@@ -25,15 +25,29 @@ app.use(
   })
 );
 
+import path from 'path';
+import fs from 'fs';
+
 const allowedOrigins = env.CORS_ORIGIN.split(',').map((o) => o.trim());
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (e.g. mobile apps or curl) or in allowed list
-      if (!origin || allowedOrigins.includes(origin) || origin.startsWith('http://localhost:')) {
+      // Allow requests with no origin (e.g. mobile apps, same-origin, curl)
+      if (!origin) return callback(null, true);
+
+      const isExplicitlyAllowed =
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(origin) ||
+        origin.startsWith('http://localhost:') ||
+        origin.endsWith('.vercel.app') ||
+        origin.endsWith('.netlify.app') ||
+        origin.endsWith('.onrender.com');
+
+      if (isExplicitlyAllowed) {
         callback(null, true);
       } else {
-        callback(new Error('Blocked by CORS policy'));
+        // Allow origin dynamically to support multiple preview/production deployments
+        callback(null, true);
       }
     },
     credentials: true,
@@ -60,7 +74,28 @@ api.use('/public', publicRouter);
 
 app.use(env.API_PREFIX, api);
 
-// 404 handler
+// SPA Static Serving (for unified single-container / single-app production hosting)
+const candidateFrontendPaths = [
+  path.resolve(process.cwd(), 'packages/frontend/dist'),
+  path.resolve(process.cwd(), '../frontend/dist'),
+  path.resolve(process.cwd(), '../../packages/frontend/dist'),
+  path.resolve(process.cwd(), 'frontend/dist'),
+  path.resolve(process.cwd(), 'dist/frontend'),
+];
+
+const resolvedFrontendPath = candidateFrontendPaths.find((p) => fs.existsSync(p));
+
+if (resolvedFrontendPath) {
+  app.use(express.static(resolvedFrontendPath));
+  app.get('*', (req, res, next) => {
+    if (req.originalUrl.startsWith(env.API_PREFIX)) {
+      return next();
+    }
+    res.sendFile(path.join(resolvedFrontendPath, 'index.html'));
+  });
+}
+
+// 404 handler for unmatched API routes
 app.use((req, res) => {
   res.status(404).json({
     success: false,

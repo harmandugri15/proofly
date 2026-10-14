@@ -13,6 +13,8 @@
     "dev:backend": "npm run dev -w @proofly/backend",
     "dev:frontend": "npm run dev -w @proofly/frontend",
     "build": "npm run build -w @proofly/shared && npm run build -w @proofly/backend && npm run build -w @proofly/frontend",
+    "start": "npm run start -w @proofly/backend",
+    "postinstall": "npm run db:generate -w @proofly/backend",
     "build:shared": "npm run build -w @proofly/shared",
     "build:backend": "npm run build -w @proofly/backend",
     "build:frontend": "npm run build -w @proofly/frontend",
