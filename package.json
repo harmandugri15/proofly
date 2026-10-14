@@ -1,0 +1,30 @@
+{
+  "name": "proofly-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Proofly — AI-Powered Verified Student Talent Platform",
+  "workspaces": [
+    "packages/shared",
+    "packages/backend",
+    "packages/frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @proofly/backend\" \"npm run dev -w @proofly/frontend\"",
+    "dev:backend": "npm run dev -w @proofly/backend",
+    "dev:frontend": "npm run dev -w @proofly/frontend",
+    "build": "npm run build -w @proofly/shared && npm run build -w @proofly/backend && npm run build -w @proofly/frontend",
+    "build:shared": "npm run build -w @proofly/shared",
+    "build:backend": "npm run build -w @proofly/backend",
+    "build:frontend": "npm run build -w @proofly/frontend",
+    "test": "npm run test -w @proofly/backend && npm run test -w @proofly/frontend",
+    "test:backend": "npm run test -w @proofly/backend",
+    "test:frontend": "npm run test -w @proofly/frontend",
+    "db:generate": "npm run db:generate -w @proofly/backend",
+    "db:push": "npm run db:push -w @proofly/backend",
+    "db:seed": "npm run db:seed -w @proofly/backend",
+    "typecheck": "npm run typecheck -w @proofly/shared && npm run typecheck -w @proofly/backend && npm run typecheck -w @proofly/frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

@@ -1,0 +1,369 @@
+// Prisma Schema for Proofly
+// Supports SQLite for zero-config local development and testing,
+// and PostgreSQL for Docker/production deployments.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                     String            @id @default(uuid())
+  email                  String            @unique
+  passwordHash           String
+  role                   String            @default("STUDENT") // STUDENT, RECRUITER, ADMIN
+  name                   String
+  isEmailVerified        Boolean           @default(false)
+  emailVerificationToken String?
+  passwordResetToken     String?
+  passwordResetExpires   DateTime?
+  createdAt              DateTime          @default(now())
+  updatedAt              DateTime          @updatedAt
+  
+  studentProfile         StudentProfile?
+  recruiterProfile       RecruiterProfile?
+  sessions               Session[]
+  auditEvents            AuditEvent[]
+
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  ipAddress    String?
+  userAgent    String?
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Organization {
+  id          String             @id @default(uuid())
+  name        String
+  slug        String             @unique
+  websiteUrl  String?
+  logoUrl     String?
+  verifiedAt  DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  recruiters  RecruiterProfile[]
+  jobPostings JobPosting[]
+  shortlists  Shortlist[]
+  notes       RecruiterNote[]
+
+  @@index([slug])
+}
+
+model RecruiterProfile {
+  id             String        @id @default(uuid())
+  userId         String        @unique
+  organizationId String
+  fullName       String
+  title          String
+  department     String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  notes          RecruiterNote[]
+
+  @@index([organizationId])
+}
+
+model StudentProfile {
+  id                   String                  @id @default(uuid())
+  userId               String                  @unique
+  username             String                  @unique
+  headline             String                  @default("")
+  bio                  String                  @default("")
+  avatarUrl            String?
+  location             String?
+  visibility           String                  @default("PUBLIC") // PUBLIC, RECRUITER_ONLY, PRIVATE
+  isOpenToWork         Boolean                 @default(true)
+  preferredRoles       String                  @default("[]") // JSON string array
+  targetGraduationYear Int?
+  completenessScore    Int                     @default(0)
+  createdAt            DateTime                @default(now())
+  updatedAt            DateTime                @updatedAt
+
+  user                 User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  educations           Education[]
+  experiences          Experience[]
+  skills               Skill[]
+  projects             Project[]
+  certificates         Certificate[]
+  codingProfiles       ExternalCodingProfile[]
+  gitHubRepos          GitHubRepo[]
+  posts                Post[]
+  shortlistEntries     ShortlistCandidate[]
+  recruiterNotes       RecruiterNote[]
+
+  @@index([username])
+  @@index([visibility])
+}
+
+model Education {
+  id               String         @id @default(uuid())
+  studentProfileId String
+  institution      String
+  degree           String
+  fieldOfStudy     String
+  startDate        DateTime
+  endDate          DateTime?
+  isCurrent        Boolean        @default(false)
+  grade            String?
+  activities       String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([studentProfileId])
+}
+
+model Experience {
+  id               String         @id @default(uuid())
+  studentProfileId String
+  company          String
+  title            String
+  location         String?
+  startDate        DateTime
+  endDate          DateTime?
+  isCurrent        Boolean        @default(false)
+  description      String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([studentProfileId])
+}
+
+model Skill {
+  id                 String         @id @default(uuid())
+  studentProfileId   String
+  name               String
+  category           String         // LANGUAGE, FRAMEWORK, DATABASE, TOOL, CLOUD_DEVOPS, CONCEPT
+  proficiencyLevel   String         // BEGINNER, INTERMEDIATE, ADVANCED, EXPERT
+  yearsOfExperience  Float?
+  isVerified         Boolean        @default(false)
+  verifiedByCount    Int            @default(0)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  studentProfile     StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([studentProfileId])
+  @@index([name])
+}
+
+model Project {
+  id                 String         @id @default(uuid())
+  studentProfileId   String
+  title              String
+  tagline            String
+  description        String
+  demoUrl            String?
+  repositoryUrl      String?
+  skills             String         @default("[]") // JSON string array
+  isFeatured         Boolean        @default(false)
+  verificationStatus String         @default("UNVERIFIED") // UNVERIFIED, CODE_VERIFIED, DEMO_VERIFIED, ISSUER_VERIFIED
+  verificationNotes  String?
+  evidenceMetadata   String?        // JSON string metadata (commits, reachable status, etc.)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  studentProfile     StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([studentProfileId])
+}
+
+model Certificate {
+  id                 String         @id @default(uuid())
+  studentProfileId   String
+  title              String
+  issuer             String
+  credentialId       String?
+  credentialUrl      String?
+  issueDate          DateTime
+  expiryDate         DateTime?
+  doesNotExpire      Boolean        @default(false)
+  verificationStatus String         @default("UNVERIFIED") // UNVERIFIED, ISSUER_VERIFIED, PENDING_REVIEW, FAILED_VERIFICATION, EXPIRED
+  verificationType   String         @default("URL_CHECK")  // URL_CHECK, ISSUER_API, MANUAL_REVIEW, UNSUPPORTED
+  lastVerifiedAt     DateTime?
+  verificationLog    String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  studentProfile     StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([studentProfileId])
+  @@index([verificationStatus])
+}
+
+model ExternalCodingProfile {
+  id               String         @id @default(uuid())
+  studentProfileId String
+  platform         String         // LEETCODE, HACKERRANK, CODEFORCES
+  username         String
+  profileUrl       String
+  totalSolved      Int            @default(0)
+  easySolved       Int            @default(0)
+  mediumSolved     Int            @default(0)
+  hardSolved       Int            @default(0)
+  ranking          Int?
+  rating           Float?
+  badges           String         @default("[]") // JSON string array
+  lastSyncedAt     DateTime?
+  syncStatus       String         @default("SYNCED") // SYNCED, PENDING, FAILED, RATE_LIMITED
+  syncError        String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([studentProfileId, platform])
+  @@index([studentProfileId])
+}
+
+model GitHubRepo {
+  id                   String         @id @default(uuid())
+  studentProfileId     String
+  githubRepoId         String
+  name                 String
+  fullName             String
+  description          String?
+  htmlUrl              String
+  primaryLanguage      String?
+  languages            String?        // JSON string map of { Language: bytes }
+  starsCount           Int            @default(0)
+  forksCount           Int            @default(0)
+  isFork               Boolean        @default(false)
+  isSelectedForProfile Boolean        @default(true)
+  lastCommitAt         DateTime?
+  recentCommitCount    Int            @default(0)
+  lastSyncedAt         DateTime?
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  studentProfile       StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([studentProfileId, githubRepoId])
+  @@index([studentProfileId])
+}
+
+model Post {
+  id               String         @id @default(uuid())
+  studentProfileId String
+  title            String
+  slug             String         @unique
+  summary          String
+  content          String
+  tags             String         @default("[]") // JSON string array
+  status           String         @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
+  publishedAt      DateTime?
+  readTimeMinutes  Int            @default(3)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([slug])
+  @@index([studentProfileId])
+  @@index([status])
+}
+
+model JobPosting {
+  id                String         @id @default(uuid())
+  organizationId    String
+  title             String
+  description       String
+  location          String
+  employmentType    String         @default("Full-time")
+  status            String         @default("ACTIVE") // DRAFT, ACTIVE, CLOSED
+  requiredSkills    String         @default("[]") // JSON string array
+  preferredSkills   String         @default("[]") // JSON string array
+  minGraduationYear Int?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  organization      Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+model Shortlist {
+  id             String               @id @default(uuid())
+  organizationId String
+  title          String
+  description    String?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+
+  organization   Organization         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  candidates     ShortlistCandidate[]
+
+  @@index([organizationId])
+}
+
+model ShortlistCandidate {
+  id               String         @id @default(uuid())
+  shortlistId      String
+  studentProfileId String
+  status           String         @default("REVIEWING") // REVIEWING, INTERVIEW_SCHEDULED, OFFERED, REJECTED, ARCHIVED
+  addedAt          DateTime       @default(now())
+
+  shortlist        Shortlist      @relation(fields: [shortlistId], references: [id], onDelete: Cascade)
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([shortlistId, studentProfileId])
+  @@index([shortlistId])
+  @@index([studentProfileId])
+}
+
+model RecruiterNote {
+  id               String           @id @default(uuid())
+  organizationId   String
+  recruiterId      String
+  studentProfileId String
+  content          String
+  tags             String           @default("[]") // JSON string array
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  organization     Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  recruiter        RecruiterProfile @relation(fields: [recruiterId], references: [id], onDelete: Cascade)
+  studentProfile   StudentProfile   @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([studentProfileId])
+}
+
+model AuditEvent {
+  id             String   @id @default(uuid())
+  actorId        String?
+  organizationId String?
+  action         String
+  resourceType   String
+  resourceId     String
+  payload        String?  // JSON string
+  ipAddress      String?
+  createdAt      DateTime @default(now())
+
+  actor          User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([actorId])
+  @@index([resourceType, resourceId])
+}
