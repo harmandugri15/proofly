@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldCheck, AlertCircle } from 'lucide-react';
+import { ShieldCheck, AlertCircle, Sparkles, User, Briefcase } from 'lucide-react';
 import { UserRole } from '@proofly/shared';
 
 export const Register: React.FC = () => {
@@ -39,52 +39,59 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Ambient background glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 blur-[100px] pointer-events-none rounded-full" />
+
+      <div className="w-full max-w-md bg-[#0c0f18]/85 border border-white/10 rounded-3xl p-7 sm:p-9 shadow-2xl backdrop-blur-2xl relative">
         <div className="text-center mb-6">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-4">
-            <ShieldCheck className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-cyan-500 p-0.5 shadow-glow-emerald mx-auto flex items-center justify-center mb-4">
+            <div className="w-full h-full bg-[#0c0f18] rounded-[14px] flex items-center justify-center text-emerald-400">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Create your Proofly Account</h1>
-          <p className="text-sm text-slate-400 mt-1">Join the evidence-based hiring network</p>
+          <h1 className="text-2xl font-black text-white tracking-tight font-sans">Create Your Handle</h1>
+          <p className="text-xs text-slate-400 mt-1">Join the verified evidence talent network</p>
         </div>
 
         {/* Role Selection Tabs */}
-        <div className="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-xl border border-slate-800 mb-6">
+        <div className="grid grid-cols-2 gap-2 p-1.5 bg-[#121624] rounded-2xl border border-white/10 mb-6">
           <button
             type="button"
             onClick={() => setRole('STUDENT')}
-            className={`py-2 text-xs font-semibold rounded-lg transition-colors ${
+            className={`py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
               role === 'STUDENT'
-                ? 'bg-emerald-500 text-slate-950'
+                ? 'bg-gradient-to-r from-emerald-400 to-teal-400 text-slate-950 shadow-glow-emerald'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            I am a Student
+            <User className="w-3.5 h-3.5" />
+            <span>Student Builder</span>
           </button>
           <button
             type="button"
             onClick={() => setRole('RECRUITER')}
-            className={`py-2 text-xs font-semibold rounded-lg transition-colors ${
+            className={`py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
               role === 'RECRUITER'
-                ? 'bg-emerald-500 text-slate-950'
+                ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-glow-cyan'
                 : 'text-slate-400 hover:text-white'
             }`}
           >
-            I am a Recruiter
+            <Briefcase className="w-3.5 h-3.5" />
+            <span>Talent Scout</span>
           </button>
         </div>
 
         {error && (
-          <div className="mb-6 p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            {error}
+          <div className="mb-5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+            <span>{error}</span>
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
               Full Name
             </label>
             <input
@@ -93,12 +100,12 @@ export const Register: React.FC = () => {
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="e.g. Alex Chen"
-              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#121624] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-400 transition-colors"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
               Email Address
             </label>
             <input
@@ -107,12 +114,12 @@ export const Register: React.FC = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@university.edu"
-              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#121624] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-400 transition-colors font-mono"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
               Password (min. 8 characters)
             </label>
             <input
@@ -122,14 +129,14 @@ export const Register: React.FC = () => {
               required
               minLength={8}
               placeholder="••••••••"
-              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#121624] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-400 transition-colors font-mono"
             />
           </div>
 
           {role === 'RECRUITER' && (
             <>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   Organization / Company Name
                 </label>
                 <input
@@ -138,12 +145,12 @@ export const Register: React.FC = () => {
                   onChange={(e) => setOrgName(e.target.value)}
                   required
                   placeholder="e.g. Stripe, Vanguard Tech"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#121624] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-400 transition-colors"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   Your Job Title
                 </label>
                 <input
@@ -151,8 +158,8 @@ export const Register: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   required
-                  placeholder="e.g. Technical Recruiter"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                  placeholder="e.g. Lead Technical Recruiter"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#121624] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-400 transition-colors"
                 />
               </div>
             </>
@@ -161,15 +168,19 @@ export const Register: React.FC = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-sm transition-colors shadow-md shadow-emerald-500/10 mt-2"
+            className={`w-full py-3 rounded-xl font-black text-xs uppercase tracking-wider transition-all mt-2 ${
+              role === 'STUDENT'
+                ? 'bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 text-slate-950 shadow-glow-emerald hover:opacity-90'
+                : 'bg-gradient-to-r from-cyan-400 via-teal-400 to-blue-500 text-slate-950 shadow-glow-cyan hover:opacity-90'
+            }`}
           >
-            {isSubmitting ? 'Creating account...' : 'Create Account'}
+            {isSubmitting ? 'Creating profile...' : 'Launch Verified Profile'}
           </button>
         </form>
 
         <p className="text-xs text-slate-400 text-center mt-6">
           Already have an account?{' '}
-          <Link to="/login" className="text-emerald-400 hover:underline font-medium">
+          <Link to="/login" className="text-emerald-400 hover:text-emerald-300 font-bold ml-1">
             Sign in
           </Link>
         </p>

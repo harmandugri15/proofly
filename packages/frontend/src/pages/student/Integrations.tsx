@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, Sparkles, Linkedin, ExternalLink } from 'lucide-react';
+import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, Sparkles, Linkedin, ExternalLink, Zap } from 'lucide-react';
 import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
 import { CodingProfileCard } from '../../components/common/CodingProfileCard';
 
@@ -117,51 +117,71 @@ export const StudentIntegrationsPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-slate-400">Loading integrations...</div>;
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-spin flex items-center justify-center p-1">
+          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" />
+          </div>
+        </div>
+        <p className="text-xs font-mono text-slate-400 tracking-wider">SYNCING INTEGRATED SIGNAL PROVIDERS...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-10">
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">External Integrations & Deep Signals</h1>
-        <p className="text-sm text-slate-400 mt-1">
-          Connect your GitHub account and algorithmic coding profiles. Proofly crawls and aggregates deep evidence (contribution heatmaps, difficulty breakdown, streaks, acceptance rates) directly in-app so recruiters never have to leave the platform.
-        </p>
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-10 animate-fadeIn">
+      {/* Header Banner */}
+      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
+            <Zap className="w-3.5 h-3.5" />
+            <span>REAL-TIME PLATFORM ORCHESTRATION</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
+            External Integrations & Verified Signals
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-3xl leading-relaxed">
+            Connect GitHub and algorithmic platforms. Proofly crawls and aggregates deep evidence (contribution heatmaps, difficulty breakdown, streaks, acceptance rates) directly in-app so scouts never have to tab out.
+          </p>
+        </div>
       </div>
 
       {/* 1. GitHub Integration Section */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white">
-              <Github className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-white">
+              <Github className="w-5 h-5 text-emerald-400" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">GitHub Integration & Activity Heatmap</h2>
+              <h2 className="text-lg font-black text-white font-sans">GitHub Activity & 52-Week Heatmap</h2>
               <p className="text-xs text-slate-400">
-                Live 52-week contribution graph, repositories, language percentages, and commit history.
+                Live contribution graph, repositories, language metrics, and verified commit history.
               </p>
             </div>
           </div>
         </div>
 
         {/* Sync Controls Form */}
-        <form onSubmit={handleSyncGithub} className="space-y-3 bg-slate-900 p-4 rounded-2xl border border-slate-800">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <form onSubmit={handleSyncGithub} className="space-y-3 glass-panel p-5 sm:p-6 rounded-3xl border border-white/10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                 GitHub Username / Handle
               </label>
               <input
                 type="text"
                 value={githubHandle}
                 onChange={(e) => setGithubHandle(e.target.value)}
-                placeholder="e.g. alexchen"
-                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                placeholder="e.g. harmandugri15"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs focus:outline-none focus:border-emerald-500 font-mono"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                 Personal Access Token (Optional for Private Repos / Rate Limits)
               </label>
               <div className="flex gap-2">
@@ -170,12 +190,12 @@ export const StudentIntegrationsPage: React.FC = () => {
                   value={githubToken}
                   onChange={(e) => setGithubToken(e.target.value)}
                   placeholder="ghp_... or leave empty for public data"
-                  className="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs focus:outline-none focus:border-emerald-500 font-mono"
                 />
                 <button
                   type="submit"
                   disabled={isSyncingGithub}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 disabled:opacity-50 text-slate-950 font-black text-xs transition-transform hover:scale-105 shrink-0 shadow-glow-emerald"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isSyncingGithub ? 'animate-spin' : ''}`} />
                   {isSyncingGithub ? 'Syncing...' : 'Sync GitHub'}
@@ -185,8 +205,8 @@ export const StudentIntegrationsPage: React.FC = () => {
           </div>
 
           {githubMsg && (
-            <p className="text-xs text-emerald-400 flex items-center gap-1.5 pt-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> {githubMsg}
+            <p className="text-xs font-mono text-emerald-400 flex items-center gap-1.5 pt-2">
+              <CheckCircle2 className="w-4 h-4" /> {githubMsg}
             </p>
           )}
         </form>
@@ -203,34 +223,34 @@ export const StudentIntegrationsPage: React.FC = () => {
 
         {/* Selected Repositories List */}
         {profile?.gitHubRepos?.length > 0 && (
-          <div className="space-y-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+          <div className="space-y-3 pt-2">
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-400">
               Synchronized Public Repositories ({profile.gitHubRepos.length})
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {profile.gitHubRepos.map((repo: any) => (
                 <div
                   key={repo.id}
-                  className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-start justify-between gap-3 text-xs shadow-md"
+                  className="p-5 rounded-2xl glass-panel border border-white/10 flex items-start justify-between gap-3 text-xs shadow-md hover:border-emerald-500/30 transition-colors"
                 >
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <a
                       href={repo.htmlUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-bold text-white hover:text-emerald-400 transition-colors"
+                      className="font-black text-white hover:text-emerald-300 transition-colors text-sm"
                     >
                       {repo.name}
                     </a>
-                    <p className="text-slate-400 line-clamp-1">{repo.description || 'No description'}</p>
-                    <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono pt-1">
-                      <span>★ {repo.starsCount}</span>
-                      <span>{repo.primaryLanguage || 'Code'}</span>
+                    <p className="text-slate-400 line-clamp-1">{repo.description || 'No description provided'}</p>
+                    <div className="flex items-center gap-3 text-[11px] text-slate-400 font-mono pt-1">
+                      <span className="text-amber-300 font-bold">★ {repo.starsCount}</span>
+                      <span className="bg-white/5 px-2 py-0.5 rounded text-slate-300">{repo.primaryLanguage || 'Code'}</span>
                       <span>{repo.recentCommitCount} commits</span>
                     </div>
                   </div>
-                  <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                    Active
+                  <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    Live
                   </span>
                 </div>
               ))}
@@ -240,32 +260,32 @@ export const StudentIntegrationsPage: React.FC = () => {
       </div>
 
       {/* 2. Coding Platforms Section (LeetCode, HackerRank, Codeforces) */}
-      <div className="space-y-6 pt-4 border-t border-slate-800">
+      <div className="space-y-6 pt-6 border-t border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-amber-400">
               <Code2 className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Algorithmic Problem Solving Profiles</h2>
+              <h2 className="text-lg font-black text-white font-sans">Algorithmic Problem Solving Profiles</h2>
               <p className="text-xs text-slate-400">
-                Connect LeetCode, HackerRank, and Codeforces handles. Renders verified problem breakdowns, difficulty distributions, acceptance rates, and recent submissions.
+                Connect LeetCode, HackerRank, and Codeforces handles. Renders verified problem breakdowns, difficulty distributions, and streaks.
               </p>
             </div>
           </div>
         </div>
 
         {/* Link Handle Form */}
-        <form onSubmit={handleAddCodingProfile} className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <form onSubmit={handleAddCodingProfile} className="glass-panel p-5 sm:p-6 rounded-3xl border border-white/10 space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                 Platform
               </label>
               <select
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value as any)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
               >
                 <option value="LEETCODE">LeetCode</option>
                 <option value="HACKERRANK">HackerRank</option>
@@ -274,7 +294,7 @@ export const StudentIntegrationsPage: React.FC = () => {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                 Profile Username / Handle
               </label>
               <div className="flex gap-2">
@@ -283,16 +303,16 @@ export const StudentIntegrationsPage: React.FC = () => {
                   required
                   value={codingUsername}
                   onChange={(e) => setCodingUsername(e.target.value)}
-                  placeholder="e.g. alexchen_dev or mayap_sys"
-                  className="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                  placeholder="e.g. harmandugri15 or dev_solver"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
                 />
                 <button
                   type="submit"
                   disabled={isAddingCoding}
-                  className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5"
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-400 hover:from-amber-300 hover:to-orange-300 disabled:opacity-50 text-slate-950 font-black text-xs transition-transform hover:scale-105 shrink-0 flex items-center gap-1.5 shadow-md"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  {isAddingCoding ? 'Linking...' : 'Link Platform Handle'}
+                  <Plus className="w-4 h-4" />
+                  {isAddingCoding ? 'Linking...' : 'Link Handle'}
                 </button>
               </div>
             </div>
@@ -311,7 +331,7 @@ export const StudentIntegrationsPage: React.FC = () => {
               />
             ))
           ) : (
-            <div className="p-8 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
+            <div className="p-8 rounded-3xl glass-panel border border-white/10 text-center space-y-2">
               <Code2 className="w-8 h-8 text-slate-600 mx-auto" />
               <p className="text-xs text-slate-400">
                 No coding profiles linked yet. Add your LeetCode, HackerRank, or Codeforces handle above to display verified algorithmic problem counts and acceptance rates.
@@ -322,14 +342,14 @@ export const StudentIntegrationsPage: React.FC = () => {
       </div>
 
       {/* 3. LinkedIn Integration Section */}
-      <div className="space-y-6 pt-4 border-t border-slate-800">
+      <div className="space-y-6 pt-6 border-t border-white/10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#0077b5]/15 border border-[#0077b5]/30 flex items-center justify-center text-[#0a66c2]">
+            <div className="w-10 h-10 rounded-2xl bg-[#0077b5]/15 border border-[#0077b5]/30 flex items-center justify-center text-[#38bdf8]">
               <Linkedin className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">LinkedIn Profile & Verification</h2>
+              <h2 className="text-lg font-black text-white font-sans">LinkedIn Profile & Verification</h2>
               <p className="text-xs text-slate-400">
                 Connect your LinkedIn profile to display a verified badge on your public portfolio and recruiter candidate view.
               </p>
@@ -338,9 +358,9 @@ export const StudentIntegrationsPage: React.FC = () => {
         </div>
 
         {profile?.linkedinUrl ? (
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+          <div className="p-5 rounded-2xl glass-panel border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-[#0077b5]/20 flex items-center justify-center text-[#0a66c2] shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#0077b5]/20 flex items-center justify-center text-[#38bdf8] shrink-0">
                 <Linkedin className="w-5 h-5" />
               </div>
               <div className="space-y-0.5">
@@ -349,13 +369,13 @@ export const StudentIntegrationsPage: React.FC = () => {
                     href={profile.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-bold text-white hover:text-[#0a66c2] transition-colors flex items-center gap-1.5"
+                    className="text-sm font-bold text-white hover:text-[#38bdf8] transition-colors flex items-center gap-1.5"
                   >
                     <span>{profile.linkedinUrl}</span>
                     <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
                   </a>
                   {profile.linkedinVerified && (
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[10px] font-bold">
                       <CheckCircle2 className="w-3 h-3" /> Verified
                     </span>
                   )}
@@ -368,15 +388,15 @@ export const StudentIntegrationsPage: React.FC = () => {
 
             <button
               onClick={handleDisconnectLinkedin}
-              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-700 transition-colors shrink-0"
+              className="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 text-xs font-bold border border-white/10 transition-colors shrink-0"
             >
               Disconnect
             </button>
           </div>
         ) : (
-          <form onSubmit={handleConnectLinkedin} className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
+          <form onSubmit={handleConnectLinkedin} className="glass-panel p-5 sm:p-6 rounded-3xl border border-white/10 space-y-3">
             <div>
-              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                 LinkedIn Profile URL
               </label>
               <div className="flex gap-2">
@@ -386,14 +406,14 @@ export const StudentIntegrationsPage: React.FC = () => {
                   value={linkedinInput}
                   onChange={(e) => setLinkedinInput(e.target.value)}
                   placeholder="https://www.linkedin.com/in/your-handle"
-                  className="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-[#0a66c2] font-mono"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-[#38bdf8] font-mono"
                 />
                 <button
                   type="submit"
                   disabled={isConnectingLinkedin || !linkedinInput.trim()}
-                  className="px-4 py-2 rounded-lg bg-[#0077b5] hover:bg-[#006097] disabled:opacity-50 text-white font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5"
+                  className="px-5 py-2.5 rounded-xl bg-[#0077b5] hover:bg-[#006097] disabled:opacity-50 text-white font-bold text-xs transition-transform hover:scale-105 shrink-0 flex items-center gap-1.5 shadow-md"
                 >
-                  <Linkedin className="w-3.5 h-3.5" />
+                  <Linkedin className="w-4 h-4" />
                   {isConnectingLinkedin ? 'Connecting...' : 'Connect & Verify'}
                 </button>
               </div>
@@ -401,13 +421,13 @@ export const StudentIntegrationsPage: React.FC = () => {
 
             {linkedinMsg && (
               <p className="text-xs text-emerald-400 flex items-center gap-1.5 pt-1">
-                <CheckCircle2 className="w-3.5 h-3.5" /> {linkedinMsg}
+                <CheckCircle2 className="w-4 h-4" /> {linkedinMsg}
               </p>
             )}
 
             {linkedinError && (
               <p className="text-xs text-rose-400 flex items-center gap-1.5 pt-1">
-                <AlertCircle className="w-3.5 h-3.5" /> {linkedinError}
+                <AlertCircle className="w-4 h-4" /> {linkedinError}
               </p>
             )}
           </form>

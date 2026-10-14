@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { FileText, Plus, Trash2, Edit3, Eye, CheckCircle2, Clock } from 'lucide-react';
+import { FileText, Plus, Trash2, Edit3, Eye, CheckCircle2, Clock, Sparkles, ArrowRight, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const StudentPostsPage: React.FC = () => {
@@ -67,75 +67,98 @@ export const StudentPostsPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-slate-400">Loading case studies...</div>;
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-spin flex items-center justify-center p-1">
+          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" />
+          </div>
+        </div>
+        <p className="text-xs font-mono text-slate-400 tracking-wider">RETRIEVING PUBLISHED ESSAYS...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Technical Case Studies & Notes</h1>
-          <p className="text-sm text-slate-400 mt-1">
-            Publish engineering reflections, architectural decisions, and project postmortems.
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
+      {/* Header Banner */}
+      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
+            <FileText className="w-3.5 h-3.5" />
+            <span>ENGINEERING LOGS</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
+            Technical Case Studies & Notes
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+            Publish engineering reflections, architectural decisions, and project postmortems. Real technical writing demonstrates your architectural clarity to scouts.
           </p>
         </div>
+
         <button
           onClick={() => setShowModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-colors shadow-md shadow-emerald-500/10"
+          className="relative z-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shadow-glow-emerald shrink-0"
         >
           <Plus className="w-4 h-4" /> Write Case Study
         </button>
       </div>
 
       {posts.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl bg-slate-900 border border-slate-800">
-          <FileText className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-white">No technical articles published yet</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
-            Technical writing highlights communication clarity and architectural reasoning for hiring teams.
+        <div className="p-12 text-center rounded-3xl glass-panel border border-white/10 space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-white/[0.03] border border-white/10 mx-auto flex items-center justify-center text-slate-500">
+            <FileText className="w-7 h-7" />
+          </div>
+          <h3 className="text-base font-bold text-white font-sans">No technical articles published yet</h3>
+          <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+            Technical writing highlights communication clarity and architectural depth for hiring leads.
           </p>
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold"
-          >
-            Create Your First Article
-          </button>
+          <div className="pt-2">
+            <button
+              onClick={() => setShowModal(true)}
+              className="px-4 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-mono font-bold border border-white/10 transition-colors"
+            >
+              Write First Article
+            </button>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
           {posts.map((post) => (
             <div
               key={post.id}
-              className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-slate-700 transition-all"
+              className="p-5 sm:p-6 rounded-3xl glass-panel border border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-emerald-500/30 transition-all shadow-md group"
             >
-              <div className="space-y-1.5 max-w-2xl">
-                <div className="flex items-center gap-2">
+              <div className="space-y-2 max-w-2xl">
+                <div className="flex items-center gap-2.5">
                   <span
-                    className={`text-[10px] font-mono px-2 py-0.5 rounded ${
+                    className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
                       post.status === 'PUBLISHED'
-                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
-                        : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                        ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                        : 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
                     }`}
                   >
                     {post.status}
                   </span>
-                  <span className="text-xs text-slate-500 flex items-center gap-1 font-mono">
-                    <Clock className="w-3 h-3" /> {post.readTimeMinutes} min read
+                  <span className="text-xs text-slate-400 flex items-center gap-1 font-mono">
+                    <Clock className="w-3.5 h-3.5 text-slate-500" /> {post.readTimeMinutes || 4} min read
                   </span>
                 </div>
 
                 <Link
                   to={`/posts/${post.slug}`}
-                  className="text-base font-bold text-white hover:text-emerald-400 transition-colors block"
+                  className="text-base sm:text-lg font-black text-white hover:text-emerald-300 transition-colors block font-sans"
                 >
                   {post.title}
                 </Link>
 
-                <p className="text-xs text-slate-400 line-clamp-2">{post.summary}</p>
+                <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed">{post.summary}</p>
 
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {post.tags?.map((tag: string) => (
-                    <span key={tag} className="text-[10px] px-2 py-0.5 rounded bg-slate-950 text-slate-400 border border-slate-800">
+                    <span key={tag} className="text-[10px] font-mono px-2.5 py-0.5 rounded-lg bg-white/[0.04] text-slate-300 border border-white/5">
                       #{tag}
                     </span>
                   ))}
@@ -145,14 +168,13 @@ export const StudentPostsPage: React.FC = () => {
               <div className="flex items-center gap-2 shrink-0">
                 <Link
                   to={`/posts/${post.slug}`}
-                  target="_blank"
-                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors flex items-center gap-1"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-mono font-bold border border-white/10 transition-colors"
                 >
-                  <Eye className="w-3.5 h-3.5" /> View
+                  <Eye className="w-3.5 h-3.5 text-emerald-400" /> View
                 </Link>
                 <button
                   onClick={() => handleDelete(post.id)}
-                  className="p-2 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                  className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -162,14 +184,14 @@ export const StudentPostsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Write Article Modal */}
+      {/* Write Post Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-2xl shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h3 className="text-base font-bold text-white mb-4">Write Technical Case Study</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="glass-panel border border-white/15 rounded-3xl p-6 sm:p-7 w-full max-w-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-base font-black text-white font-sans">Draft Technical Case Study</h3>
             <form onSubmit={handleCreatePost} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   Article Title
                 </label>
                 <input
@@ -177,61 +199,60 @@ export const StudentPostsPage: React.FC = () => {
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  placeholder="e.g. Taming CRDTs for Real-Time Canvas Collaboration"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  placeholder="e.g. Scaling WebSockets to 50k Concurrent Sessions: Architecture & Benchmarks"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                  Summary / Abstract
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Executive Summary
                 </label>
-                <textarea
-                  rows={2}
+                <input
+                  type="text"
                   required
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
-                  placeholder="A 2-sentence summary outlining what you learned, built, or debugged."
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  placeholder="A concise synopsis of the engineering problem and outcome"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                  Markdown Content
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Content (Markdown supported)
                 </label>
                 <textarea
                   rows={8}
                   required
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  placeholder="Write in Markdown. Include architecture decisions, code blocks, latency benchmarks, or design trade-offs."
-                  className="w-full font-mono text-xs px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white focus:outline-none focus:border-emerald-500 leading-relaxed"
+                  placeholder="Document your architecture, code choices, performance trade-offs, and lessons learned..."
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 font-mono leading-relaxed"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                     Tags (Comma-separated)
                   </label>
                   <input
                     type="text"
                     value={tagsStr}
                     onChange={(e) => setTagsStr(e.target.value)}
-                    placeholder="TypeScript, WebSockets, Systems"
-                    className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    placeholder="architecture, distributed, rust"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                     Publication Status
                   </label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as any)}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
                   >
                     <option value="PUBLISHED">Published (Public)</option>
                     <option value="DRAFT">Draft</option>
@@ -239,17 +260,17 @@ export const StudentPostsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3">
+              <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
+                  className="px-4 py-2 rounded-xl bg-white/[0.04] text-slate-300 text-xs font-bold hover:bg-white/[0.08]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-600"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 text-xs font-black shadow-glow-emerald hover:scale-105 transition-transform"
                 >
                   Publish Article
                 </button>

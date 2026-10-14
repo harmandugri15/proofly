@@ -20,6 +20,10 @@ import {
   CheckCircle2,
   Key,
   Linkedin,
+  MapPin,
+  Calendar,
+  Layers,
+  ArrowUpRight,
 } from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 import { RecruiterResearchResult, CandidateMatchResult } from '@proofly/shared';
@@ -135,58 +139,93 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-slate-400">Loading candidate profile and evidence...</div>;
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-spin flex items-center justify-center p-1">
+          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" />
+          </div>
+        </div>
+        <p className="text-xs font-mono text-slate-400 tracking-wider">RETRIEVING CANDIDATE EVIDENCE DOSSIER...</p>
+      </div>
+    );
   }
 
   if (!candidate) {
-    return <div className="p-8 text-center text-rose-400">Candidate not found.</div>;
+    return (
+      <div className="max-w-md mx-auto my-24 p-8 rounded-3xl glass-panel border border-rose-500/20 text-center space-y-4">
+        <p className="text-sm font-bold text-rose-400 font-sans">Candidate record not found.</p>
+        <Link to="/recruiter/candidates" className="text-xs font-mono text-slate-400 hover:text-white">
+          &larr; Return to Candidate Radar
+        </Link>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 space-y-8">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
       {/* Breadcrumb Header */}
-      <div className="flex items-center gap-2 text-xs text-slate-400">
-        <Link to="/recruiter/candidates" className="hover:text-white">
+      <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
+        <Link to="/recruiter/candidates" className="hover:text-emerald-400 transition-colors">
           Candidates
         </Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-white font-semibold">{candidate.user?.name}</span>
+        <ChevronRight className="w-3 h-3 text-slate-600" />
+        <span className="text-white font-bold">{candidate.user?.name}</span>
       </div>
 
       {/* Candidate Hero Card */}
-      <div className="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-900 to-slate-850 border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-white tracking-tight">{candidate.user?.name}</h1>
-            <span className="text-xs font-mono font-bold text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
-              {candidate.completenessScore}% Proof Score
-            </span>
+      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex items-start gap-5">
+          <div className="story-ring p-1 rounded-full shrink-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-900 flex items-center justify-center text-xl sm:text-2xl font-black text-emerald-400">
+              {candidate.user?.name ? candidate.user.name[0] : 'U'}
+            </div>
           </div>
 
-          <p className="text-sm font-semibold text-slate-300">{candidate.headline}</p>
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
+                {candidate.user?.name}
+              </h1>
+              <span className="text-xs font-mono font-black text-emerald-300 bg-emerald-500/15 px-3 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1.5 shadow-sm">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                {candidate.completenessScore}% Proof Score
+              </span>
+            </div>
 
-          <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
-            {candidate.bio || 'No biography supplied.'}
-          </p>
+            <p className="text-sm font-semibold text-slate-200">{candidate.headline || 'Software Engineer'}</p>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-2 font-mono">
-            <span>Location: {candidate.location || 'Remote'}</span>
-            {candidate.targetGraduationYear && (
-              <span>Graduation: Class of {candidate.targetGraduationYear}</span>
-            )}
-            <span>Status: {candidate.isOpenToWork ? 'Open to offers' : 'Not actively looking'}</span>
+            <p className="text-xs text-slate-400 max-w-2xl leading-relaxed">
+              {candidate.bio || 'No biography supplied.'}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 pt-1 font-mono">
+              <span className="inline-flex items-center gap-1 bg-white/[0.04] px-2.5 py-1 rounded-lg border border-white/5">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" /> {candidate.location || 'Remote'}
+              </span>
+              {candidate.targetGraduationYear && (
+                <span className="inline-flex items-center gap-1 bg-white/[0.04] px-2.5 py-1 rounded-lg border border-white/5">
+                  <Calendar className="w-3.5 h-3.5 text-cyan-400" /> Class of {candidate.targetGraduationYear}
+                </span>
+              )}
+              <span className="text-emerald-400 font-bold">
+                {candidate.isOpenToWork ? '● Open to offers' : '○ Not actively looking'}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col gap-2.5 shrink-0">
+        <div className="relative z-10 flex flex-col gap-3 shrink-0">
           <div className="flex flex-wrap items-center gap-2">
             <Link
               to={`/u/${candidate.username}${candidate.shareToken ? `?pass=${candidate.shareToken}` : ''}`}
               target="_blank"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.05] hover:bg-white/[0.1] text-white font-mono font-bold text-xs border border-white/10 transition-colors"
             >
-              <span>Public Portfolio</span>
+              <span>Public View</span>
               <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             </Link>
 
@@ -195,7 +234,7 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
                 href={candidate.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0077b5]/15 hover:bg-[#0077b5]/25 text-[#38bdf8] font-semibold text-xs border border-[#0077b5]/30 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#0077b5]/15 hover:bg-[#0077b5]/25 text-[#38bdf8] font-mono font-bold text-xs border border-[#0077b5]/30 transition-colors"
               >
                 <Linkedin className="w-3.5 h-3.5 text-[#0a66c2]" />
                 <span>LinkedIn</span>
@@ -212,34 +251,38 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
                 setCopiedLink(true);
                 setTimeout(() => setCopiedLink(false), 2000);
               }}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 font-semibold text-xs border border-cyan-500/30 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-400/10 hover:bg-cyan-400/20 text-cyan-300 font-mono font-bold text-xs border border-cyan-400/30 transition-colors"
             >
-              <Key className="w-3.5 h-3.5" />
-              <span>{copiedLink ? 'Fast-Pass Copied!' : 'Copy Fast-Pass'}</span>
+              <Key className="w-3.5 h-3.5 text-cyan-400" />
+              <span>{copiedLink ? 'Pass Copied!' : 'Copy Fast-Pass'}</span>
             </button>
           </div>
 
-          <div className="text-xs text-slate-400 font-semibold">Add to Shortlist:</div>
-          <div className="flex gap-2">
-            <select
-              id="shortlist-select"
-              className="px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
-            >
-              {shortlists.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.title}
-                </option>
-              ))}
-            </select>
-            <button
-              onClick={() => {
-                const sel = (document.getElementById('shortlist-select') as HTMLSelectElement)?.value;
-                if (sel) handleAddToShortlist(sel);
-              }}
-              className="px-3 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs transition-colors shrink-0 flex items-center gap-1"
-            >
-              <BookmarkCheck className="w-3.5 h-3.5" /> Save
-            </button>
+          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
+            <div className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-wider">
+              Add to Talent Pool:
+            </div>
+            <div className="flex gap-2">
+              <select
+                id="shortlist-select"
+                className="flex-1 px-3 py-1.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
+              >
+                {shortlists.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.title}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => {
+                  const sel = (document.getElementById('shortlist-select') as HTMLSelectElement)?.value;
+                  if (sel) handleAddToShortlist(sel);
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shrink-0 flex items-center gap-1 shadow-glow-emerald"
+              >
+                <BookmarkCheck className="w-3.5 h-3.5" /> Save
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -249,40 +292,43 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
         {/* Left Column (Evidence) */}
         <div className="lg:col-span-2 space-y-6">
           {/* Projects & Demonstrations */}
-          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              Verified Project Evidence ({candidate.projects?.length || 0})
-            </h2>
+          <div className="p-6 sm:p-7 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between pb-2 border-b border-white/5">
+              <h2 className="text-base font-black text-white flex items-center gap-2 font-sans">
+                <Layers className="w-4 h-4 text-emerald-400" />
+                Verified Project Evidence ({candidate.projects?.length || 0})
+              </h2>
+              <span className="text-[11px] font-mono text-slate-400">Authenticated Artifacts</span>
+            </div>
 
             <div className="space-y-4">
               {candidate.projects?.map((proj: any) => (
-                <div key={proj.id} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                <div key={proj.id} className="p-5 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2.5 hover:border-emerald-500/30 transition-colors">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-sm font-bold text-white">{proj.title}</h3>
+                    <h3 className="text-sm sm:text-base font-black text-white">{proj.title}</h3>
                     <EvidenceBadge status={proj.verificationStatus} type="project" />
                   </div>
 
-                  <p className="text-xs text-slate-300 font-medium">{proj.tagline}</p>
+                  <p className="text-xs text-slate-300 font-semibold">{proj.tagline}</p>
                   <p className="text-xs text-slate-400 leading-relaxed">{proj.description}</p>
 
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {proj.skills?.map((s: string) => (
-                      <span key={s} className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-300">
+                      <span key={s} className="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-white/[0.04] text-slate-300 border border-white/5">
                         {s}
                       </span>
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-4 text-xs pt-2 border-t border-slate-800/80">
+                  <div className="flex items-center gap-4 text-xs pt-2.5 border-t border-white/5">
                     {proj.repositoryUrl && (
                       <a
                         href={proj.repositoryUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-slate-400 hover:text-white flex items-center gap-1"
+                        className="text-slate-400 hover:text-white flex items-center gap-1.5 font-mono text-xs transition-colors"
                       >
-                        <Github className="w-3.5 h-3.5" /> Inspect Repository
+                        <Github className="w-3.5 h-3.5" /> Inspect Code
                       </a>
                     )}
                     {proj.demoUrl && (
@@ -290,7 +336,7 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
                         href={proj.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-400 hover:underline flex items-center gap-1"
+                        className="text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 font-mono text-xs font-bold transition-colors"
                       >
                         <ExternalLink className="w-3.5 h-3.5" /> Live Deployment
                       </a>
@@ -301,26 +347,28 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Certificates */}
-          <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Award className="w-4 h-4 text-emerald-400" />
-              Certifications & Credential Records
-            </h2>
+          {/* Certifications */}
+          <div className="p-6 sm:p-7 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
+            <div className="flex items-center justify-between pb-2 border-b border-white/5">
+              <h2 className="text-base font-black text-white flex items-center gap-2 font-sans">
+                <Award className="w-4 h-4 text-emerald-400" />
+                Certifications & Credential Records ({candidate.certificates?.length || 0})
+              </h2>
+            </div>
 
             <div className="space-y-3">
               {candidate.certificates?.map((cert: any) => (
                 <div
                   key={cert.id}
-                  className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between gap-3 text-xs"
+                  className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 flex items-start justify-between gap-3 text-xs"
                 >
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <div className="flex items-center gap-2">
-                      <span className="font-bold text-white">{cert.title}</span>
+                      <span className="font-bold text-white text-sm">{cert.title}</span>
                       <EvidenceBadge status={cert.verificationStatus} type="certificate" />
                     </div>
                     <p className="text-slate-400">
-                      Issuer: <strong className="text-slate-300">{cert.issuer}</strong>
+                      Issuer: <strong className="text-slate-200">{cert.issuer}</strong>
                       {cert.credentialId && ` • ID: ${cert.credentialId}`}
                     </p>
                     {cert.credentialUrl && (
@@ -328,7 +376,7 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
                         href={cert.credentialUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-emerald-400 hover:underline inline-flex items-center gap-1"
+                        className="text-cyan-400 hover:text-cyan-300 inline-flex items-center gap-1 font-mono font-bold"
                       >
                         Official Verification Link <ExternalLink className="w-3 h-3" />
                       </a>
@@ -341,7 +389,7 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
 
           {/* GitHub Engineering Signals & 52-Week Contribution Heatmap */}
           <div className="space-y-4">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <h2 className="text-base font-black text-white flex items-center gap-2 font-sans">
               <Github className="w-4 h-4 text-emerald-400" />
               GitHub Engineering Signals & Activity Heatmap
             </h2>
@@ -357,9 +405,9 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
           {/* Algorithmic Problem Solving Profiles (LeetCode, HackerRank, Codeforces) */}
           {candidate.codingProfiles && candidate.codingProfiles.length > 0 && (
             <div className="space-y-4">
-              <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <h2 className="text-base font-black text-white flex items-center gap-2 font-sans">
                 <Code2 className="w-4 h-4 text-amber-400" />
-                Verified Algorithmic Problem Solving Profiles ({candidate.codingProfiles.length})
+                Verified Algorithmic Solving Profiles ({candidate.codingProfiles.length})
               </h2>
 
               <div className="space-y-4">
@@ -374,14 +422,14 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
         {/* Right Column (AI Assistant & Private Notes) */}
         <div className="space-y-6">
           {/* AI Explainable Candidate Matcher */}
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+          <div className="p-5 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <TrendingUp className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Explainable Job Matcher</h3>
-                <p className="text-[11px] text-slate-400">Evaluate fit against open job requirements</p>
+                <h3 className="text-sm font-black text-white font-sans">Explainable Job Matcher</h3>
+                <p className="text-[11px] text-slate-400 font-mono">Evaluate against requirements</p>
               </div>
             </div>
 
@@ -389,7 +437,7 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
               <select
                 value={selectedJobId}
                 onChange={(e) => setSelectedJobId(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
               >
                 {jobs.map((j) => (
                   <option key={j.id} value={j.id}>
@@ -401,26 +449,26 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
               <button
                 onClick={handleMatchJob}
                 disabled={isMatching}
-                className="w-full py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors"
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 disabled:opacity-50 text-slate-950 font-black text-xs transition-transform hover:scale-105 shadow-glow-emerald"
               >
-                {isMatching ? 'Matching...' : 'Compute Match Breakdown'}
+                {isMatching ? 'Computing Match...' : 'Compute Match Breakdown'}
               </button>
 
               {matchResult && (
-                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2.5 text-xs">
+                <div className="p-4 rounded-2xl bg-[#090d16] border border-emerald-500/30 space-y-2.5 text-xs">
                   <div className="flex items-center justify-between">
-                    <span className="font-semibold text-slate-300">Match Score:</span>
-                    <span className="font-mono font-bold text-emerald-400 text-sm">
+                    <span className="font-bold text-slate-300">Match Score:</span>
+                    <span className="font-mono font-black text-emerald-400 text-sm">
                       {matchResult.matchScore}%
                     </span>
                   </div>
                   <p className="text-slate-400 text-[11px] leading-relaxed">{matchResult.summary}</p>
-                  <div className="space-y-1">
-                    <span className="text-[10px] uppercase font-bold text-slate-500 font-mono">
+                  <div className="space-y-1 pt-1 border-t border-white/5">
+                    <span className="text-[10px] uppercase font-bold text-slate-400 font-mono">
                       Evidence Highlights:
                     </span>
                     {matchResult.evidenceHighlights.map((h, i) => (
-                      <p key={i} className="text-slate-300 text-[11px]">
+                      <p key={i} className="text-slate-300 text-[11px] leading-relaxed">
                         • {h}
                       </p>
                     ))}
@@ -431,38 +479,38 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
           </div>
 
           {/* AI Grounded Research Assistant */}
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="p-1.5 rounded-lg bg-cyan-500/10 text-cyan-400">
+          <div className="p-5 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
+            <div className="flex items-center gap-2.5">
+              <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-white">Recruiter Research Assistant</h3>
-                <p className="text-[11px] text-slate-400">Ask questions grounded in verified evidence</p>
+                <h3 className="text-sm font-black text-white font-sans">Recruiter Research Assistant</h3>
+                <p className="text-[11px] text-slate-400 font-mono">Query verified proof artifacts</p>
               </div>
             </div>
 
-            <form onSubmit={handleResearch} className="space-y-2">
+            <form onSubmit={handleResearch} className="space-y-2.5">
               <input
                 type="text"
                 value={researchQuery}
                 onChange={(e) => setResearchQuery(e.target.value)}
                 placeholder="e.g. Has candidate built WebSocket or AWS projects?"
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs focus:outline-none focus:border-cyan-500"
               />
               <button
                 type="submit"
                 disabled={isResearching}
-                className="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-50 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors flex items-center justify-center gap-1.5"
+                className="w-full py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] disabled:opacity-50 text-white text-xs font-mono font-bold border border-white/10 transition-colors flex items-center justify-center gap-1.5"
               >
-                <Send className="w-3 h-3" />
+                <Send className="w-3.5 h-3.5 text-cyan-400" />
                 {isResearching ? 'Searching evidence...' : 'Ask Assistant'}
               </button>
             </form>
 
             {researchResult && (
-              <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-3 text-xs">
-                <div className="flex items-center justify-between text-[11px] font-mono text-cyan-400">
+              <div className="p-4 rounded-2xl bg-[#090d16] border border-cyan-500/30 space-y-2 text-xs">
+                <div className="flex items-center justify-between text-[10px] font-mono text-cyan-400">
                   <span>Confidence: {Math.round(researchResult.confidence * 100)}%</span>
                   <span>{researchResult.citations.length} citation(s)</span>
                 </div>
@@ -474,35 +522,35 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
           </div>
 
           {/* Organization Private Notes */}
-          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+          <div className="p-5 sm:p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
+            <h3 className="text-sm font-black text-white flex items-center gap-2 font-sans">
               <MessageSquare className="w-4 h-4 text-emerald-400" />
               Team Notes (Private to your Org)
             </h3>
 
-            <form onSubmit={handleAddNote} className="space-y-2">
+            <form onSubmit={handleAddNote} className="space-y-2.5">
               <textarea
                 rows={3}
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
                 placeholder="Add private evaluation notes for your hiring team..."
-                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs focus:outline-none focus:border-emerald-500"
               />
               <button
                 type="submit"
                 disabled={isSubmittingNote}
-                className="w-full py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700"
+                className="w-full py-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-mono font-bold border border-white/10 transition-colors"
               >
                 {isSubmittingNote ? 'Saving...' : 'Add Note'}
               </button>
             </form>
 
-            <div className="space-y-2">
+            <div className="space-y-2.5 pt-1">
               {candidate.recruiterNotes?.map((note: any) => (
-                <div key={note.id} className="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1">
-                  <div className="flex items-center justify-between text-[11px] text-slate-400">
-                    <span className="font-semibold text-slate-300">{note.recruiter?.fullName}</span>
-                    <span className="font-mono">{new Date(note.createdAt).toLocaleDateString()}</span>
+                <div key={note.id} className="p-3.5 rounded-2xl bg-white/[0.02] border border-white/5 text-xs space-y-1">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono">
+                    <span className="font-bold text-white">{note.recruiter?.fullName}</span>
+                    <span>{new Date(note.createdAt).toLocaleDateString()}</span>
                   </div>
                   <p className="text-slate-300 text-[11px] leading-relaxed">{note.content}</p>
                 </div>

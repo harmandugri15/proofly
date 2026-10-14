@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { User, GraduationCap, Briefcase, Plus, Trash2, CheckCircle2, Award } from 'lucide-react';
+import { User, GraduationCap, Briefcase, Plus, Trash2, CheckCircle2, Award, Sparkles, MapPin, Calendar, FileText } from 'lucide-react';
 import { SkillCategory, ProficiencyLevel } from '@proofly/shared';
 
 export const StudentProfilePage: React.FC = () => {
@@ -127,180 +127,215 @@ export const StudentProfilePage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-slate-400">Loading profile data...</div>;
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-spin flex items-center justify-center p-1">
+          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" />
+          </div>
+        </div>
+        <p className="text-xs font-mono text-slate-400 tracking-wider">LOADING BUILDER IDENTITY...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">Profile & Skills</h1>
-        <p className="text-sm text-slate-400 mt-1">
-          Maintain your core personal background, verified skills, and academic history.
-        </p>
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
+      {/* Header Banner */}
+      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>BUILDER IDENTITY</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
+            Profile Bio & Technical Competencies
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
+            Curate your professional story, core competencies, and academic background. Recruiters inspect these signals alongside your verified code repositories.
+          </p>
+        </div>
       </div>
 
       {/* Basic Profile Form */}
-      <form onSubmit={handleSaveBasic} className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        <h2 className="text-base font-bold text-white mb-2 flex items-center gap-2">
-          <User className="w-4 h-4 text-emerald-400" />
-          General Overview
-        </h2>
-
-        <div>
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-            Professional Headline
-          </label>
-          <input
-            type="text"
-            value={headline}
-            onChange={(e) => setHeadline(e.target.value)}
-            placeholder="e.g. Full-Stack Engineer | Distributed Systems & React"
-            className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
-          />
+      <form onSubmit={handleSaveBasic} className="p-6 sm:p-7 rounded-3xl glass-panel border border-white/10 space-y-5 shadow-xl">
+        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+          <h2 className="text-base font-black text-white flex items-center gap-2 font-sans">
+            <User className="w-4 h-4 text-emerald-400" />
+            General Overview
+          </h2>
+          <span className="text-[11px] font-mono text-slate-400">Publicly visible on your fast-pass link</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Location
+            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+              Professional Headline
             </label>
             <input
               type="text"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="e.g. Seattle, WA / Remote"
-              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+              value={headline}
+              onChange={(e) => setHeadline(e.target.value)}
+              placeholder="e.g. Distributed Systems Engineer | High-Throughput TypeScript & Rust"
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors"
             />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" /> Location
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="e.g. San Francisco, CA / Remote"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                <Calendar className="w-3.5 h-3.5 text-cyan-400" /> Target Graduation Year
+              </label>
+              <input
+                type="number"
+                value={gradYear}
+                onChange={(e) => setGradYear(e.target.value ? Number(e.target.value) : '')}
+                placeholder="e.g. 2026"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+              />
+            </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-              Target Graduation Year
+            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+              <FileText className="w-3.5 h-3.5 text-slate-400" /> Technical Bio / Summary
             </label>
-            <input
-              type="number"
-              value={gradYear}
-              onChange={(e) => setGradYear(e.target.value ? Number(e.target.value) : '')}
-              placeholder="e.g. 2025"
-              className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+            <textarea
+              rows={4}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="Describe your technical architecture focus, the systems you enjoy constructing, and what excites you about software engineering."
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors leading-relaxed"
             />
           </div>
         </div>
 
-        <div>
-          <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
-            Technical Bio / Summary
-          </label>
-          <textarea
-            rows={4}
-            value={bio}
-            onChange={(e) => setBio(e.target.value)}
-            placeholder="Describe your technical background, the systems you love building, and key areas of interest."
-            className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-emerald-500 transition-colors"
-          />
-        </div>
-
-        <div className="flex items-center justify-between pt-2">
-          {saveSuccess && (
-            <span className="text-xs text-emerald-400 flex items-center gap-1.5">
+        <div className="flex items-center justify-between pt-3 border-t border-white/5">
+          {saveSuccess ? (
+            <span className="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" /> Changes saved successfully!
             </span>
-          )}
-          <div className="ml-auto">
-            <button
-              type="submit"
-              disabled={isSaving}
-              className="px-5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-colors"
-            >
-              {isSaving ? 'Saving...' : 'Save Overview'}
-            </button>
-          </div>
+          ) : <div />}
+          <button
+            type="submit"
+            disabled={isSaving}
+            className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shadow-glow-emerald disabled:opacity-50"
+          >
+            {isSaving ? 'Saving...' : 'Save Overview'}
+          </button>
         </div>
       </form>
 
       {/* Skills Section */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
+      <div className="p-6 sm:p-7 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+          <div className="flex items-center gap-2">
             <Award className="w-4 h-4 text-emerald-400" />
-            Skills & Competencies ({profile?.skills?.length || 0})
-          </h2>
+            <h2 className="text-base font-black text-white font-sans">
+              Skills & Competencies ({profile?.skills?.length || 0})
+            </h2>
+          </div>
           <button
             onClick={() => setShowSkillModal(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-mono font-bold border border-white/10 transition-colors"
           >
-            <Plus className="w-3.5 h-3.5" /> Add Skill
+            <Plus className="w-3.5 h-3.5 text-emerald-400" /> Add Skill
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {profile?.skills?.map((skill: any) => (
-            <div
-              key={skill.id}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs"
-            >
-              <span className="font-semibold text-slate-200">{skill.name}</span>
-              <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                {skill.proficiencyLevel}
-              </span>
-              <button
-                onClick={() => handleDeleteSkill(skill.id)}
-                className="text-slate-500 hover:text-rose-400 ml-1"
+        <div className="flex flex-wrap gap-2.5 pt-1">
+          {profile?.skills?.length === 0 ? (
+            <p className="text-xs text-slate-500 font-mono">No skills added yet. Add languages and frameworks to power recruiter matching.</p>
+          ) : (
+            profile?.skills?.map((skill: any) => (
+              <div
+                key={skill.id}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/[0.03] border border-white/10 text-xs hover:border-emerald-500/30 transition-colors group"
               >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
+                <span className="font-bold text-white">{skill.name}</span>
+                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                  {skill.proficiencyLevel}
+                </span>
+                <button
+                  onClick={() => handleDeleteSkill(skill.id)}
+                  className="text-slate-500 hover:text-rose-400 ml-1 transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
       {/* Education Section */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <GraduationCap className="w-4 h-4 text-emerald-400" />
-            Education ({profile?.educations?.length || 0})
-          </h2>
+      <div className="p-6 sm:p-7 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
+        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 text-cyan-400" />
+            <h2 className="text-base font-black text-white font-sans">
+              Education & Degrees ({profile?.educations?.length || 0})
+            </h2>
+          </div>
           <button
             onClick={() => setShowEduModal(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white text-xs font-mono font-bold border border-white/10 transition-colors"
           >
-            <Plus className="w-3.5 h-3.5" /> Add Education
+            <Plus className="w-3.5 h-3.5 text-cyan-400" /> Add Education
           </button>
         </div>
 
-        <div className="space-y-3">
-          {profile?.educations?.map((edu: any) => (
-            <div
-              key={edu.id}
-              className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between"
-            >
-              <div>
-                <h4 className="text-sm font-bold text-white">{edu.institution}</h4>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  {edu.degree} in {edu.fieldOfStudy}
-                </p>
-                {edu.grade && <p className="text-xs text-emerald-400 mt-1 font-mono">{edu.grade}</p>}
-              </div>
-              <button
-                onClick={() => handleDeleteEducation(edu.id)}
-                className="p-2 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+        <div className="space-y-3 pt-1">
+          {profile?.educations?.length === 0 ? (
+            <p className="text-xs text-slate-500 font-mono">No education history recorded.</p>
+          ) : (
+            profile?.educations?.map((edu: any) => (
+              <div
+                key={edu.id}
+                className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/5 flex items-start justify-between gap-4 hover:border-white/10 transition-colors"
               >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
+                <div className="space-y-1">
+                  <h4 className="text-sm font-bold text-white">{edu.institution}</h4>
+                  <p className="text-xs text-slate-300">
+                    {edu.degree} in {edu.fieldOfStudy}
+                  </p>
+                  {edu.grade && <p className="text-xs text-emerald-400 font-mono">{edu.grade}</p>}
+                </div>
+                <button
+                  onClick={() => handleDeleteEducation(edu.id)}
+                  className="p-2 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
       {/* Add Skill Modal */}
       {showSkillModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl">
-            <h3 className="text-base font-bold text-white mb-4">Add Technical Skill</h3>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="glass-panel border border-white/15 rounded-3xl p-6 sm:p-7 w-full max-w-md shadow-2xl space-y-4">
+            <h3 className="text-base font-black text-white font-sans">Add Technical Skill</h3>
             <form onSubmit={handleAddSkill} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   Skill Name
                 </label>
                 <input
@@ -308,20 +343,20 @@ export const StudentProfilePage: React.FC = () => {
                   required
                   value={skillForm.name}
                   onChange={(e) => setSkillForm({ ...skillForm, name: e.target.value })}
-                  placeholder="e.g. TypeScript, React, PostgreSQL"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  placeholder="e.g. TypeScript, React, Go, Kafka"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 font-mono"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                     Category
                   </label>
                   <select
                     value={skillForm.category}
                     onChange={(e) => setSkillForm({ ...skillForm, category: e.target.value as any })}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
                   >
                     <option value="LANGUAGE">Language</option>
                     <option value="FRAMEWORK">Framework</option>
@@ -332,13 +367,13 @@ export const StudentProfilePage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                     Proficiency
                   </label>
                   <select
                     value={skillForm.proficiencyLevel}
                     onChange={(e) => setSkillForm({ ...skillForm, proficiencyLevel: e.target.value as any })}
-                    className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
                   >
                     <option value="BEGINNER">Beginner</option>
                     <option value="INTERMEDIATE">Intermediate</option>
@@ -348,17 +383,17 @@ export const StudentProfilePage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setShowSkillModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
+                  className="px-4 py-2 rounded-xl bg-white/[0.04] text-slate-300 text-xs font-bold hover:bg-white/[0.08]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-600"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 text-xs font-black shadow-glow-emerald hover:scale-105 transition-transform"
                 >
                   Add Skill
                 </button>
@@ -370,12 +405,12 @@ export const StudentProfilePage: React.FC = () => {
 
       {/* Add Education Modal */}
       {showEduModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl">
-            <h3 className="text-base font-bold text-white mb-4">Add Education Entry</h3>
-            <form onSubmit={handleAddEducation} className="space-y-3">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="glass-panel border border-white/15 rounded-3xl p-6 sm:p-7 w-full max-w-md shadow-2xl space-y-4">
+            <h3 className="text-base font-black text-white font-sans">Add Education Record</h3>
+            <form onSubmit={handleAddEducation} className="space-y-3.5">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   Institution
                 </label>
                 <input
@@ -383,14 +418,14 @@ export const StudentProfilePage: React.FC = () => {
                   required
                   value={eduForm.institution}
                   onChange={(e) => setEduForm({ ...eduForm, institution: e.target.value })}
-                  placeholder="e.g. Stanford University"
-                  className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  placeholder="e.g. UC Berkeley, IIT Delhi, Waterloo"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-cyan-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                     Degree
                   </label>
                   <input
@@ -399,11 +434,11 @@ export const StudentProfilePage: React.FC = () => {
                     value={eduForm.degree}
                     onChange={(e) => setEduForm({ ...eduForm, degree: e.target.value })}
                     placeholder="e.g. B.S."
-                    className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-cyan-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                     Field of Study
                   </label>
                   <input
@@ -412,35 +447,35 @@ export const StudentProfilePage: React.FC = () => {
                     value={eduForm.fieldOfStudy}
                     onChange={(e) => setEduForm({ ...eduForm, fieldOfStudy: e.target.value })}
                     placeholder="e.g. Computer Science"
-                    className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-cyan-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                   GPA / Honors (Optional)
                 </label>
                 <input
                   type="text"
                   value={eduForm.grade}
                   onChange={(e) => setEduForm({ ...eduForm, grade: e.target.value })}
-                  placeholder="e.g. 3.9 GPA"
-                  className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  placeholder="e.g. 3.9 GPA / Dean's List"
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-cyan-500 font-mono"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
                 <button
                   type="button"
                   onClick={() => setShowEduModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
+                  className="px-4 py-2 rounded-xl bg-white/[0.04] text-slate-300 text-xs font-bold hover:bg-white/[0.08]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-600"
+                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 text-xs font-black shadow-glow-cyan hover:scale-105 transition-transform"
                 >
                   Add Education
                 </button>
