@@ -79,6 +79,9 @@ export interface StudentProfileSummary {
   preferredRoles: string[];
   targetGraduationYear?: number | null;
   completenessScore: number;
+  githubUsername?: string | null;
+  githubStats?: GitHubProfileStats | null;
+  shareToken?: string | null;
   user?: UserSummary;
 }
 
@@ -167,6 +170,7 @@ export interface ExternalCodingProfileItem {
   lastSyncedAt?: string | null;
   syncStatus: SyncStatus;
   syncError?: string | null;
+  detailedStats?: CodingProfileDetailedStats | null;
 }
 
 export interface GitHubRepoItem {
@@ -334,3 +338,73 @@ export interface RecruiterResearchResult {
   citations: ResearchCitation[];
   limitations?: string[];
 }
+
+// ============================================================================
+// Extended GitHub & Coding Stats & Heatmap Types
+// ============================================================================
+
+export interface ContributionDay {
+  date: string; // YYYY-MM-DD
+  count: number;
+  level: 0 | 1 | 2 | 3 | 4; // 0: 0 commits, 1: 1-2, 2: 3-5, 3: 6-9, 4: 10+
+}
+
+export interface GitHubProfileStats {
+  username: string;
+  avatarUrl?: string;
+  bio?: string;
+  publicRepos: number;
+  followers: number;
+  following: number;
+  totalStars: number;
+  totalForks: number;
+  totalCommitsLastYear: number;
+  currentStreak: number;
+  longestStreak: number;
+  topLanguages: Array<{ language: string; percentage: number; color?: string }>;
+  contributions: ContributionDay[];
+  lastSyncedAt?: string;
+}
+
+export interface CodingProfileDetailedStats {
+  acceptanceRate?: number | null;
+  streakDays?: number | null;
+  percentileRank?: number | null;
+  easyTotal?: number;
+  mediumTotal?: number;
+  hardTotal?: number;
+  topSkills?: string[];
+  recentSubmissions?: Array<{
+    title: string;
+    difficulty: string;
+    timestamp: string;
+    language: string;
+  }>;
+}
+
+export interface AutoFetchedProjectData {
+  title: string;
+  tagline: string;
+  description: string;
+  repositoryUrl: string;
+  demoUrl?: string;
+  skills: string[];
+  languages: Record<string, number>;
+  primaryLanguage?: string;
+  starsCount: number;
+  forksCount: number;
+  openIssuesCount: number;
+  license?: string;
+  lastCommitDate?: string;
+  readmeExcerpt?: string;
+  isVerified: boolean;
+}
+
+export interface ShareProfileInfo {
+  shareUrl: string;
+  recruiterFastPassUrl: string;
+  username: string;
+  shareToken: string;
+  visibility: ProfileVisibility;
+}
+

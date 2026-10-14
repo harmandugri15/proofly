@@ -107,6 +107,12 @@ export const ProjectSchema = z.object({
 
 export type ProjectInput = z.infer<typeof ProjectSchema>;
 
+export const AutoFetchRepoSchema = z.object({
+  repositoryUrl: z.string().url('Must be a valid repository URL'),
+});
+
+export type AutoFetchRepoInput = z.infer<typeof AutoFetchRepoSchema>;
+
 export const CertificateSchema = z.object({
   title: z.string().min(1, 'Certificate title is required').max(150),
   issuer: z.string().min(1, 'Issuer name is required').max(100),

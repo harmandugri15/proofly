@@ -92,6 +92,9 @@ model StudentProfile {
   preferredRoles       String                  @default("[]")
   targetGraduationYear Int?
   completenessScore    Int                     @default(0)
+  githubUsername       String?
+  githubStats          String?
+  shareToken           String?                 @unique
   createdAt            DateTime                @default(now())
   updatedAt            DateTime                @updatedAt
 
@@ -223,6 +226,7 @@ model ExternalCodingProfile {
   ranking          Int?
   rating           Float?
   badges           String         @default("[]")
+  detailedStats    String?
   lastSyncedAt     DateTime?
   syncStatus       String         @default("SYNCED")
   syncError        String?

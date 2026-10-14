@@ -94,6 +94,9 @@ model StudentProfile {
   preferredRoles       String                  @default("[]") // JSON string array
   targetGraduationYear Int?
   completenessScore    Int                     @default(0)
+  githubUsername       String?
+  githubStats          String?                 // JSON string of GitHubProfileStats (contributions, stars, streak)
+  shareToken           String?                 @unique
   createdAt            DateTime                @default(now())
   updatedAt            DateTime                @updatedAt
 
@@ -225,6 +228,7 @@ model ExternalCodingProfile {
   ranking          Int?
   rating           Float?
   badges           String         @default("[]") // JSON string array
+  detailedStats    String?        // JSON string storing streak, acceptanceRate, topics, percentiles
   lastSyncedAt     DateTime?
   syncStatus       String         @default("SYNCED") // SYNCED, PENDING, FAILED, RATE_LIMITED
   syncError        String?
