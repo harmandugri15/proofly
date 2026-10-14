@@ -189,13 +189,15 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
         {/* Floating Tooltip */}
         {hoveredDay && tooltipPos && (
           <div
-            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-2 px-3 py-1.5 rounded-xl bg-forest-900 border border-sand-400 text-sand-50 text-[11px] shadow-xl font-mono whitespace-nowrap"
+            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-2 px-3 py-1.5 rounded-xl bg-forest-900 border border-sand-400 text-white text-[11px] shadow-xl font-mono whitespace-nowrap"
             style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y - 8}px` }}
           >
-            <span className="font-bold text-sand-200">
+            <span className="font-bold text-sand-100">
               {hoveredDay.count === 0 ? 'No contributions' : `${hoveredDay.count} contribution${hoveredDay.count > 1 ? 's' : ''}`}
             </span>{' '}
-            on {new Date(hoveredDay.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            <span className="text-sand-200">
+              on {new Date(hoveredDay.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+            </span>
           </div>
         )}
       </div>

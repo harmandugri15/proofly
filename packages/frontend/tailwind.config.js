@@ -54,6 +54,7 @@ export default {
           500: '#758C7D', // Subtle text
         },
         sand: {
+          50: '#FAF8F5',
           100: '#F5F1E9',
           200: '#EDE8DF',
           300: '#E0D9CD',

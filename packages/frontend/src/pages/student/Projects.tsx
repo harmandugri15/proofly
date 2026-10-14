@@ -66,12 +66,16 @@ export const StudentProjectsPage: React.FC = () => {
     setCrawlerErrorMsg(null);
 
     try {
-      const res = await api.post<{ project: AutoFetchedProjectData; message: string }>(
+      const rawRes = await api.post<any>(
         '/student/projects/auto-fetch',
         { repositoryUrl: urlToFetch.trim() }
       );
 
-      const p = res.project;
+      const p: AutoFetchedProjectData = rawRes?.project || rawRes;
+      if (!p || typeof p !== 'object' || !p.title) {
+        throw new Error('Could not extract project details. Please ensure the repository is public.');
+      }
+
       setFetchedMeta(p);
       setTitle(p.title || '');
       setTagline(p.tagline || '');
@@ -80,7 +84,7 @@ export const StudentProjectsPage: React.FC = () => {
       if (p.demoUrl) setDemoUrl(p.demoUrl);
       if (p.skills && p.skills.length > 0) setSkillsStr(p.skills.join(', '));
 
-      setCrawlerSuccessMsg(res.message || 'Auto-fetched repository details!');
+      setCrawlerSuccessMsg(rawRes?.message || 'Auto-fetched repository details!');
       setShowModal(true);
     } catch (e: any) {
       console.error(e);

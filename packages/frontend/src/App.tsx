@@ -43,7 +43,7 @@ const ProtectedStudentRoute: React.FC<{ children: React.ReactNode }> = ({ childr
     return <Navigate to="/login" replace />;
   }
   return (
-    <div className="flex w-full max-w-full overflow-x-hidden min-w-0">
+    <div className="flex w-full max-w-full min-w-0 items-start">
       <Sidebar />
       <main className="flex-1 w-full max-w-full min-w-0 pb-24 md:pb-8">{children}</main>
     </div>
@@ -57,7 +57,7 @@ const ProtectedRecruiterRoute: React.FC<{ children: React.ReactNode }> = ({ chil
     return <Navigate to="/login" replace />;
   }
   return (
-    <div className="flex w-full max-w-full overflow-x-hidden min-w-0">
+    <div className="flex w-full max-w-full min-w-0 items-start">
       <Sidebar />
       <main className="flex-1 w-full max-w-full min-w-0 pb-24 md:pb-8">{children}</main>
     </div>

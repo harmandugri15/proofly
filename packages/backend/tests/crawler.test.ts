@@ -34,7 +34,7 @@ describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () =>
     expect(sampleDay).toHaveProperty('count');
     expect(sampleDay).toHaveProperty('level');
     expect([0, 1, 2, 3, 4]).toContain(sampleDay.level);
-  });
+  }, 15000);
 
   it('GitHubService: should auto-fetch project details from GitHub repo URL', async () => {
     const autoFetched = await GitHubService.autoFetchRepository('https://github.com/facebook/react');
@@ -44,7 +44,7 @@ describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () =>
     expect(autoFetched.skills.length).toBeGreaterThan(0);
     expect(autoFetched.starsCount).toBeGreaterThanOrEqual(0);
     expect(autoFetched.isVerified).toBe(true);
-  });
+  }, 15000);
 
   it('API: POST /api/v1/student/projects/auto-fetch should crawl and return project metadata', async () => {
     const res = await request(app)
@@ -59,7 +59,7 @@ describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () =>
     expect(res.body.data.repositoryUrl).toBe('https://github.com/alexchen/syncflow-canvas');
     expect(Array.isArray(res.body.data.skills)).toBe(true);
     expect(res.body.data.isVerified).toBe(true);
-  });
+  }, 15000);
 
   it('API: GET /api/v1/student/share-link should return recruiter fast-pass URL', async () => {
     const res = await request(app)

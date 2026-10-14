@@ -192,10 +192,10 @@ export const StudentIntegrationsPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSyncingGithub}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 disabled:opacity-50 text-sand-50 font-medium text-xs transition-transform hover:scale-105 shrink-0 shadow-sm"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 disabled:opacity-50 text-white font-medium text-xs transition-transform hover:scale-105 shrink-0 shadow-sm"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${isSyncingGithub ? 'animate-spin' : ''}`} />
-                  {isSyncingGithub ? 'Syncing...' : 'Sync GitHub'}
+                  <RefreshCw className={`w-3.5 h-3.5 text-white ${isSyncingGithub ? 'animate-spin' : ''}`} />
+                  <span className="text-white font-medium">{isSyncingGithub ? 'Syncing...' : 'Sync GitHub'}</span>
                 </button>
               </div>
             </div>

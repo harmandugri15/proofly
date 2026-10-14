@@ -275,9 +275,9 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
                   const sel = (document.getElementById('shortlist-select') as HTMLSelectElement)?.value;
                   if (sel) handleAddToShortlist(sel);
                 }}
-                className="px-4 py-1.5 rounded-full bg-forest-900 hover:bg-forest-800 text-sand-50 font-medium text-xs transition-transform hover:scale-105 shrink-0 flex items-center gap-1 shadow-sm"
+                className="px-4 py-1.5 rounded-full bg-forest-900 hover:bg-forest-800 text-white font-medium text-xs transition-transform hover:scale-105 shrink-0 flex items-center gap-1 shadow-sm"
               >
-                <BookmarkCheck className="w-3.5 h-3.5" /> Save
+                <BookmarkCheck className="w-3.5 h-3.5 text-white" /> <span className="text-white">Save</span>
               </button>
             </div>
           </div>
@@ -446,9 +446,9 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
               <button
                 onClick={handleMatchJob}
                 disabled={isMatching}
-                className="w-full py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 disabled:opacity-50 text-sand-50 font-medium text-xs transition-transform hover:scale-105 shadow-sm"
+                className="w-full py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 disabled:opacity-50 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm"
               >
-                {isMatching ? 'Computing Match...' : 'Compute Match Breakdown'}
+                <span className="text-white">{isMatching ? 'Computing Match...' : 'Compute Match Breakdown'}</span>
               </button>
 
               {matchResult && (
