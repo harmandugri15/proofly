@@ -11,9 +11,8 @@ import {
   Users,
   Briefcase,
   BookmarkCheck,
-  Sparkles,
   ExternalLink,
-  Zap,
+  Code2,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -66,11 +65,11 @@ export const Sidebar: React.FC = () => {
   const sections = isStudent ? studentSections : recruiterSections;
 
   return (
-    <aside className="w-64 border-r border-white/10 bg-[#090e1c]/85 backdrop-blur-xl p-4 shrink-0 hidden md:flex flex-col justify-between min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 border-r border-[#EBE5D8] bg-[#FAF7F2] p-4 shrink-0 hidden md:flex flex-col justify-between min-h-[calc(100vh-5rem)]">
       <div className="space-y-6">
         {sections.map((sec, sIdx) => (
           <div key={sIdx} className="space-y-1.5">
-            <h4 className="text-[10px] font-mono font-black uppercase tracking-wider text-slate-400 px-3">
+            <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#758C7D] px-3">
               {sec.title}
             </h4>
             <div className="space-y-1">
@@ -81,12 +80,10 @@ export const Sidebar: React.FC = () => {
                     key={link.to}
                     to={link.to}
                     className={({ isActive }) =>
-                      `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 group ${
+                      `flex items-center justify-between px-3.5 py-2.5 rounded-full text-xs font-semibold transition-all duration-200 group ${
                         isActive
-                          ? isStudent
-                            ? 'bg-gradient-to-r from-[#00f59b]/20 to-[#00f59b]/5 text-[#00f59b] border border-[#00f59b]/30 shadow-[0_0_15px_rgba(0,245,155,0.25)]'
-                            : 'bg-gradient-to-r from-cyan-500/20 to-cyan-500/5 text-cyan-400 border border-cyan-500/30 shadow-glow-cyan'
-                          : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
+                          ? 'bg-[#E4ECE6] text-[#24362A] border border-[#C7D9CD] shadow-2xs'
+                          : 'text-[#586E5F] hover:text-[#1F2C23] hover:bg-[#F4EFE6]'
                       }`
                     }
                   >
@@ -95,7 +92,7 @@ export const Sidebar: React.FC = () => {
                       <span>{link.label}</span>
                     </div>
                     {link.badge && (
-                      <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/[0.08] text-white font-bold">
+                      <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#EBE5D8] text-[#2D3E32] font-bold">
                         {link.badge}
                       </span>
                     )}
@@ -107,26 +104,26 @@ export const Sidebar: React.FC = () => {
         ))}
       </div>
 
-      {/* Bottom Promo / Link Pill */}
+      {/* Bottom Profile Quick Link */}
       {isStudent && user?.studentProfile && (
-        <div className="pt-4 border-t border-white/10">
+        <div className="pt-4 border-t border-[#EBE5D8]">
           <Link
             to={`/u/${user.studentProfile.username}`}
             target="_blank"
-            className="p-3.5 rounded-2xl bg-gradient-to-br from-[#12192e] to-[#182342] border border-white/10 hover:border-[#ff451a]/40 flex items-center justify-between gap-2 group transition-all shadow-lg"
+            className="p-3.5 rounded-2xl bg-[#F4EFE6] border border-[#DDD5C4] hover:border-[#D97043] flex items-center justify-between gap-2 group transition-all shadow-xs"
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#ff451a]/20 text-[#ff7043] flex items-center justify-center border border-[#ff451a]/30">
-                <Zap className="w-4 h-4" />
+              <div className="w-8 h-8 rounded-xl bg-[#FCE5DB] text-[#D97043] flex items-center justify-center border border-[#F4CDBC]">
+                <Code2 className="w-4 h-4" />
               </div>
               <div className="text-left">
-                <p className="text-xs font-bold text-white leading-tight group-hover:text-[#ff7043] transition-colors">
+                <p className="text-xs font-bold text-[#1F2C23] leading-tight group-hover:text-[#D97043] transition-colors">
                   Live Public Card
                 </p>
-                <p className="text-[10px] text-slate-400 font-mono">@{user.studentProfile.username}</p>
+                <p className="text-[10px] text-[#758C7D] font-mono">@{user.studentProfile.username}</p>
               </div>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#ff7043] transition-colors" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#758C7D] group-hover:text-[#D97043] transition-colors" />
           </Link>
         </div>
       )}

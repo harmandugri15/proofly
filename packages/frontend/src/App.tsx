@@ -69,7 +69,7 @@ export const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
-          <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#080c16] text-slate-100 flex flex-col font-sans relative">
+          <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#FAF7F2] text-[#1F2C23] flex flex-col font-sans relative selection:bg-terracotta-500/20 selection:text-terracotta-700">
             <Navbar />
             <div className="flex-1 w-full max-w-full min-w-0">
               <Routes>

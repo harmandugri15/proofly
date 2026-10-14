@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { ShieldCheck, AlertCircle, Eye, EyeOff, User, Briefcase, Mail, Lock } from 'lucide-react';
-import { GoogleIcon, BocSparkle, TactileSticker } from '../../components/common/CreativeArt';
+import { AlertCircle, Eye, EyeOff, User, Briefcase, Mail, Lock } from 'lucide-react';
+import { GoogleIcon, OrganicLeafLogo } from '../../components/common/CreativeArt';
 import { PasswordStrengthMeter } from '../../components/common/PasswordStrengthMeter';
 
 export const Register: React.FC = () => {
@@ -58,35 +58,31 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-3 sm:p-4 relative overflow-hidden w-full max-w-full">
-      {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#ff451a]/10 blur-[120px] pointer-events-none rounded-full" />
-      <div className="absolute top-1/3 right-1/4 w-80 h-80 bg-[#00f59b]/10 blur-[100px] pointer-events-none rounded-full" />
-
-      <div className="w-full max-w-md bg-[#0c1326]/90 border border-white/10 rounded-3xl p-6 sm:p-9 shadow-2xl backdrop-blur-2xl relative min-w-0">
-        <div className="text-center mb-6">
-          <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-[#ff451a] via-[#ffb703] to-[#00f59b] p-0.5 shadow-glow-coral mx-auto flex items-center justify-center mb-4">
-            <div className="w-full h-full bg-[#0c1326] rounded-[14px] flex items-center justify-center text-[#ff451a]">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
+    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-[#FAF7F2] text-[#1F2C23]">
+      <div className="w-full max-w-lg bg-[#FAF7F2] border border-[#EBE5D8] rounded-[36px] p-7 sm:p-9 shadow-sm relative space-y-6">
+        
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <div className="flex justify-center pb-1">
+            <OrganicLeafLogo size={46} />
           </div>
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <TactileSticker color="lime" text="JOIN THE NETWORK" />
-            <BocSparkle size={14} />
-          </div>
-          <h1 className="text-2xl font-black text-white tracking-tight font-sans">Create Your Handle</h1>
-          <p className="text-xs text-slate-400 mt-1">Proof-verified technical identities for builders & scouts</p>
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1F2C23]">
+            Create Your Proofly Account
+          </h2>
+          <p className="text-xs sm:text-sm text-[#586E5F]">
+            Join the verified platform for real student builder evidence.
+          </p>
         </div>
 
-        {/* Role Selection Tabs */}
-        <div className="grid grid-cols-2 gap-2 p-1.5 bg-[#101934] rounded-2xl border border-white/10 mb-5">
+        {/* Role Selector Pill */}
+        <div className="grid grid-cols-2 p-1.5 bg-[#F4EFE6] border border-[#DDD5C4] rounded-full">
           <button
             type="button"
             onClick={() => setRole('STUDENT')}
-            className={`py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-semibold transition-all ${
               role === 'STUDENT'
-                ? 'bg-gradient-to-r from-[#00f59b] to-emerald-400 text-slate-950 font-black shadow-glow-lime'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#385241] text-white shadow-xs'
+                : 'text-[#405446] hover:text-[#1F2C23]'
             }`}
           >
             <User className="w-3.5 h-3.5" />
@@ -95,152 +91,145 @@ export const Register: React.FC = () => {
           <button
             type="button"
             onClick={() => setRole('RECRUITER')}
-            className={`py-2 px-3 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-semibold transition-all ${
               role === 'RECRUITER'
-                ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-black shadow-glow-cyan'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-[#385241] text-white shadow-xs'
+                : 'text-[#405446] hover:text-[#1F2C23]'
             }`}
           >
             <Briefcase className="w-3.5 h-3.5" />
-            <span>Talent Scout</span>
+            <span>Recruiter / Founder</span>
           </button>
         </div>
 
+        {/* Google Signup Button */}
+        <div>
+          <button
+            type="button"
+            onClick={handleGoogleSignup}
+            className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-full bg-white hover:bg-[#F8F5EE] border border-[#DDD5C4] text-[#1F2C23] font-semibold text-xs sm:text-sm transition-all shadow-xs"
+          >
+            <GoogleIcon size={18} />
+            <span>Sign Up with Google ({role === 'STUDENT' ? 'Student' : 'Recruiter'})</span>
+          </button>
+        </div>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3">
+          <div className="flex-1 h-[1px] bg-[#EBE5D8]" />
+          <span className="text-[11px] font-mono text-[#758C7D] uppercase">or with email</span>
+          <div className="flex-1 h-[1px] bg-[#EBE5D8]" />
+        </div>
+
+        {/* Error Alert */}
         {error && (
-          <div className="mb-5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-            <span className="break-words">{error}</span>
+          <div className="p-3.5 rounded-2xl bg-[#FCE5DB] border border-[#F4CDBC] text-[#853C1E] text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#C55F34]" />
+            <span className="font-medium">{error}</span>
           </div>
         )}
 
-        {/* 1. Google OAuth 2.0 Sign Up Button */}
-        <button
-          type="button"
-          onClick={handleGoogleSignup}
-          className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition-transform hover:scale-[1.01] shadow-md border border-slate-200"
-        >
-          <GoogleIcon size={18} />
-          <span>Sign up with Google as {role === 'STUDENT' ? 'Builder' : 'Scout'}</span>
-        </button>
-
-        {/* Divider */}
-        <div className="relative my-5">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-white/10" />
-          </div>
-          <div className="relative flex justify-center text-[10px] uppercase font-mono">
-            <span className="bg-[#0c1326] px-3 text-slate-500 font-bold">Or register with email</span>
-          </div>
-        </div>
-
-        {/* Standard Email & Password Registration Form */}
+        {/* Registration Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-              Full Legal Name
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-[#2D3E32]">
+              Full Name
             </label>
             <input
               type="text"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
-              placeholder="e.g. Alex Chen"
-              className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#00f59b] transition-colors"
+              placeholder={role === 'STUDENT' ? 'Maya Lin' : 'Alex Mercer'}
+              className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
             />
           </div>
 
-          <div>
-            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-slate-400" />
-              <span>Email Address</span>
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-[#2D3E32]">
+              Email Address
             </label>
             <input
               type="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="you@university.edu"
-              className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#00f59b] transition-colors font-mono"
+              placeholder={role === 'STUDENT' ? 'maya@stanford.edu' : 'alex@company.com'}
+              className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
             />
           </div>
 
-          <div>
-            <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-              <Lock className="w-3.5 h-3.5 text-slate-400" />
-              <span>Strong Password</span>
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="••••••••••••"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#00f59b] transition-colors font-mono pr-10"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-
-            <PasswordStrengthMeter password={password} />
-          </div>
-
           {role === 'RECRUITER' && (
-            <>
-              <div>
-                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Organization / Company Name
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-[#2D3E32]">
+                  Organization Name
                 </label>
                 <input
                   type="text"
+                  required
                   value={orgName}
                   onChange={(e) => setOrgName(e.target.value)}
-                  required
-                  placeholder="e.g. Stripe, Vanguard Tech"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="Acme Ventures"
+                  className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F]"
                 />
               </div>
-
-              <div>
-                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+              <div className="space-y-1.5">
+                <label className="block text-xs font-semibold text-[#2D3E32]">
                   Your Job Title
                 </label>
                 <input
                   type="text"
+                  required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  required
-                  placeholder="e.g. Lead Technical Recruiter"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-400 transition-colors"
+                  placeholder="Lead Tech Talent Partner"
+                  className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F]"
                 />
               </div>
-            </>
+            </div>
           )}
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-[#2D3E32]">
+              Strong Password
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Must include uppercase, number, symbol"
+                className="w-full pl-4 pr-11 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-[#758C7D] hover:text-[#24362A]"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+            <PasswordStrengthMeter password={password} />
+          </div>
 
           <button
             type="submit"
-            disabled={isSubmitting || !isPasswordValid}
-            className={`w-full py-3 rounded-xl font-black text-xs uppercase tracking-wider transition-all mt-2 ${
-              role === 'STUDENT'
-                ? 'bg-gradient-to-r from-[#ff451a] to-[#ff7b00] text-white shadow-glow-coral hover:opacity-90 disabled:opacity-50'
-                : 'bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 shadow-glow-cyan hover:opacity-90 disabled:opacity-50'
-            }`}
+            disabled={isSubmitting || (password.length > 0 && !isPasswordValid)}
+            className="w-full py-3.5 px-4 rounded-full bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-60 text-white font-semibold text-xs sm:text-sm transition-all shadow-sm"
           >
-            {isSubmitting ? 'Creating profile...' : 'Launch Verified Profile'}
+            {isSubmitting ? 'Creating Account...' : 'Get Verified Now'}
           </button>
         </form>
 
-        <p className="text-xs text-slate-400 text-center mt-6">
+        {/* Footer */}
+        <div className="text-center text-xs text-[#586E5F]">
           Already have an account?{' '}
-          <Link to="/login" className="text-[#00f59b] hover:text-emerald-300 font-bold ml-1">
-            Sign in
+          <Link to="/login" className="text-[#D97043] font-bold hover:underline">
+            Sign In
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

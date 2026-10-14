@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { Lock, Eye, EyeOff, CheckCircle2, AlertCircle, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2, AlertCircle, ArrowLeft, Mail, Lock, Key } from 'lucide-react';
 import { PasswordStrengthMeter } from '../../components/common/PasswordStrengthMeter';
-import { BocSparkle, TactileSticker } from '../../components/common/CreativeArt';
+import { OrganicLeafLogo } from '../../components/common/CreativeArt';
 
 export const ResetPassword: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -59,176 +59,166 @@ export const ResetPassword: React.FC = () => {
     try {
       const token = searchParams.get('token') || undefined;
       await resetPassword({
-        email: email.trim(),
+        email,
         otp: otp.trim(),
-        token,
         newPassword,
+        token,
       });
       setIsSuccess(true);
     } catch (err: any) {
-      setError(err?.message || 'Password reset failed. Code may have expired.');
+      setError(err?.message || 'Password reset failed. The code may be expired.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-3 sm:p-4 relative overflow-hidden w-full max-w-full">
-      {/* Ambient background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#00f59b]/10 blur-[120px] pointer-events-none rounded-full" />
-
-      <div className="w-full max-w-md bg-[#0c1326]/90 border border-white/10 rounded-3xl p-6 sm:p-9 shadow-2xl backdrop-blur-2xl relative min-w-0">
-        <div className="text-center mb-6">
-          <div className="w-13 h-13 rounded-2xl bg-gradient-to-tr from-[#ff451a] via-[#ffb703] to-[#00f59b] p-0.5 shadow-glow-coral mx-auto flex items-center justify-center mb-4">
-            <div className="w-full h-full bg-[#0c1326] rounded-[14px] flex items-center justify-center text-[#00f59b]">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
+    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-[#FAF7F2] text-[#1F2C23]">
+      <div className="w-full max-w-md bg-[#FAF7F2] border border-[#EBE5D8] rounded-[36px] p-7 sm:p-9 shadow-sm relative space-y-6">
+        
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <div className="flex justify-center pb-1">
+            <OrganicLeafLogo size={46} />
           </div>
-          <div className="flex items-center justify-center gap-1.5 mb-1">
-            <TactileSticker color="lime" text="VERIFICATION & RESET" />
-            <BocSparkle size={14} />
-          </div>
-          <h1 className="text-2xl font-black text-white tracking-tight font-sans">Set New Password</h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Verify your 6-digit code and create a production-grade password.
+          <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1F2C23]">
+            Set New Password
+          </h2>
+          <p className="text-xs sm:text-sm text-[#586E5F]">
+            Enter your 6-digit verification code and new password.
           </p>
         </div>
 
         {error && (
-          <div className="mb-5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-            <span>{error}</span>
+          <div className="p-3.5 rounded-2xl bg-[#FCE5DB] border border-[#F4CDBC] text-[#853C1E] text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#C55F34]" />
+            <span className="font-medium">{error}</span>
           </div>
         )}
 
         {isSuccess ? (
-          <div className="text-center space-y-5 animate-fadeIn py-4">
-            <div className="w-16 h-16 rounded-full bg-[#00f59b]/20 text-[#00f59b] mx-auto flex items-center justify-center border-2 border-[#00f59b]/50 shadow-glow-lime">
-              <CheckCircle2 className="w-8 h-8" />
-            </div>
-
-            <div className="space-y-1.5">
-              <h2 className="text-lg font-black text-white font-sans">Password Successfully Reset!</h2>
-              <p className="text-xs text-slate-300 leading-relaxed max-w-sm mx-auto">
-                Your credentials have been securely updated and all previous sessions revoked. You can now log in with your new password.
+          <div className="space-y-4">
+            <div className="p-4 rounded-2xl bg-[#E4ECE6] border border-[#C7D9CD] text-[#24362A] text-xs space-y-2">
+              <div className="flex items-center gap-2 font-bold text-[#385241]">
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Password Successfully Updated!</span>
+              </div>
+              <p className="text-[#405446]">
+                Your account is secured with your new password. All prior sessions have been revoked.
               </p>
             </div>
 
             <button
+              type="button"
               onClick={() => navigate('/login')}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00f59b] to-emerald-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-105 shadow-glow-lime"
+              className="w-full py-3.5 px-4 rounded-full bg-[#D97043] hover:bg-[#C55F34] text-white font-semibold text-xs sm:text-sm transition-all shadow-sm"
             >
-              Sign In to Workspace
+              Sign In with New Password
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-[#2D3E32]">
                 Email Address
               </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="you@example.com"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-cyan-400 transition-colors font-mono"
-              />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider">
-                  6-Digit Verification Code (OTP)
-                </label>
-                <Link
-                  to="/forgot-password"
-                  className="text-[11px] font-mono text-[#ff451a] hover:underline"
-                >
-                  Resend Code
-                </Link>
+              <div className="relative">
+                <Mail className="w-4 h-4 text-[#758C7D] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="builder@university.edu"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
+                />
               </div>
-              <input
-                type="text"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                maxLength={6}
-                required
-                placeholder="123456"
-                className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-base font-black tracking-widest text-center focus:outline-none focus:border-[#ff451a] transition-colors font-mono select-all"
-              />
             </div>
 
-            <div>
-              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-[#2D3E32]">
+                6-Digit Verification Code
+              </label>
+              <div className="relative">
+                <Key className="w-4 h-4 text-[#758C7D] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  type="text"
+                  maxLength={6}
+                  required
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
+                  placeholder="123456"
+                  className="w-full pl-11 pr-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-sm font-mono tracking-widest text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-[#2D3E32]">
                 New Strong Password
               </label>
               <div className="relative">
+                <Lock className="w-4 h-4 text-[#758C7D] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  required
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  required
                   placeholder="••••••••••••"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#00f59b] transition-colors font-mono pr-10"
+                  className="w-full pl-11 pr-11 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#758C7D] hover:text-[#24362A]"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-
               <PasswordStrengthMeter password={newPassword} />
             </div>
 
-            <div>
-              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                Confirm New Password
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-[#2D3E32]">
+                Confirm Password
               </label>
               <div className="relative">
+                <Lock className="w-4 h-4 text-[#758C7D] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
+                  required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
                   placeholder="••••••••••••"
-                  className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#00f59b] transition-colors font-mono pr-10"
+                  className="w-full pl-11 pr-11 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
                 />
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#758C7D] hover:text-[#24362A]"
                 >
                   {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
-
-              {confirmPassword && newPassword !== confirmPassword && (
-                <p className="text-[11px] text-rose-400 font-mono mt-1">Passwords do not match</p>
-              )}
             </div>
 
             <button
               type="submit"
-              disabled={isSubmitting || !isPasswordValid || newPassword !== confirmPassword}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-[#ff451a] to-[#ff7b00] hover:opacity-90 disabled:opacity-50 text-white font-black text-xs uppercase tracking-wider transition-all shadow-glow-coral mt-2"
+              disabled={isSubmitting}
+              className="w-full py-3.5 px-4 rounded-full bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-60 text-white font-semibold text-xs sm:text-sm transition-all shadow-sm"
             >
-              {isSubmitting ? 'Verifying & Updating...' : 'Set New Password'}
+              {isSubmitting ? 'Updating Password...' : 'Save New Password'}
             </button>
           </form>
         )}
 
-        <div className="text-center mt-6 pt-5 border-t border-white/10">
+        <div className="text-center pt-2">
           <Link
             to="/login"
-            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-slate-400 hover:text-white transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#586E5F] hover:text-[#1F2C23] font-medium"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Return to Sign In</span>
+            <span>Back to Sign In</span>
           </Link>
         </div>
       </div>
