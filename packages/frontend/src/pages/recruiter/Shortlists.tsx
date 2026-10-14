@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api';
 import { BookmarkCheck, Plus, Trash2, ArrowRight, User, Sparkles } from 'lucide-react';
+import { DelicateStarOrnament } from '../../components/common/CreativeArt';
 
 export const RecruiterShortlistsPage: React.FC = () => {
   const [shortlists, setShortlists] = useState<any[]>([]);
@@ -50,12 +51,10 @@ export const RecruiterShortlistsPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-spin flex items-center justify-center p-1">
-          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" />
-          </div>
+        <div className="w-12 h-12 rounded-full border-2 border-sage-500 border-t-terracotta-500 animate-spin flex items-center justify-center p-1">
+          <Sparkles className="w-5 h-5 text-terracotta-500" />
         </div>
-        <p className="text-xs font-mono text-slate-400 tracking-wider">RETRIEVING SAVED TALENT POOLS...</p>
+        <p className="text-xs font-mono text-forest-700/60 tracking-wider">RETRIEVING SAVED TALENT POOLS...</p>
       </div>
     );
   }
@@ -63,25 +62,23 @@ export const RecruiterShortlistsPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
       {/* Header Banner */}
-      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
-
+      <div className="relative rounded-3xl bg-[#7D9B86] text-white p-6 sm:p-8 overflow-hidden shadow-lg border border-sage-700/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
-            <BookmarkCheck className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/25 text-xs font-mono font-bold">
+            <BookmarkCheck className="w-3.5 h-3.5 text-terracotta-300" />
             <span>TALENT POOLS</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
+          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-white">
             Saved Candidate Shortlists
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-white/80 max-w-xl leading-relaxed">
             Curate candidates into tailored pipelines, team review pools, and interview funnels.
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="relative z-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shadow-glow-emerald shrink-0"
+          className="relative z-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm shrink-0"
         >
           <Plus className="w-4 h-4" /> Create Shortlist
         </button>
@@ -89,52 +86,52 @@ export const RecruiterShortlistsPage: React.FC = () => {
 
       <div className="space-y-6">
         {shortlists.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl glass-panel border border-white/10 text-slate-400 font-mono text-xs">
+          <div className="p-12 text-center rounded-3xl bg-white/80 border border-sand-200 text-forest-700/60 font-mono text-xs">
             No shortlists created yet. Organize candidate profiles by role or team.
           </div>
         ) : (
           shortlists.map((sl) => (
-            <div key={sl.id} className="p-6 rounded-3xl glass-panel border border-white/10 space-y-4 shadow-xl">
-              <div className="flex items-start justify-between pb-3 border-b border-white/5">
+            <div key={sl.id} className="p-6 rounded-3xl bg-white/95 border border-sand-200/80 space-y-4 shadow-sm hover:shadow-md transition-all">
+              <div className="flex items-start justify-between pb-3 border-b border-sand-200">
                 <div>
-                  <h3 className="text-base sm:text-lg font-black text-white font-sans">{sl.title}</h3>
-                  {sl.description && <p className="text-xs text-slate-400 mt-0.5">{sl.description}</p>}
+                  <h3 className="text-base sm:text-lg font-serif font-normal text-forest-900">{sl.title}</h3>
+                  {sl.description && <p className="text-xs text-forest-700/70 mt-0.5">{sl.description}</p>}
                 </div>
-                <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-sage-50 text-sage-800 border border-sage-200">
                   {sl.candidates?.length || 0} candidate(s)
                 </span>
               </div>
 
               {sl.candidates?.length === 0 ? (
-                <p className="text-xs text-slate-500 font-mono py-2">No candidates added to this list yet.</p>
+                <p className="text-xs text-forest-700/50 font-mono py-2">No candidates added to this list yet.</p>
               ) : (
-                <div className="divide-y divide-white/5">
+                <div className="divide-y divide-sand-100">
                   {sl.candidates?.map((c: any) => (
                     <div key={c.id} className="py-3.5 flex items-center justify-between gap-4 text-xs group">
                       <div className="flex items-center gap-3">
-                        <div className="story-ring p-0.5 rounded-full shrink-0">
-                          <div className="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center text-xs font-black text-emerald-400">
+                        <div className="p-0.5 rounded-full bg-sand-200 shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-forest-900 flex items-center justify-center text-xs font-bold text-sand-100">
                             {c.name ? c.name[0] : 'C'}
                           </div>
                         </div>
                         <div>
                           <Link
                             to={`/recruiter/candidates/${c.candidateId}`}
-                            className="font-bold text-white hover:text-emerald-300 transition-colors text-sm font-sans"
+                            className="font-medium text-forest-900 hover:text-terracotta-600 transition-colors text-sm"
                           >
                             {c.name}
                           </Link>
-                          <p className="text-slate-400 text-xs mt-0.5 line-clamp-1">{c.headline}</p>
+                          <p className="text-forest-700/60 text-xs mt-0.5 line-clamp-1">{c.headline}</p>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-lg bg-white/[0.04] text-slate-300 border border-white/5">
+                        <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-sand-100 text-forest-800 border border-sand-200">
                           {c.status}
                         </span>
                         <button
                           onClick={() => handleRemoveCandidate(sl.id, c.candidateId)}
-                          className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                          className="p-1.5 rounded-full text-forest-700/40 hover:text-terracotta-600 hover:bg-terracotta-50 transition-colors"
                           title="Remove from shortlist"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -151,12 +148,12 @@ export const RecruiterShortlistsPage: React.FC = () => {
 
       {/* Create Shortlist Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="glass-panel border border-white/15 rounded-3xl p-6 sm:p-7 w-full max-w-md shadow-2xl space-y-4">
-            <h3 className="text-base font-black text-white font-sans">Create New Talent Pool</h3>
+        <div className="fixed inset-0 bg-forest-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#FAF7F2] border border-sand-300 rounded-3xl p-6 sm:p-7 w-full max-w-md shadow-2xl space-y-4">
+            <h3 className="text-base font-serif font-normal text-forest-900">Create New Talent Pool</h3>
             <form onSubmit={handleCreate} className="space-y-3.5">
               <div>
-                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
                   Pool Title
                 </label>
                 <input
@@ -165,12 +162,12 @@ export const RecruiterShortlistsPage: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. 2026 Core Infrastructure Interns"
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
                   Description (Optional)
                 </label>
                 <textarea
@@ -178,21 +175,21 @@ export const RecruiterShortlistsPage: React.FC = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Targeting candidates with strong systems and networking background..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 font-mono leading-relaxed"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500 font-mono leading-relaxed"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-white/10">
+              <div className="flex justify-end gap-2 pt-3 border-t border-sand-200">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-xl bg-white/[0.04] text-slate-300 text-xs font-bold hover:bg-white/[0.08]"
+                  className="px-4 py-2 rounded-full bg-sand-200 text-forest-800 text-xs font-mono font-medium hover:bg-sand-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 text-xs font-black shadow-glow-emerald hover:scale-105 transition-transform"
+                  className="px-5 py-2 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs font-medium shadow-sm transition-transform hover:scale-105"
                 >
                   Create Pool
                 </button>

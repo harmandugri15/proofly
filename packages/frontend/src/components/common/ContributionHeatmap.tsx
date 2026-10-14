@@ -12,11 +12,11 @@ interface ContributionHeatmapProps {
 }
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: 'bg-[#151c30] border-[#1e2a4a]',
-  1: 'bg-[#064e3b] border-[#047857]',
-  2: 'bg-[#059669] border-[#10b981]',
-  3: 'bg-[#10b981] border-[#34d399]',
-  4: 'bg-[#00f59b] border-[#00f59b] shadow-[0_0_8px_rgba(0,245,155,0.6)]',
+  0: 'bg-[#EAE4DC] border-[#DFD8CE]',
+  1: 'bg-[#C6D8CB] border-[#B2C9B8]',
+  2: 'bg-[#96B79F] border-[#7D9B86]',
+  3: 'bg-[#5B8267] border-[#486D53]',
+  4: 'bg-[#24422D] border-[#1B3423] shadow-sm',
 };
 
 export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
@@ -82,54 +82,54 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
   const newMonthIndices = new Set(monthLabels.map((m) => m.index));
 
   return (
-    <div className={`w-full max-w-full min-w-0 overflow-hidden p-4 sm:p-6 rounded-3xl bg-[#0c1222]/90 border border-white/10 space-y-4 shadow-xl ${className}`}>
+    <div className={`w-full max-w-full min-w-0 overflow-hidden p-5 sm:p-6 rounded-3xl bg-sand-50/70 border border-sand-200/80 space-y-4 ${className}`}>
       {/* Header with Stats */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-emerald-500/15 text-[#00f59b] border border-emerald-500/20 shadow-glow-emerald">
+          <div className="p-2 rounded-xl bg-sage-100 text-sage-800 border border-sage-200">
             <GitCommit className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-black uppercase tracking-wider text-white font-sans flex items-center gap-1.5">
+            <h3 className="text-xs font-serif font-normal uppercase tracking-wider text-forest-900 flex items-center gap-1.5">
               <span>GitHub Contribution Heatmap</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#00f59b] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-sage-600 animate-pulse" />
             </h3>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-forest-700/60 font-mono">
               {username ? `@${username}'s` : 'Candidate'} verified commit and pull-request activity
             </p>
           </div>
         </div>
 
-        {/* Streak Metrics Pills (grid on mobile, flex on desktop) */}
+        {/* Streak Metrics Pills */}
         <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 text-xs">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#131b32] border border-white/5 text-slate-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-sand-200 text-forest-800 shadow-2xs">
             <div className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-[#00f59b]" />
-              <span className="text-[10px] text-slate-400">Year:</span>
+              <Calendar className="w-3.5 h-3.5 text-sage-600" />
+              <span className="text-[10px] text-forest-700/50">Year:</span>
             </div>
-            <strong className="text-white font-mono text-xs">{totalCommitsLastYear.toLocaleString()}</strong>
+            <strong className="text-forest-900 font-mono text-xs">{totalCommitsLastYear.toLocaleString()}</strong>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#131b32] border border-white/5 text-slate-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-sand-200 text-forest-800 shadow-2xs">
             <div className="flex items-center gap-1">
-              <Flame className="w-3.5 h-3.5 text-[#ff451a]" />
-              <span className="text-[10px] text-slate-400">Streak:</span>
+              <Flame className="w-3.5 h-3.5 text-terracotta-600" />
+              <span className="text-[10px] text-forest-700/50">Streak:</span>
             </div>
-            <strong className="text-[#ff7043] font-mono text-xs">{currentStreak}d</strong>
+            <strong className="text-terracotta-600 font-mono text-xs">{currentStreak}d</strong>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#131b32] border border-white/5 text-slate-300">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-sand-200 text-forest-800 shadow-2xs">
             <div className="flex items-center gap-1">
-              <Trophy className="w-3.5 h-3.5 text-[#00e5ff]" />
-              <span className="text-[10px] text-slate-400">Best:</span>
+              <Trophy className="w-3.5 h-3.5 text-amber-500" />
+              <span className="text-[10px] text-forest-700/50">Best:</span>
             </div>
-            <strong className="text-[#00e5ff] font-mono text-xs">{longestStreak}d</strong>
+            <strong className="text-forest-900 font-mono text-xs">{longestStreak}d</strong>
           </div>
         </div>
       </div>
 
       {/* Mobile scroll hint */}
-      <div className="flex items-center justify-between text-[10px] font-mono text-cyan-400 sm:hidden">
+      <div className="flex items-center justify-between text-[10px] font-mono text-sage-700 sm:hidden">
         <span>↔ Scroll horizontally to explore full year</span>
       </div>
 
@@ -140,7 +140,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
           {monthLabels.map((m, i) => (
             <span
               key={i}
-              className="absolute text-[10px] text-slate-400 font-mono whitespace-nowrap"
+              className="absolute text-[10px] text-forest-700/60 font-mono whitespace-nowrap"
               style={{ left: `${m.index * 14}px` }}
             >
               {m.label}
@@ -151,7 +151,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
         {/* Grid: Day-of-week labels + exact week columns */}
         <div className="flex gap-2 min-w-[760px]">
           {/* Day of week labels */}
-          <div className="w-6 flex flex-col justify-between text-[9px] text-slate-500 font-mono py-0.5 h-[98px]">
+          <div className="w-6 flex flex-col justify-between text-[9px] text-forest-700/50 font-mono py-0.5 h-[98px]">
             <span>Mon</span>
             <span>Wed</span>
             <span>Fri</span>
@@ -164,7 +164,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
               return (
                 <div
                   key={wIdx}
-                  className={`flex flex-col gap-[3px] ${isMonthStart ? 'border-l border-slate-700/60 pl-[2px] ml-[1px]' : ''}`}
+                  className={`flex flex-col gap-[3px] ${isMonthStart ? 'border-l border-sand-300/80 pl-[2px] ml-[1px]' : ''}`}
                 >
                   {week.map((day, dIdx) => (
                     <div
@@ -189,10 +189,10 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
         {/* Floating Tooltip */}
         {hoveredDay && tooltipPos && (
           <div
-            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-2 px-3 py-1.5 rounded-xl bg-[#0e1628] border border-cyan-500/40 text-white text-[11px] shadow-2xl font-mono whitespace-nowrap"
+            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-2 px-3 py-1.5 rounded-xl bg-forest-900 border border-sand-400 text-sand-50 text-[11px] shadow-xl font-mono whitespace-nowrap"
             style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y - 8}px` }}
           >
-            <span className="font-bold text-[#00f59b]">
+            <span className="font-bold text-sand-200">
               {hoveredDay.count === 0 ? 'No contributions' : `${hoveredDay.count} contribution${hoveredDay.count > 1 ? 's' : ''}`}
             </span>{' '}
             on {new Date(hoveredDay.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -201,18 +201,18 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 font-mono pt-2 border-t border-white/5 gap-2">
-        <span className="text-[10px] text-slate-500">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-forest-700/60 font-mono pt-2 border-t border-sand-200/80 gap-2">
+        <span className="text-[10px] text-forest-700/50">
           Continuous 52-week telemetry directly from verified GitHub events
         </span>
         <div className="flex items-center gap-1.5 self-end sm:self-auto">
-          <span className="text-[10px] text-slate-500">Less</span>
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#151c30] border border-[#1e2a4a]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#064e3b] border border-[#047857]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#059669] border border-[#10b981]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#10b981] border border-[#34d399]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#00f59b] border border-[#00f59b]" />
-          <span className="text-[10px] text-slate-500">More</span>
+          <span className="text-[10px] text-forest-700/50">Less</span>
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#EAE4DC] border border-[#DFD8CE]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#C6D8CB] border border-[#B2C9B8]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#96B79F] border border-[#7D9B86]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#5B8267] border border-[#486D53]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#24422D] border border-[#1B3423]" />
+          <span className="text-[10px] text-forest-700/50">More</span>
         </div>
       </div>
     </div>

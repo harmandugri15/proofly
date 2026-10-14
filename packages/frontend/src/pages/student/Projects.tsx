@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 import { AutoFetchedProjectData } from '@proofly/shared';
+import { DelicateStarOrnament } from '../../components/common/CreativeArt';
 
 export const StudentProjectsPage: React.FC = () => {
   const [projects, setProjects] = useState<any[]>([]);
@@ -58,37 +59,32 @@ export const StudentProjectsPage: React.FC = () => {
     }
   };
 
-  const handleAutoFetch = async (repoUrlToFetch: string) => {
-    if (!repoUrlToFetch || !repoUrlToFetch.trim()) {
-      setCrawlerErrorMsg('Please enter a valid GitHub repository URL.');
-      return;
-    }
-
+  const handleAutoFetch = async (urlToFetch: string) => {
+    if (!urlToFetch || !urlToFetch.trim()) return;
     setIsAutoFetching(true);
     setCrawlerSuccessMsg(null);
     setCrawlerErrorMsg(null);
-    setSubmitError(null);
 
     try {
-      const fetched = await api.post<AutoFetchedProjectData>('/student/projects/auto-fetch', {
-        repositoryUrl: repoUrlToFetch.trim(),
-      });
-
-      setFetchedMeta(fetched);
-      setTitle(fetched.title);
-      setTagline(fetched.tagline);
-      setDescription(fetched.description);
-      setRepositoryUrl(fetched.repositoryUrl);
-      setDemoUrl(fetched.demoUrl || '');
-      setSkillsStr(fetched.skills.join(', '));
-      setModalRepoUrl(fetched.repositoryUrl);
-
-      setCrawlerSuccessMsg(
-        `Auto-fetched "${fetched.title}"! Crawled repo metadata, README, ${fetched.starsCount} stars, and ${fetched.skills.length} technology tags.`
+      const res = await api.post<{ project: AutoFetchedProjectData; message: string }>(
+        '/student/projects/auto-fetch',
+        { repositoryUrl: urlToFetch.trim() }
       );
+
+      const p = res.project;
+      setFetchedMeta(p);
+      setTitle(p.title || '');
+      setTagline(p.tagline || '');
+      setDescription(p.description || '');
+      setRepositoryUrl(p.repositoryUrl || urlToFetch.trim());
+      if (p.demoUrl) setDemoUrl(p.demoUrl);
+      if (p.skills && p.skills.length > 0) setSkillsStr(p.skills.join(', '));
+
+      setCrawlerSuccessMsg(res.message || 'Auto-fetched repository details!');
       setShowModal(true);
     } catch (e: any) {
-      setCrawlerErrorMsg(e?.message || 'Failed to crawl repository. Please check URL or enter manually.');
+      console.error(e);
+      setCrawlerErrorMsg(e?.message || 'Failed to auto-fetch repository. Ensure the URL is public.');
     } finally {
       setIsAutoFetching(false);
     }
@@ -98,6 +94,7 @@ export const StudentProjectsPage: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitError(null);
+
     try {
       const skills = skillsStr
         .split(',')
@@ -105,18 +102,18 @@ export const StudentProjectsPage: React.FC = () => {
         .filter(Boolean);
 
       await api.post('/student/projects', {
-        title: title.trim().slice(0, 120),
-        tagline: tagline.trim().slice(0, 480),
-        description: description.trim(),
-        repositoryUrl: repositoryUrl.trim() || null,
-        demoUrl: demoUrl.trim() || null,
+        title,
+        tagline,
+        description,
+        repositoryUrl: repositoryUrl || null,
+        demoUrl: demoUrl || null,
         skills,
-        isFeatured: true,
+        verifiedCommitCount: (fetchedMeta as any)?.commitCount || null,
       });
 
       setShowModal(false);
       resetForm();
-      await loadProjects();
+      loadProjects();
     } catch (e: any) {
       console.error(e);
       setSubmitError(e?.message || 'Failed to save project. Please check fields.');
@@ -162,52 +159,61 @@ export const StudentProjectsPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div className="p-8 text-center text-slate-400">Loading projects...</div>;
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 rounded-full border-2 border-sage-500 border-t-terracotta-500 animate-spin flex items-center justify-center p-1">
+          <Sparkles className="w-5 h-5 text-terracotta-500" />
+        </div>
+        <p className="text-xs font-mono text-forest-700/60 tracking-wider">RETRIEVING VERIFIED PROJECTS...</p>
+      </div>
+    );
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 overflow-hidden">
-      {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full max-w-full">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#00f59b] px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/25">
-              Verified Work
+    <div className="w-full max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 overflow-hidden animate-fadeIn">
+      {/* Top Header Banner */}
+      <div className="relative rounded-3xl bg-[#7D9B86] text-white p-6 sm:p-8 overflow-hidden shadow-lg border border-sage-700/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="relative z-10 space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono font-bold uppercase px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/25">
+              VERIFIED ARTIFACTS
             </span>
+            <DelicateStarOrnament className="w-4 h-4 text-terracotta-300" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">Projects & Evidence</h1>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1">
+          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-white">
+            Projects & Technical Evidence
+          </h1>
+          <p className="text-xs sm:text-sm text-white/80 max-w-xl leading-relaxed">
             Showcase your best engineering work backed by verifiable repositories, live deployments, and automated code inspection.
           </p>
         </div>
+
         <button
           onClick={() => {
             resetForm();
             setShowModal(true);
           }}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] text-white font-bold text-xs border border-white/10 transition-all hover:scale-105 shrink-0 self-start sm:self-auto"
+          className="relative z-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm shrink-0 self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 text-[#00f59b]" />
+          <Plus className="w-4 h-4" />
           <span>Add Project Manually</span>
         </button>
       </div>
 
       {/* 1-Click Crawler Banner */}
-      <div className="p-6 rounded-3xl bg-[#0c1326]/95 border border-white/10 shadow-2xl space-y-3.5 relative overflow-hidden w-full max-w-full">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#ff451a]/15 via-[#00f59b]/15 to-transparent blur-3xl pointer-events-none rounded-full" />
-
+      <div className="p-6 rounded-3xl bg-white/95 border border-sand-200/80 shadow-sm space-y-3.5 relative overflow-hidden w-full max-w-full">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-2xl bg-gradient-to-tr from-[#ff451a]/20 to-[#00f59b]/20 border border-white/10 text-[#00f59b] shrink-0">
-            <Zap className="w-4 h-4 text-[#00f59b]" />
+          <div className="p-2.5 rounded-2xl bg-sage-100 text-sage-800 border border-sage-200 shrink-0">
+            <Zap className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-sm font-bold text-white font-sans flex items-center gap-2">
+            <h2 className="text-sm font-serif font-normal text-forest-900 flex items-center gap-2">
               <span>1-Click GitHub Repository Crawler</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/15 text-[#00e5ff] border border-cyan-500/25 font-bold">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sage-50 text-sage-800 border border-sage-200 font-bold">
                 Auto-Telemetry
               </span>
             </h2>
-            <p className="text-xs text-slate-300">
+            <p className="text-xs text-forest-700/75">
               Paste your repository link below. Proofly's crawler automatically extracts title, architecture summary from README, languages, stars, and live demo link.
             </p>
           </div>
@@ -215,7 +221,7 @@ export const StudentProjectsPage: React.FC = () => {
 
         <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
           <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-forest-700/50">
               <Github className="w-4 h-4" />
             </div>
             <input
@@ -223,14 +229,14 @@ export const StudentProjectsPage: React.FC = () => {
               value={quickRepoUrl}
               onChange={(e) => setQuickRepoUrl(e.target.value)}
               placeholder="https://github.com/username/repository"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#090f1e] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#00f59b] font-mono transition-colors"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-sand-50/70 border border-sand-300 text-forest-900 placeholder:text-forest-700/40 text-xs focus:outline-none focus:border-sage-500 font-mono transition-colors"
             />
           </div>
 
           <button
             onClick={() => handleAutoFetch(quickRepoUrl)}
             disabled={isAutoFetching || !quickRepoUrl.trim()}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-[#ff451a] via-[#ff5c26] to-[#ff8a00] hover:opacity-95 disabled:opacity-50 text-white font-black text-xs uppercase tracking-wider transition-all shrink-0 shadow-[0_0_20px_rgba(255,69,26,0.35)] hover:scale-105"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 disabled:opacity-50 text-white font-medium text-xs transition-all shrink-0 shadow-sm hover:scale-105"
           >
             {isAutoFetching ? (
               <>
@@ -245,7 +251,7 @@ export const StudentProjectsPage: React.FC = () => {
         </div>
 
         {crawlerErrorMsg && (
-          <p className="text-xs text-rose-400 flex items-center gap-1.5 pt-1 font-mono">
+          <p className="text-xs text-terracotta-600 flex items-center gap-1.5 pt-1 font-mono">
             <AlertCircle className="w-3.5 h-3.5" /> {crawlerErrorMsg}
           </p>
         )}
@@ -253,10 +259,10 @@ export const StudentProjectsPage: React.FC = () => {
 
       {/* Projects Grid */}
       {projects.length === 0 ? (
-        <div className="p-16 text-center rounded-3xl bg-[#0c0f18]/80 border border-white/10 space-y-3">
-          <FolderGit2 className="w-12 h-12 text-slate-600 mx-auto" />
-          <h3 className="text-base font-bold text-white font-sans">No projects added yet</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+        <div className="p-16 text-center rounded-3xl bg-white/80 border border-sand-200 text-forest-700/60 space-y-3">
+          <FolderGit2 className="w-12 h-12 text-forest-700/40 mx-auto" />
+          <h3 className="text-base font-serif font-normal text-forest-900">No projects added yet</h3>
+          <p className="text-xs text-forest-700/70 max-w-sm mx-auto leading-relaxed">
             Projects with repository links or live demos provide essential proof of work for recruiters. Paste a GitHub link above to get started instantly.
           </p>
         </div>
@@ -265,24 +271,24 @@ export const StudentProjectsPage: React.FC = () => {
           {projects.map((project) => (
             <div
               key={project.id}
-              className="p-6 rounded-3xl bg-[#0c0f18]/90 border border-white/10 flex flex-col justify-between space-y-4 hover:border-white/20 transition-all duration-300 shadow-2xl group"
+              className="p-6 rounded-3xl bg-white/95 border border-sand-200/80 flex flex-col justify-between space-y-4 hover:border-sage-400/60 transition-all shadow-sm hover:shadow-md group"
             >
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-base font-black text-white leading-snug group-hover:text-emerald-300 transition-colors">
+                  <h3 className="text-base font-serif font-normal text-forest-900 leading-snug group-hover:text-terracotta-600 transition-colors">
                     {project.title}
                   </h3>
                   <EvidenceBadge status={project.verificationStatus} type="project" />
                 </div>
 
-                <p className="text-xs text-slate-300 font-semibold">{project.tagline}</p>
-                <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">{project.description}</p>
+                <p className="text-xs text-forest-800 font-medium">{project.tagline}</p>
+                <p className="text-xs text-forest-700/70 leading-relaxed line-clamp-3">{project.description}</p>
 
                 <div className="flex flex-wrap gap-1.5 pt-2">
                   {project.skills?.map((s: string) => (
                     <span
                       key={s}
-                      className="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-black/40 text-slate-300 border border-white/5"
+                      className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-sand-100 text-forest-800 border border-sand-200"
                     >
                       #{s}
                     </span>
@@ -290,16 +296,16 @@ export const StudentProjectsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-white/5 flex items-center justify-between text-xs">
+              <div className="pt-4 border-t border-sand-100 flex items-center justify-between text-xs">
                 <div className="flex items-center gap-3">
                   {project.repositoryUrl && (
                     <a
                       href={project.repositoryUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-slate-400 hover:text-white flex items-center gap-1.5 transition-colors font-mono font-semibold"
+                      className="text-forest-700/75 hover:text-forest-900 flex items-center gap-1.5 transition-colors font-mono font-medium"
                     >
-                      <Github className="w-3.5 h-3.5" /> Source Code
+                      <Github className="w-3.5 h-3.5 text-forest-700/50" /> Source Code
                     </a>
                   )}
                   {project.demoUrl && (
@@ -307,7 +313,7 @@ export const StudentProjectsPage: React.FC = () => {
                       href={project.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition-colors font-mono font-bold"
+                      className="text-terracotta-600 hover:text-terracotta-700 flex items-center gap-1.5 transition-colors font-mono font-bold"
                     >
                       <ExternalLink className="w-3.5 h-3.5" /> Live Demo
                     </a>
@@ -318,13 +324,13 @@ export const StudentProjectsPage: React.FC = () => {
                   <button
                     onClick={() => handleVerifyProject(project.id)}
                     disabled={verifyingId === project.id}
-                    className="px-3 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-slate-300 text-[11px] font-mono font-bold border border-white/10 transition-colors"
+                    className="px-3.5 py-1.5 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-900 text-[11px] font-mono font-medium border border-sand-200 transition-colors"
                   >
                     {verifyingId === project.id ? 'Checking...' : 'Re-verify'}
                   </button>
                   <button
                     onClick={() => handleDeleteProject(project.id)}
-                    className="p-1.5 rounded-xl text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors"
+                    className="p-1.5 rounded-full text-forest-700/40 hover:text-terracotta-600 hover:bg-terracotta-50 transition-colors"
                     title="Delete project"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -338,11 +344,11 @@ export const StudentProjectsPage: React.FC = () => {
 
       {/* Add Project Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#0c1326] border border-white/15 rounded-3xl p-6 sm:p-7 w-full max-w-xl shadow-2xl max-h-[92vh] overflow-y-auto space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <h3 className="text-base font-black text-white flex items-center gap-2">
-                <FolderGit2 className="w-5 h-5 text-[#00f59b]" />
+        <div className="fixed inset-0 bg-forest-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#FAF7F2] border border-sand-300 rounded-3xl p-6 sm:p-7 w-full max-w-xl shadow-2xl max-h-[92vh] overflow-y-auto space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-sand-200">
+              <h3 className="text-base font-serif font-normal text-forest-900 flex items-center gap-2">
+                <FolderGit2 className="w-5 h-5 text-sage-600" />
                 Add Project & Evidence
               </h3>
               <button
@@ -351,15 +357,15 @@ export const StudentProjectsPage: React.FC = () => {
                   setShowModal(false);
                   resetForm();
                 }}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center text-xs transition-colors"
+                className="w-8 h-8 rounded-full bg-sand-200 hover:bg-sand-300 text-forest-800 flex items-center justify-center text-xs transition-colors"
               >
                 ✕
               </button>
             </div>
 
             {/* In-Modal Crawler Input */}
-            <div className="p-4 rounded-2xl bg-[#090f1e] border border-white/10 space-y-2">
-              <label className="block text-[11px] font-mono font-bold text-slate-300 uppercase tracking-wider">
+            <div className="p-4 rounded-2xl bg-white border border-sand-200 space-y-2">
+              <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider">
                 ⚡ Auto-Fetch from GitHub URL
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -368,13 +374,13 @@ export const StudentProjectsPage: React.FC = () => {
                   value={modalRepoUrl}
                   onChange={(e) => setModalRepoUrl(e.target.value)}
                   placeholder="https://github.com/..."
-                  className="flex-1 px-3.5 py-2 rounded-xl bg-[#0e1628] border border-white/10 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-[#00f59b] font-mono"
+                  className="flex-1 px-3.5 py-2 rounded-xl bg-sand-50 border border-sand-300 text-forest-900 placeholder:text-forest-700/40 text-xs focus:outline-none focus:border-sage-500 font-mono"
                 />
                 <button
                   type="button"
                   onClick={() => handleAutoFetch(modalRepoUrl)}
                   disabled={isAutoFetching || !modalRepoUrl.trim()}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#ff451a] to-[#ff7700] hover:opacity-90 disabled:opacity-50 text-white font-black text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 shadow-md"
+                  className="px-4 py-2 rounded-full bg-terracotta-500 hover:bg-terracotta-600 disabled:opacity-50 text-white font-medium text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 shadow-sm"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isAutoFetching ? 'animate-spin' : ''}`} />
                   {isAutoFetching ? 'Crawling...' : 'Auto-Fetch'}
@@ -382,14 +388,14 @@ export const StudentProjectsPage: React.FC = () => {
               </div>
 
               {crawlerSuccessMsg && (
-                <p className="text-xs text-[#00f59b] flex items-center gap-1.5 pt-1">
+                <p className="text-xs text-sage-700 flex items-center gap-1.5 pt-1">
                   <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                   {crawlerSuccessMsg}
                 </p>
               )}
 
               {crawlerErrorMsg && (
-                <p className="text-xs text-rose-400 flex items-center gap-1.5 pt-1">
+                <p className="text-xs text-terracotta-600 flex items-center gap-1.5 pt-1">
                   <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                   {crawlerErrorMsg}
                 </p>
@@ -398,12 +404,12 @@ export const StudentProjectsPage: React.FC = () => {
 
             {/* Fetched Highlights Badge */}
             {fetchedMeta && (
-              <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 text-xs text-[#00f59b] font-mono">
+              <div className="flex flex-wrap items-center gap-3 p-3 rounded-xl bg-sage-50 border border-sage-200 text-xs text-sage-800 font-mono">
                 <span className="flex items-center gap-1">
-                  <Star className="w-3.5 h-3.5 text-amber-300" /> {fetchedMeta.starsCount} stars
+                  <Star className="w-3.5 h-3.5 text-amber-500" /> {fetchedMeta.starsCount} stars
                 </span>
                 <span className="flex items-center gap-1">
-                  <GitFork className="w-3.5 h-3.5 text-slate-300" /> {fetchedMeta.forksCount} forks
+                  <GitFork className="w-3.5 h-3.5 text-forest-700/60" /> {fetchedMeta.forksCount} forks
                 </span>
                 {fetchedMeta.primaryLanguage && (
                   <span>Primary: <strong>{fetchedMeta.primaryLanguage}</strong></span>
@@ -414,7 +420,7 @@ export const StudentProjectsPage: React.FC = () => {
 
             <form onSubmit={handleCreateProject} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-forest-800 uppercase tracking-wider mb-1">
                   Project Title
                 </label>
                 <input
@@ -423,16 +429,16 @@ export const StudentProjectsPage: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. SyncFlow — Real-Time Canvas"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#090f1e] border border-white/10 text-white text-sm focus:outline-none focus:border-[#00f59b]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-sm focus:outline-none focus:border-sage-500"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
+                  <label className="block text-xs font-bold text-forest-800 uppercase tracking-wider">
                     Tagline / High-Level Pitch
                   </label>
-                  <span className="text-[10px] font-mono text-slate-400">max 240 chars</span>
+                  <span className="text-[10px] font-mono text-forest-700/50">max 240 chars</span>
                 </div>
                 <input
                   type="text"
@@ -441,12 +447,12 @@ export const StudentProjectsPage: React.FC = () => {
                   value={tagline}
                   onChange={(e) => setTagline(e.target.value)}
                   placeholder="e.g. Infinite collaborative canvas with CRDT-based multi-user synchronization."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#090f1e] border border-white/10 text-white text-sm focus:outline-none focus:border-[#00f59b]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-sm focus:outline-none focus:border-sage-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-forest-800 uppercase tracking-wider mb-1">
                   Detailed Technical Description & Architecture
                 </label>
                 <textarea
@@ -455,13 +461,13 @@ export const StudentProjectsPage: React.FC = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Explain the problem solved, architectural trade-offs, technologies used, and measurable results."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#090f1e] border border-white/10 text-white text-xs leading-relaxed focus:outline-none focus:border-[#00f59b] font-sans"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs leading-relaxed focus:outline-none focus:border-sage-500 font-sans"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-forest-800 uppercase tracking-wider mb-1">
                     Repository URL (GitHub)
                   </label>
                   <input
@@ -469,11 +475,11 @@ export const StudentProjectsPage: React.FC = () => {
                     value={repositoryUrl}
                     onChange={(e) => setRepositoryUrl(e.target.value)}
                     placeholder="https://github.com/..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#090f1e] border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#00f59b]"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs font-mono focus:outline-none focus:border-sage-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-forest-800 uppercase tracking-wider mb-1">
                     Live Demo URL (Optional)
                   </label>
                   <input
@@ -481,13 +487,13 @@ export const StudentProjectsPage: React.FC = () => {
                     value={demoUrl}
                     onChange={(e) => setDemoUrl(e.target.value)}
                     placeholder="https://demo.app"
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-[#090f1e] border border-white/10 text-white text-xs font-mono focus:outline-none focus:border-[#00f59b]"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs font-mono focus:outline-none focus:border-sage-500"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-forest-800 uppercase tracking-wider mb-1">
                   Skills & Technologies (Comma-separated)
                 </label>
                 <input
@@ -495,32 +501,32 @@ export const StudentProjectsPage: React.FC = () => {
                   value={skillsStr}
                   onChange={(e) => setSkillsStr(e.target.value)}
                   placeholder="e.g. TypeScript, React, Node.js, WebSockets, PostgreSQL"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#090f1e] border border-white/10 text-white text-xs focus:outline-none focus:border-[#00f59b]"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs focus:outline-none focus:border-sage-500"
                 />
               </div>
 
               {submitError && (
-                <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-xs text-rose-300 flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-terracotta-50 border border-terracotta-200 text-xs text-terracotta-700 flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{submitError}</span>
                 </div>
               )}
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-white/10">
+              <div className="flex justify-end gap-2 pt-2 border-t border-sand-200">
                 <button
                   type="button"
                   onClick={() => {
                     setShowModal(false);
                     resetForm();
                   }}
-                  className="px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] text-slate-300 text-xs font-bold transition-colors"
+                  className="px-4 py-2 rounded-full bg-sand-200 hover:bg-sand-300 text-forest-800 text-xs font-mono font-medium transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#ff451a] via-[#ff5c26] to-[#ff8a00] text-white text-xs font-black hover:opacity-95 disabled:opacity-50 flex items-center gap-1.5 shadow-[0_0_15px_rgba(255,69,26,0.35)]"
+                  className="px-5 py-2 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs font-medium disabled:opacity-50 flex items-center gap-1.5 shadow-sm transition-transform hover:scale-105"
                 >
                   {isSubmitting ? 'Saving & Verifying...' : 'Save Project & Verify'}
                 </button>
