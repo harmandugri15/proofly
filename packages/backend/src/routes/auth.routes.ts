@@ -152,11 +152,7 @@ authRouter.get('/google', (req, res, next) => {
     // If GOOGLE_CALLBACK_URL is explicitly set and not localhost on a production host, use it.
     // Otherwise construct the callback using the active domain.
     let callbackUrl = env.GOOGLE_CALLBACK_URL;
-    if (
-      (!callbackUrl || callbackUrl.includes('localhost')) &&
-      host &&
-      !host.includes('localhost')
-    ) {
+    if (host && (!callbackUrl || !callbackUrl.includes(host))) {
       callbackUrl = `${proto}://${host}${env.API_PREFIX}/auth/google/callback`;
     }
 
