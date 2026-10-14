@@ -66,11 +66,11 @@ export const Sidebar: React.FC = () => {
   const sections = isStudent ? studentSections : recruiterSections;
 
   return (
-    <aside className="w-64 border-r border-white/[0.07] bg-[#090b14]/70 backdrop-blur-xl p-4 shrink-0 hidden md:flex flex-col justify-between min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 border-r border-white/10 bg-[#090e1c]/85 backdrop-blur-xl p-4 shrink-0 hidden md:flex flex-col justify-between min-h-[calc(100vh-4rem)]">
       <div className="space-y-6">
         {sections.map((sec, sIdx) => (
           <div key={sIdx} className="space-y-1.5">
-            <h4 className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 px-3">
+            <h4 className="text-[10px] font-mono font-black uppercase tracking-wider text-slate-400 px-3">
               {sec.title}
             </h4>
             <div className="space-y-1">
@@ -81,12 +81,12 @@ export const Sidebar: React.FC = () => {
                     key={link.to}
                     to={link.to}
                     className={({ isActive }) =>
-                      `flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 group ${
+                      `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 group ${
                         isActive
                           ? isStudent
-                            ? 'bg-gradient-to-r from-emerald-500/15 to-emerald-500/5 text-emerald-400 border border-emerald-500/25 shadow-glow-emerald'
-                            : 'bg-gradient-to-r from-cyan-500/15 to-cyan-500/5 text-cyan-400 border border-cyan-500/25 shadow-glow-cyan'
-                          : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                            ? 'bg-gradient-to-r from-[#00f59b]/20 to-[#00f59b]/5 text-[#00f59b] border border-[#00f59b]/30 shadow-[0_0_15px_rgba(0,245,155,0.25)]'
+                            : 'bg-gradient-to-r from-cyan-500/20 to-cyan-500/5 text-cyan-400 border border-cyan-500/30 shadow-glow-cyan'
+                          : 'text-slate-400 hover:text-white hover:bg-white/[0.05]'
                       }`
                     }
                   >
@@ -95,7 +95,7 @@ export const Sidebar: React.FC = () => {
                       <span>{link.label}</span>
                     </div>
                     {link.badge && (
-                      <span className="text-[9px] font-mono px-1.5 py-0.5 rounded-full bg-white/[0.06] text-slate-400 font-bold">
+                      <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/[0.08] text-white font-bold">
                         {link.badge}
                       </span>
                     )}
@@ -109,24 +109,24 @@ export const Sidebar: React.FC = () => {
 
       {/* Bottom Promo / Link Pill */}
       {isStudent && user?.studentProfile && (
-        <div className="pt-4 border-t border-white/[0.06]">
+        <div className="pt-4 border-t border-white/10">
           <Link
             to={`/u/${user.studentProfile.username}`}
             target="_blank"
-            className="p-3 rounded-xl bg-gradient-to-br from-slate-900 to-[#121624] border border-white/10 hover:border-emerald-500/30 flex items-center justify-between gap-2 group transition-all"
+            className="p-3.5 rounded-2xl bg-gradient-to-br from-[#12192e] to-[#182342] border border-white/10 hover:border-[#ff451a]/40 flex items-center justify-between gap-2 group transition-all shadow-lg"
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-                <Zap className="w-3.5 h-3.5" />
+              <div className="w-8 h-8 rounded-xl bg-[#ff451a]/20 text-[#ff7043] flex items-center justify-center border border-[#ff451a]/30">
+                <Zap className="w-4 h-4" />
               </div>
               <div className="text-left">
-                <p className="text-[11px] font-bold text-white leading-tight group-hover:text-emerald-400 transition-colors">
+                <p className="text-xs font-bold text-white leading-tight group-hover:text-[#ff7043] transition-colors">
                   Live Public Card
                 </p>
                 <p className="text-[10px] text-slate-400 font-mono">@{user.studentProfile.username}</p>
               </div>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+            <ExternalLink className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#ff7043] transition-colors" />
           </Link>
         </div>
       )}

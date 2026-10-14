@@ -27,6 +27,7 @@ import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
 import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
 import { CodingProfileCard } from '../../components/common/CodingProfileCard';
+import { BocSparkle, TactileSticker, CyberCrosshair } from '../../components/common/CreativeArt';
 
 export const PublicProfilePage: React.FC = () => {
   const { username } = useParams<{ username: string }>();
@@ -108,86 +109,87 @@ export const PublicProfilePage: React.FC = () => {
     })) || [];
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
+    <div className="w-full max-w-6xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden">
       {/* Top Fast-Pass Recruiter Banner (if active) */}
       {searchParams.get('pass') && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-cyan-500/15 via-teal-500/10 to-emerald-500/15 border border-cyan-500/30 backdrop-blur-md flex flex-wrap items-center justify-between gap-4 shadow-lg shadow-cyan-950/40">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-cyan-400/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300">
-              <Key className="w-4 h-4" />
+        <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-[#0c1830] via-[#0e223d] to-[#0c1830] border-2 border-cyan-400/50 backdrop-blur-md flex flex-wrap items-center justify-between gap-4 shadow-xl shadow-cyan-950/40">
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-cyan-400/20 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0">
+              <Key className="w-5 h-5" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-xs font-black tracking-wide text-cyan-300 uppercase font-mono">
                   Recruiter Fast-Pass Active
                 </span>
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
               </div>
-              <p className="text-xs text-slate-300 font-medium">
+              <p className="text-xs text-slate-300 font-medium truncate sm:whitespace-normal">
                 You have instant, verified access to candidate repositories, test proofs, and direct signals.
               </p>
             </div>
           </div>
           <button
             onClick={() => handleCopy('fastpass', fastPassUrl)}
-            className="px-3.5 py-1.5 rounded-xl bg-cyan-400/20 hover:bg-cyan-400/30 text-cyan-200 border border-cyan-400/40 text-xs font-bold font-mono transition-colors flex items-center gap-1.5"
+            className="px-4 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 border border-cyan-300 text-xs font-black font-mono transition-transform hover:scale-105 flex items-center gap-1.5 shadow-md shrink-0"
           >
-            {copiedType === 'fastpass' ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copiedType === 'fastpass' ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
             {copiedType === 'fastpass' ? 'Copied' : 'Copy Pass URL'}
           </button>
         </div>
       )}
 
-      {/* Instagram/Reddit-Inspired Builder Header */}
-      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl">
+      {/* Instagram/Reddit-Inspired Builder Header (Boc Studio Dossier) */}
+      <div className="relative rounded-3xl bg-[#0c1326]/90 border border-white/10 p-5 sm:p-8 overflow-hidden shadow-2xl backdrop-blur-xl">
+        <CyberCrosshair className="absolute top-3 left-3 pointer-events-none opacity-40" />
+        <CyberCrosshair className="absolute bottom-3 right-3 pointer-events-none opacity-40" />
+
         {/* Ambient Top Glow */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-transparent blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#ff451a]/15 via-[#00f59b]/10 to-transparent blur-3xl pointer-events-none -mr-20 -mt-20" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 min-w-0">
             {/* Story-Ring Profile Avatar */}
             <div className="relative group shrink-0">
-              <div className="story-ring p-1 rounded-full cursor-pointer hover:scale-105 transition-transform duration-300 shadow-glow-emerald">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0e1422] border-2 border-slate-900 flex items-center justify-center text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-tr from-emerald-400 via-teal-300 to-cyan-400 overflow-hidden">
+              <div className="story-ring p-1 rounded-full cursor-pointer hover:scale-105 transition-transform duration-300 shadow-glow-coral">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#0e1832] border-2 border-slate-900 flex items-center justify-center text-2xl sm:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-tr from-[#ff451a] via-[#ffb703] to-[#00f59b] overflow-hidden">
                   {profile.user?.name ? (
                     profile.user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
                   ) : (
-                    <Sparkles className="w-8 h-8 text-emerald-400" />
+                    <Sparkles className="w-8 h-8 text-[#ff451a]" />
                   )}
                 </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 bg-emerald-500 text-slate-950 p-1.5 rounded-full border-2 border-slate-950 shadow-md" title="Verified Proofly Builder">
+              <div className="absolute -bottom-1 -right-1 bg-[#00f59b] text-slate-950 p-1.5 rounded-full border-2 border-slate-950 shadow-md" title="Verified Proofly Builder">
                 <ShieldCheck className="w-3.5 h-3.5 font-black stroke-[3]" />
               </div>
             </div>
 
             {/* Candidate Identity */}
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
-                  {profile.user?.name}
+            <div className="space-y-2.5 min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans flex items-center gap-2 break-words">
+                  <span>{profile.user?.name}</span>
+                  <BocSparkle size={20} className="hidden sm:inline-block" />
                 </h1>
-                <span className="text-xs font-mono font-bold text-slate-400 bg-white/[0.04] px-2.5 py-1 rounded-lg border border-white/10">
+                <span className="text-xs font-mono font-bold text-slate-400 bg-white/[0.06] px-2.5 py-1 rounded-lg border border-white/10">
                   @{username}
                 </span>
-                <span className="text-xs font-mono font-black text-emerald-300 bg-emerald-500/15 px-3 py-1 rounded-full border border-emerald-500/30 flex items-center gap-1.5 shadow-sm">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  {profile.completenessScore || 92}% PROOF SCORE
-                </span>
+                <TactileSticker color="lime" text={`${profile.completenessScore || 92}% PROOF SCORE`} />
               </div>
 
-              <p className="text-sm font-semibold text-slate-200 max-w-2xl leading-relaxed">
+              <p className="text-sm font-semibold text-slate-200 max-w-2xl leading-relaxed break-words">
                 {profile.headline || 'Software Engineer & Builder'}
               </p>
 
               {profile.bio && (
-                <p className="text-xs text-slate-400 max-w-2xl leading-relaxed whitespace-pre-line line-clamp-3">
+                <p className="text-xs text-slate-400 max-w-2xl leading-relaxed whitespace-pre-line line-clamp-3 break-words">
                   {profile.bio}
                 </p>
               )}
 
               {/* Badges / Links bar */}
-              <div className="flex flex-wrap items-center gap-2.5 pt-2 text-xs text-slate-300 font-mono">
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-slate-300 font-mono">
                 {profile.location && (
                   <span className="inline-flex items-center gap-1 bg-white/[0.04] px-2.5 py-1 rounded-lg border border-white/5">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" /> {profile.location}
@@ -206,7 +208,7 @@ export const PublicProfilePage: React.FC = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] text-white border border-white/10 transition-colors"
                   >
-                    <Github className="w-3.5 h-3.5 text-emerald-400" />
+                    <Github className="w-3.5 h-3.5 text-[#00f59b]" />
                     <span>github/{profile.githubUsername}</span>
                     <ArrowUpRight className="w-3 h-3 text-slate-400" />
                   </a>
@@ -217,12 +219,12 @@ export const PublicProfilePage: React.FC = () => {
                     href={profile.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#0077b5]/15 hover:bg-[#0077b5]/25 text-[#38bdf8] border border-[#0077b5]/30 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#0077b5]/20 hover:bg-[#0077b5]/30 text-[#38bdf8] border border-[#0077b5]/40 transition-colors"
                   >
                     <Linkedin className="w-3.5 h-3.5 text-[#0a66c2]" />
                     <span>LinkedIn</span>
                     {profile.linkedinVerified && (
-                      <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                      <CheckCircle2 className="w-3 h-3 text-[#00f59b]" />
                     )}
                   </a>
                 )}
@@ -234,7 +236,7 @@ export const PublicProfilePage: React.FC = () => {
           <div className="flex items-center gap-2 self-start shrink-0">
             <button
               onClick={() => setShowShareModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 text-xs font-black transition-transform hover:scale-105 shadow-glow-emerald"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#ff451a] to-[#ff7b00] text-white text-xs font-black transition-transform hover:scale-105 shadow-glow-coral"
             >
               <Share2 className="w-4 h-4" />
               <span>Share Proof Pass</span>
@@ -244,35 +246,35 @@ export const PublicProfilePage: React.FC = () => {
 
         {/* Quick Social Proof Stats Bar */}
         <div className="mt-6 pt-5 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-            <div className="text-lg font-black text-white font-sans">
+          <div className="p-3.5 rounded-2xl bg-[#101934] border border-white/10 text-center hover:border-white/20 transition-colors">
+            <div className="text-xl font-black text-white font-sans">
               {profile.projects?.length || 0}
             </div>
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">
               Verified Projects
             </div>
           </div>
-          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-            <div className="text-lg font-black text-emerald-400 font-sans">
+          <div className="p-3.5 rounded-2xl bg-[#101934] border border-white/10 text-center hover:border-[#00f59b]/30 transition-colors">
+            <div className="text-xl font-black text-[#00f59b] font-sans">
               {profile.gitHubRepos?.length || (profile.githubStats?.totalStars ? `${profile.githubStats.totalStars}★` : 'Active')}
             </div>
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">
               Public Repositories
             </div>
           </div>
-          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-            <div className="text-lg font-black text-cyan-400 font-sans">
+          <div className="p-3.5 rounded-2xl bg-[#101934] border border-white/10 text-center hover:border-cyan-400/30 transition-colors">
+            <div className="text-xl font-black text-cyan-400 font-sans">
               {profile.codingProfiles?.reduce((acc: number, cp: any) => acc + (cp.solvedCount || 0), 0) || 0}
             </div>
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">
               Problems Solved
             </div>
           </div>
-          <div className="p-3 rounded-2xl bg-white/[0.02] border border-white/5 text-center">
-            <div className="text-lg font-black text-violet-400 font-sans">
+          <div className="p-3.5 rounded-2xl bg-[#101934] border border-white/10 text-center hover:border-[#ff451a]/30 transition-colors">
+            <div className="text-xl font-black text-[#ff451a] font-sans">
               {profile.certificates?.length || 0}
             </div>
-            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider">
+            <div className="text-[10px] font-mono text-slate-400 uppercase tracking-wider font-bold">
               Credentials
             </div>
           </div>
@@ -281,16 +283,16 @@ export const PublicProfilePage: React.FC = () => {
 
       {/* Share Modal with Recruiter Fast-Pass Link */}
       {showShareModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="glass-panel border border-white/15 rounded-3xl p-6 sm:p-7 w-full max-w-lg shadow-2xl space-y-5">
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
+          <div className="bg-[#0c1326] border border-white/20 rounded-3xl p-5 sm:p-7 w-full max-w-lg shadow-2xl space-y-5 min-w-0">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
               <h3 className="text-base font-black text-white flex items-center gap-2">
-                <Share2 className="w-5 h-5 text-emerald-400" />
+                <Share2 className="w-5 h-5 text-[#ff451a]" />
                 Share Candidate Proof Pass
               </h3>
               <button
                 onClick={() => setShowShareModal(false)}
-                className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm transition-colors"
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center text-sm transition-colors"
               >
                 ✕
               </button>
@@ -298,17 +300,17 @@ export const PublicProfilePage: React.FC = () => {
 
             <div className="space-y-4">
               {/* Recruiter Fast-Pass Direct Link */}
-              <div className="p-4 rounded-2xl bg-[#090d16] border border-cyan-500/40 space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-black text-cyan-300 flex items-center gap-1.5">
+              <div className="p-4 rounded-2xl bg-[#101934] border-2 border-cyan-400/50 space-y-2.5">
+                <div className="flex items-center justify-between flex-wrap gap-1">
+                  <span className="text-xs font-black text-cyan-300 flex items-center gap-1.5 font-mono">
                     <Key className="w-4 h-4 text-cyan-400" /> Recruiter Fast-Pass Link (Recommended)
                   </span>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
                     Bypasses Auth Barrier
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Share this secure link with recruiters, engineering leads, and hiring managers. It grants instant 1-click access to review your verified project evidence, repositories, and certifications.
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  Share this secure link with recruiters, engineering leads, and hiring managers. It grants instant 1-click access to review verified project evidence, repositories, and certifications.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2 pt-1">
                   <input
@@ -319,7 +321,7 @@ export const PublicProfilePage: React.FC = () => {
                   />
                   <button
                     onClick={() => handleCopy('fastpass', fastPassUrl)}
-                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shrink-0 flex items-center justify-center gap-1.5"
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#ff451a] to-[#ff7b00] text-white font-black text-xs transition-transform hover:scale-105 shrink-0 flex items-center justify-center gap-1.5 shadow-glow-coral"
                   >
                     {copiedType === 'fastpass' ? (
                       <>
@@ -335,8 +337,8 @@ export const PublicProfilePage: React.FC = () => {
               </div>
 
               {/* Standard Public Profile Link */}
-              <div className="p-4 rounded-2xl bg-[#090d16] border border-white/10 space-y-2">
-                <span className="text-xs font-bold text-slate-300">Standard Public Link</span>
+              <div className="p-4 rounded-2xl bg-[#101934] border border-white/10 space-y-2">
+                <span className="text-xs font-bold text-slate-200">Standard Public Link</span>
                 <p className="text-[11px] text-slate-400">
                   Standard public profile link suitable for resumes, X bio, and LinkedIn summaries.
                 </p>
@@ -349,11 +351,11 @@ export const PublicProfilePage: React.FC = () => {
                   />
                   <button
                     onClick={() => handleCopy('standard', standardUrl)}
-                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 border border-white/10"
+                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 border border-white/10"
                   >
                     {copiedType === 'standard' ? (
                       <>
-                        <CheckCircle2 className="w-4 h-4 text-emerald-400" /> Copied!
+                        <CheckCircle2 className="w-4 h-4 text-[#00f59b]" /> Copied!
                       </>
                     ) : (
                       <>
@@ -368,7 +370,7 @@ export const PublicProfilePage: React.FC = () => {
             <div className="flex justify-end pt-2 border-t border-white/10">
               <button
                 onClick={() => setShowShareModal(false)}
-                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-slate-200 text-xs font-bold transition-colors"
+                className="px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 text-xs font-bold transition-colors"
               >
                 Done
               </button>
@@ -444,14 +446,15 @@ export const PublicProfilePage: React.FC = () => {
         </div>
       )}
 
-      {/* Featured Projects Section - Reddit/Substack Card Layout */}
+      {/* Featured Projects Section - Boc.Studio Vibrant Cards */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-black text-white flex items-center gap-2 font-sans">
-            <Layers className="w-5 h-5 text-emerald-400" />
-            Verified Projects & Production Artifacts
+            <Layers className="w-5 h-5 text-[#ff451a]" />
+            <span>Verified Projects & Production Artifacts</span>
+            <BocSparkle size={16} />
           </h2>
-          <span className="text-[11px] font-mono text-slate-400">
+          <span className="text-[11px] font-mono text-slate-400 font-bold">
             {profile.projects?.length || 0} Showcased
           </span>
         </div>
@@ -460,15 +463,15 @@ export const PublicProfilePage: React.FC = () => {
           {profile.projects?.map((proj: any, idx: number) => (
             <div
               key={proj.id}
-              className="p-6 rounded-3xl glass-panel border border-white/10 flex flex-col justify-between space-y-4 hover:border-emerald-500/30 transition-all hover:-translate-y-1 shadow-lg group"
+              className="p-5 sm:p-6 rounded-3xl bg-[#0c1326]/90 border border-white/10 flex flex-col justify-between space-y-4 hover:border-[#ff451a]/40 transition-all hover:-translate-y-1 shadow-xl group min-w-0"
             >
-              <div className="space-y-3">
+              <div className="space-y-3 min-w-0">
                 <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-mono text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-[11px] font-mono text-[#ff451a] font-black bg-[#ff451a]/15 px-2.5 py-0.5 rounded-lg border border-[#ff451a]/30 shrink-0">
                       #{idx + 1}
                     </span>
-                    <h3 className="text-base font-black text-white group-hover:text-emerald-300 transition-colors">
+                    <h3 className="text-base font-black text-white group-hover:text-[#ff451a] transition-colors truncate">
                       {proj.title}
                     </h3>
                   </div>
@@ -476,17 +479,17 @@ export const PublicProfilePage: React.FC = () => {
                 </div>
 
                 {proj.tagline && (
-                  <p className="text-xs text-slate-300 font-semibold line-clamp-1">{proj.tagline}</p>
+                  <p className="text-xs text-slate-300 font-semibold line-clamp-1 break-words">{proj.tagline}</p>
                 )}
 
-                <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">{proj.description}</p>
+                <p className="text-xs text-slate-400 leading-relaxed line-clamp-3 break-words">{proj.description}</p>
 
                 {proj.skills && proj.skills.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {proj.skills.map((s: string) => (
                       <span
                         key={s}
-                        className="text-[10px] font-mono font-medium px-2.5 py-0.5 rounded-lg bg-white/[0.04] text-slate-300 border border-white/5"
+                        className="text-[10px] font-mono font-medium px-2.5 py-0.5 rounded-lg bg-white/[0.06] text-slate-300 border border-white/10"
                       >
                         {s}
                       </span>
@@ -495,16 +498,16 @@ export const PublicProfilePage: React.FC = () => {
                 )}
               </div>
 
-              <div className="pt-3 border-t border-white/5 flex items-center justify-between text-xs">
+              <div className="pt-3 border-t border-white/10 flex items-center justify-between text-xs flex-wrap gap-2">
                 <div className="flex items-center gap-3">
                   {proj.repositoryUrl && (
                     <a
                       href={proj.repositoryUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-slate-400 hover:text-white flex items-center gap-1.5 font-mono font-semibold transition-colors"
+                      className="text-slate-300 hover:text-white flex items-center gap-1.5 font-mono font-semibold transition-colors"
                     >
-                      <Github className="w-3.5 h-3.5" /> Source
+                      <Github className="w-3.5 h-3.5 text-slate-400" /> Source
                     </a>
                   )}
                   {proj.demoUrl && (
@@ -512,14 +515,14 @@ export const PublicProfilePage: React.FC = () => {
                       href={proj.demoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 font-mono font-bold transition-colors"
+                      className="text-[#00f59b] hover:text-emerald-300 flex items-center gap-1.5 font-mono font-bold transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" /> Live Demo
                     </a>
                   )}
                 </div>
 
-                <div className="text-[10px] font-mono text-slate-400">
+                <div className="text-[10px] font-mono text-slate-400 font-bold">
                   {proj.verifiedCommitCount ? `${proj.verifiedCommitCount} commits` : 'Verified'}
                 </div>
               </div>
@@ -532,21 +535,21 @@ export const PublicProfilePage: React.FC = () => {
       {profile.certificates?.length > 0 && (
         <div className="space-y-4">
           <h2 className="text-lg font-black text-white flex items-center gap-2 font-sans">
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            Verified Credentials & Accreditations
+            <ShieldCheck className="w-5 h-5 text-cyan-400" />
+            <span>Verified Credentials & Accreditations</span>
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {profile.certificates.map((cert: any) => (
               <div
                 key={cert.id}
-                className="p-5 rounded-2xl glass-panel border border-white/10 text-xs space-y-2 shadow-md hover:border-cyan-500/30 transition-all"
+                className="p-5 rounded-3xl bg-[#0c1326]/90 border border-white/10 text-xs space-y-2 shadow-xl hover:border-cyan-400/40 transition-all min-w-0"
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="font-bold text-white text-sm">{cert.title}</span>
+                  <span className="font-bold text-white text-sm truncate">{cert.title}</span>
                   <EvidenceBadge status={cert.verificationStatus} type="certificate" />
                 </div>
-                <p className="text-slate-400 text-xs">
+                <p className="text-slate-400 text-xs break-words">
                   {cert.issuer} {cert.credentialId && `• ID: ${cert.credentialId}`}
                 </p>
                 {cert.credentialUrl && (

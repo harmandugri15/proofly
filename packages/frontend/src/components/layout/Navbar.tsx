@@ -41,28 +41,28 @@ export const Navbar: React.FC = () => {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 border-b border-white/[0.08] bg-[#07090e]/90 backdrop-blur-2xl">
+      <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#090e1c]/92 backdrop-blur-2xl w-full max-w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             {/* Brand Logo & Tag */}
-            <div className="flex items-center gap-6 sm:gap-8">
+            <div className="flex items-center gap-4 sm:gap-8">
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
                 className="flex items-center gap-2.5 group shrink-0"
               >
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-400 via-teal-300 to-cyan-400 p-0.5 shadow-glow-emerald group-hover:scale-105 transition-transform duration-200">
-                  <div className="w-full h-full bg-[#090b12] rounded-[10px] flex items-center justify-center">
-                    <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#ff451a] via-[#ff7700] to-[#00f59b] p-0.5 shadow-[0_0_15px_rgba(255,69,26,0.35)] group-hover:scale-105 transition-transform duration-200">
+                  <div className="w-full h-full bg-[#0a0f1e] rounded-[10px] flex items-center justify-center">
+                    <ShieldCheck className="w-5 h-5 text-[#00f59b]" />
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-black text-xl tracking-tight text-white font-sans">
-                    Proofly<span className="text-emerald-400">.</span>
+                    Proofly<span className="text-[#ff451a]">.</span>
                   </span>
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/25">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    LIVE SIGNALS
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#ff451a]/15 text-[#ff7043] border border-[#ff451a]/25">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#ff451a] animate-pulse" />
+                    LIVE TELEMETRY
                   </span>
                 </div>
               </Link>
@@ -77,7 +77,7 @@ export const Navbar: React.FC = () => {
                       : 'hover:text-white hover:bg-white/5'
                   }`}
                 >
-                  <Flame className="w-3.5 h-3.5 text-amber-400" />
+                  <Flame className="w-3.5 h-3.5 text-[#ffb703]" />
                   <span>Proof Feed</span>
                 </Link>
 
@@ -87,7 +87,7 @@ export const Navbar: React.FC = () => {
                       to="/student/dashboard"
                       className={`px-3 py-1.5 rounded-xl transition-all font-mono font-bold ${
                         isCurrent('/student/dashboard')
-                          ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/25'
+                          ? 'bg-[#00f59b]/15 text-[#00f59b] border border-[#00f59b]/30'
                           : 'hover:text-white hover:bg-white/5'
                       }`}
                     >
@@ -97,7 +97,7 @@ export const Navbar: React.FC = () => {
                       to="/student/projects"
                       className={`px-3 py-1.5 rounded-xl transition-all ${
                         isCurrent('/student/projects')
-                          ? 'bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/25'
+                          ? 'bg-[#00f59b]/15 text-[#00f59b] font-bold border border-[#00f59b]/30'
                           : 'hover:text-white hover:bg-white/5'
                       }`}
                     >
@@ -107,7 +107,7 @@ export const Navbar: React.FC = () => {
                       to="/student/integrations"
                       className={`px-3 py-1.5 rounded-xl transition-all ${
                         isCurrent('/student/integrations')
-                          ? 'bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/25'
+                          ? 'bg-[#00f59b]/15 text-[#00f59b] font-bold border border-[#00f59b]/30'
                           : 'hover:text-white hover:bg-white/5'
                       }`}
                     >
@@ -117,7 +117,7 @@ export const Navbar: React.FC = () => {
                       to="/student/evidence"
                       className={`px-3 py-1.5 rounded-xl transition-all ${
                         isCurrent('/student/evidence')
-                          ? 'bg-emerald-500/15 text-emerald-400 font-bold border border-emerald-500/25'
+                          ? 'bg-[#00f59b]/15 text-[#00f59b] font-bold border border-[#00f59b]/30'
                           : 'hover:text-white hover:bg-white/5'
                       }`}
                     >
@@ -182,26 +182,26 @@ export const Navbar: React.FC = () => {
                     <Link
                       to={`/u/${user.studentProfile.username}`}
                       target="_blank"
-                      className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 hover:from-emerald-500/30 hover:to-cyan-500/30 text-emerald-300 border border-emerald-500/30 transition-all hover:scale-105"
+                      className="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#ff451a]/20 to-[#00f59b]/20 hover:from-[#ff451a]/30 hover:to-[#00f59b]/30 text-white border border-white/10 transition-all hover:scale-105"
                     >
                       <span>Public Card</span>
-                      <ExternalLink className="w-3 h-3" />
+                      <ExternalLink className="w-3 h-3 text-slate-400" />
                     </Link>
                   )}
 
                   {/* Clickable User Avatar -> Direct Dashboard Access */}
                   <Link
                     to={dashboardUrl}
-                    className="flex items-center gap-2.5 pl-2 sm:pl-3 border-l border-white/10 group cursor-pointer"
+                    className="flex items-center gap-2 pl-2 sm:pl-3 border-l border-white/10 group cursor-pointer"
                     title={`Open ${user.name}'s Dashboard`}
                   >
-                    <div className="story-ring group-hover:scale-105 transition-transform duration-200">
-                      <div className="w-8 h-8 rounded-full bg-[#0e111a] flex items-center justify-center text-xs font-black text-emerald-400 uppercase font-mono">
+                    <div className="story-ring group-hover:scale-105 transition-transform duration-200 shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-[#12192e] flex items-center justify-center text-xs font-black text-[#00f59b] uppercase font-mono">
                         {user.name ? user.name.slice(0, 2).toUpperCase() : 'PR'}
                       </div>
                     </div>
                     <div className="text-left hidden lg:block">
-                      <p className="text-xs font-bold text-white leading-none group-hover:text-emerald-300 transition-colors">
+                      <p className="text-xs font-bold text-white leading-none group-hover:text-[#00f59b] transition-colors truncate max-w-[120px]">
                         {user.name}
                       </p>
                       <p className="text-[10px] text-slate-400 font-mono tracking-wider mt-0.5">
@@ -221,10 +221,10 @@ export const Navbar: React.FC = () => {
                   {/* Mobile Hamburger Button */}
                   <button
                     onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                    className="p-2 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white border border-white/10 md:hidden transition-colors"
+                    className="p-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] text-white border border-white/10 md:hidden transition-colors"
                     aria-label="Toggle navigation menu"
                   >
-                    {mobileMenuOpen ? <X className="w-5 h-5 text-emerald-400" /> : <Menu className="w-5 h-5" />}
+                    {mobileMenuOpen ? <X className="w-5 h-5 text-[#ff451a]" /> : <Menu className="w-5 h-5" />}
                   </button>
                 </div>
               ) : (
@@ -237,7 +237,7 @@ export const Navbar: React.FC = () => {
                   </Link>
                   <Link
                     to="/register"
-                    className="inline-flex items-center gap-1.5 text-xs font-black bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 hover:opacity-90 text-slate-950 px-4 py-2 rounded-xl shadow-glow-emerald transition-all hover:scale-105"
+                    className="inline-flex items-center gap-1.5 text-xs font-black bg-gradient-to-r from-[#ff451a] via-[#ff5c26] to-[#ff8a00] text-white px-4 py-2 rounded-xl shadow-[0_0_15px_rgba(255,69,26,0.35)] transition-all hover:scale-105"
                   >
                     <span>Get Verified</span>
                   </Link>
@@ -246,7 +246,7 @@ export const Navbar: React.FC = () => {
                     className="p-2 rounded-xl bg-white/[0.04] text-white border border-white/10 md:hidden ml-1"
                     aria-label="Toggle navigation menu"
                   >
-                    {mobileMenuOpen ? <X className="w-5 h-5 text-emerald-400" /> : <Menu className="w-5 h-5" />}
+                    {mobileMenuOpen ? <X className="w-5 h-5 text-[#ff451a]" /> : <Menu className="w-5 h-5" />}
                   </button>
                 </div>
               )}
@@ -265,17 +265,23 @@ export const Navbar: React.FC = () => {
           />
 
           {/* Drawer Menu Panel */}
-          <div className="fixed right-0 top-0 bottom-0 w-[82%] max-w-sm bg-[#090b14] border-l border-white/15 p-5 shadow-2xl flex flex-col justify-between overflow-y-auto">
+          <div className="fixed right-0 top-0 bottom-0 w-[84%] max-w-sm bg-[#0c1326] border-l border-white/15 p-5 shadow-2xl flex flex-col justify-between overflow-y-auto">
             <div className="space-y-6">
               {/* Header with Close */}
               <div className="flex items-center justify-between pb-3 border-b border-white/10">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 text-emerald-400" />
-                  <span className="font-black text-lg text-white font-sans">Proofly Menu</span>
+                  <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#ff451a] to-[#00f59b] p-0.5">
+                    <div className="w-full h-full bg-[#0c1326] rounded-[6px] flex items-center justify-center">
+                      <ShieldCheck className="w-4 h-4 text-[#00f59b]" />
+                    </div>
+                  </div>
+                  <span className="font-black text-lg text-white font-sans">
+                    Proofly<span className="text-[#ff451a]">.</span> Menu
+                  </span>
                 </div>
                 <button
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-400 hover:text-white flex items-center justify-center text-sm"
+                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center text-sm transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -283,16 +289,16 @@ export const Navbar: React.FC = () => {
 
               {/* User Profile Card (if authenticated) */}
               {isAuthenticated && user && (
-                <div className="p-4 rounded-2xl glass-panel border border-white/10 space-y-3">
+                <div className="p-4 rounded-2xl bg-[#131d36] border border-white/10 space-y-3 shadow-lg">
                   <div className="flex items-center gap-3">
                     <div className="story-ring">
-                      <div className="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center text-sm font-black text-emerald-400 font-mono">
+                      <div className="w-10 h-10 rounded-full bg-[#0a0f1e] flex items-center justify-center text-sm font-black text-[#00f59b] font-mono">
                         {user.name ? user.name.slice(0, 2).toUpperCase() : 'PR'}
                       </div>
                     </div>
                     <div>
                       <h4 className="text-sm font-black text-white font-sans leading-tight">{user.name}</h4>
-                      <p className="text-[10px] font-mono text-emerald-400 font-bold uppercase mt-0.5">
+                      <p className="text-[10px] font-mono text-[#00f59b] font-bold uppercase mt-0.5">
                         {user.role === 'STUDENT' ? 'Verified Builder' : 'Technical Recruiter'}
                       </p>
                     </div>
@@ -301,7 +307,7 @@ export const Navbar: React.FC = () => {
                   <Link
                     to={dashboardUrl}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs text-center flex items-center justify-center gap-2 shadow-glow-emerald"
+                    className="w-full py-2.5 px-3 rounded-xl bg-gradient-to-r from-[#ff451a] via-[#ff5c26] to-[#ff8a00] text-white font-black text-xs text-center flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,69,26,0.35)]"
                   >
                     <LayoutDashboard className="w-4 h-4" />
                     <span>Open Dashboard</span>
@@ -312,7 +318,7 @@ export const Navbar: React.FC = () => {
                       to={`/u/${user.studentProfile.username}`}
                       target="_blank"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="w-full py-1.5 px-3 rounded-xl bg-white/[0.04] text-emerald-300 font-mono font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-white/5"
+                      className="w-full py-2 px-3 rounded-xl bg-[#0e1628] hover:bg-[#152038] text-[#00e5ff] font-mono font-bold text-xs text-center flex items-center justify-center gap-1.5 border border-white/10 transition-colors"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                       <span>View Public Card</span>

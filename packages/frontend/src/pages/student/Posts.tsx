@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
 import { FileText, Plus, Trash2, Edit3, Eye, CheckCircle2, Clock, Sparkles, ArrowRight, Tag } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { BocSparkle, TactileSticker } from '../../components/common/CreativeArt';
 
 export const StudentPostsPage: React.FC = () => {
   const [posts, setPosts] = useState<any[]>([]);
@@ -69,9 +70,9 @@ export const StudentPostsPage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-spin flex items-center justify-center p-1">
-          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" />
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#ff451a] via-[#ffb703] to-[#00f59b] animate-spin flex items-center justify-center p-1">
+          <div className="w-full h-full bg-[#080c16] rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-[#ff451a] animate-pulse" />
           </div>
         </div>
         <p className="text-xs font-mono text-slate-400 tracking-wider">RETRIEVING PUBLISHED ESSAYS...</p>
@@ -80,27 +81,27 @@ export const StudentPostsPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
+    <div className="w-full max-w-5xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden">
       {/* Header Banner */}
-      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
+      <div className="relative rounded-3xl bg-[#0c1326]/90 border border-white/10 p-5 sm:p-8 overflow-hidden shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-6 backdrop-blur-xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#ff451a]/15 via-[#00f59b]/10 to-transparent blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
-            <FileText className="w-3.5 h-3.5" />
-            <span>ENGINEERING LOGS</span>
+        <div className="relative z-10 space-y-2 min-w-0">
+          <div className="flex items-center gap-2">
+            <TactileSticker color="cyan" text="ENGINEERING LOGS" />
+            <BocSparkle size={18} />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
             Technical Case Studies & Notes
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
             Publish engineering reflections, architectural decisions, and project postmortems. Real technical writing demonstrates your architectural clarity to scouts.
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="relative z-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shadow-glow-emerald shrink-0"
+          className="relative z-10 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#ff451a] to-[#ff7b00] text-white font-black text-xs transition-transform hover:scale-105 shadow-glow-coral shrink-0"
         >
           <Plus className="w-4 h-4" /> Write Case Study
         </button>

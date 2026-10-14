@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
 import { User, GraduationCap, Briefcase, Plus, Trash2, CheckCircle2, Award, Sparkles, MapPin, Calendar, FileText } from 'lucide-react';
 import { SkillCategory, ProficiencyLevel } from '@proofly/shared';
+import { BocSparkle, TactileSticker } from '../../components/common/CreativeArt';
 
 export const StudentProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
@@ -129,9 +130,9 @@ export const StudentProfilePage: React.FC = () => {
   if (isLoading) {
     return (
       <div className="min-h-[60vh] flex flex-col items-center justify-center space-y-4">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-400 animate-spin flex items-center justify-center p-1">
-          <div className="w-full h-full bg-[#0a0d14] rounded-xl flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-emerald-400 animate-pulse" />
+        <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-[#ff451a] via-[#ffb703] to-[#00f59b] animate-spin flex items-center justify-center p-1">
+          <div className="w-full h-full bg-[#080c16] rounded-xl flex items-center justify-center">
+            <Sparkles className="w-5 h-5 text-[#ff451a] animate-pulse" />
           </div>
         </div>
         <p className="text-xs font-mono text-slate-400 tracking-wider">LOADING BUILDER IDENTITY...</p>
@@ -140,33 +141,33 @@ export const StudentProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
+    <div className="w-full max-w-5xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden">
       {/* Header Banner */}
-      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
+      <div className="relative rounded-3xl bg-[#0c1326]/90 border border-white/10 p-5 sm:p-8 overflow-hidden shadow-2xl backdrop-blur-xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#ff451a]/15 via-[#00f59b]/10 to-transparent blur-3xl pointer-events-none" />
 
         <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>BUILDER IDENTITY</span>
+          <div className="flex items-center gap-2">
+            <TactileSticker color="flame" text="BUILDER IDENTITY" />
+            <BocSparkle size={18} />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
             Profile Bio & Technical Competencies
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
             Curate your professional story, core competencies, and academic background. Recruiters inspect these signals alongside your verified code repositories.
           </p>
         </div>
       </div>
 
       {/* Basic Profile Form */}
-      <form onSubmit={handleSaveBasic} className="p-6 sm:p-7 rounded-3xl glass-panel border border-white/10 space-y-5 shadow-xl">
-        <div className="flex items-center justify-between pb-2 border-b border-white/5">
+      <form onSubmit={handleSaveBasic} className="p-5 sm:p-7 rounded-3xl bg-[#0c1326]/90 border border-white/10 space-y-5 shadow-xl min-w-0">
+        <div className="flex items-center justify-between pb-2 border-b border-white/10 flex-wrap gap-2">
           <h2 className="text-base font-black text-white flex items-center gap-2 font-sans">
-            <User className="w-4 h-4 text-emerald-400" />
+            <User className="w-4 h-4 text-[#00f59b]" />
             General Overview
           </h2>
-          <span className="text-[11px] font-mono text-slate-400">Publicly visible on your fast-pass link</span>
+          <span className="text-[11px] font-mono text-slate-400 font-bold">Publicly visible on your fast-pass link</span>
         </div>
 
         <div className="space-y-4">
@@ -179,7 +180,7 @@ export const StudentProfilePage: React.FC = () => {
               value={headline}
               onChange={(e) => setHeadline(e.target.value)}
               placeholder="e.g. Distributed Systems Engineer | High-Throughput TypeScript & Rust"
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#00f59b] transition-colors"
             />
           </div>
 
@@ -193,7 +194,7 @@ export const StudentProfilePage: React.FC = () => {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. San Francisco, CA / Remote"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#00f59b] transition-colors"
               />
             </div>
 
@@ -206,7 +207,7 @@ export const StudentProfilePage: React.FC = () => {
                 value={gradYear}
                 onChange={(e) => setGradYear(e.target.value ? Number(e.target.value) : '')}
                 placeholder="e.g. 2026"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#00f59b] transition-colors font-mono"
               />
             </div>
           </div>
@@ -220,21 +221,21 @@ export const StudentProfilePage: React.FC = () => {
               value={bio}
               onChange={(e) => setBio(e.target.value)}
               placeholder="Describe your technical architecture focus, the systems you enjoy constructing, and what excites you about software engineering."
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-white/10 text-white placeholder-slate-600 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 transition-colors leading-relaxed"
+              className="w-full px-4 py-2.5 rounded-xl bg-[#101934] border border-white/10 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-[#00f59b] transition-colors leading-relaxed"
             />
           </div>
         </div>
 
-        <div className="flex items-center justify-between pt-3 border-t border-white/5">
+        <div className="flex items-center justify-between pt-3 border-t border-white/10 flex-wrap gap-2">
           {saveSuccess ? (
-            <span className="text-xs font-mono font-bold text-emerald-400 flex items-center gap-1.5">
+            <span className="text-xs font-mono font-bold text-[#00f59b] flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4" /> Changes saved successfully!
             </span>
           ) : <div />}
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shadow-glow-emerald disabled:opacity-50"
+            className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-[#ff451a] to-[#ff7b00] text-white font-black text-xs transition-transform hover:scale-105 shadow-glow-coral disabled:opacity-50"
           >
             {isSaving ? 'Saving...' : 'Save Overview'}
           </button>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
 import { Settings, Shield, Eye, Lock, Download, CheckCircle2, AlertTriangle, Sparkles, UserCheck } from 'lucide-react';
 import { ProfileVisibility } from '@proofly/shared';
+import { BocSparkle, TactileSticker } from '../../components/common/CreativeArt';
 
 export const StudentSettingsPage: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
@@ -53,20 +54,20 @@ export const StudentSettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
+    <div className="w-full max-w-4xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden">
       {/* Header Banner */}
-      <div className="relative rounded-3xl glass-panel p-6 sm:p-8 border border-white/10 overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl pointer-events-none" />
+      <div className="relative rounded-3xl bg-[#0c1326]/90 border border-white/10 p-5 sm:p-8 overflow-hidden shadow-2xl backdrop-blur-xl">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-[#ff451a]/15 via-[#00f59b]/10 to-transparent blur-3xl pointer-events-none" />
 
-        <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-mono font-bold">
-            <Shield className="w-3.5 h-3.5" />
-            <span>SOVEREIGN DATA CONTROLS</span>
+        <div className="relative z-10 space-y-2 min-w-0">
+          <div className="flex items-center gap-2">
+            <TactileSticker color="lime" text="SOVEREIGN DATA CONTROLS" />
+            <BocSparkle size={18} />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-sans">
             Privacy & Identity Sovereignty
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed">
             You own your telemetry and portfolio. Toggle discovery permissions, recruiter visibility, and export your machine-readable dossier.
           </p>
         </div>
@@ -189,7 +190,7 @@ export const StudentSettingsPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shadow-glow-emerald disabled:opacity-50"
+            className="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-[#ff451a] to-[#ff7b00] text-white font-black text-xs transition-transform hover:scale-105 shadow-glow-coral disabled:opacity-50"
           >
             {isSaving ? 'Updating...' : 'Save Settings'}
           </button>

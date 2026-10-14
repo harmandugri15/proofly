@@ -40,9 +40,9 @@ const ProtectedStudentRoute: React.FC<{ children: React.ReactNode }> = ({ childr
     return <Navigate to="/login" replace />;
   }
   return (
-    <div className="flex">
+    <div className="flex w-full max-w-full overflow-x-hidden min-w-0">
       <Sidebar />
-      <main className="flex-1 min-w-0 pb-20 md:pb-6">{children}</main>
+      <main className="flex-1 w-full max-w-full min-w-0 pb-24 md:pb-8">{children}</main>
     </div>
   );
 };
@@ -54,9 +54,9 @@ const ProtectedRecruiterRoute: React.FC<{ children: React.ReactNode }> = ({ chil
     return <Navigate to="/login" replace />;
   }
   return (
-    <div className="flex">
+    <div className="flex w-full max-w-full overflow-x-hidden min-w-0">
       <Sidebar />
-      <main className="flex-1 min-w-0 pb-20 md:pb-6">{children}</main>
+      <main className="flex-1 w-full max-w-full min-w-0 pb-24 md:pb-8">{children}</main>
     </div>
   );
 };
@@ -66,9 +66,9 @@ export const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
-          <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans">
+          <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#080c16] text-slate-100 flex flex-col font-sans relative">
             <Navbar />
-            <div className="flex-1">
+            <div className="flex-1 w-full max-w-full min-w-0">
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />

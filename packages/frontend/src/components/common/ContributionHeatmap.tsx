@@ -12,11 +12,11 @@ interface ContributionHeatmapProps {
 }
 
 const LEVEL_COLORS: Record<number, string> = {
-  0: 'bg-[#161b22] border-[#21262d]',
-  1: 'bg-[#0e4429] border-[#0e4429]',
-  2: 'bg-[#006d32] border-[#006d32]',
-  3: 'bg-[#26a641] border-[#26a641]',
-  4: 'bg-[#39d353] border-[#39d353]',
+  0: 'bg-[#151c30] border-[#1e2a4a]',
+  1: 'bg-[#064e3b] border-[#047857]',
+  2: 'bg-[#059669] border-[#10b981]',
+  3: 'bg-[#10b981] border-[#34d399]',
+  4: 'bg-[#00f59b] border-[#00f59b] shadow-[0_0_8px_rgba(0,245,155,0.6)]',
 };
 
 export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
@@ -82,16 +82,17 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
   const newMonthIndices = new Set(monthLabels.map((m) => m.index));
 
   return (
-    <div className={`p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4 ${className}`}>
+    <div className={`w-full max-w-full min-w-0 overflow-hidden p-4 sm:p-6 rounded-3xl bg-[#0c1222]/90 border border-white/10 space-y-4 shadow-xl ${className}`}>
       {/* Header with Stats */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
+          <div className="p-2 rounded-xl bg-emerald-500/15 text-[#00f59b] border border-emerald-500/20 shadow-glow-emerald">
             <GitCommit className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-white">
-              GitHub Contribution Heatmap
+            <h3 className="text-xs font-black uppercase tracking-wider text-white font-sans flex items-center gap-1.5">
+              <span>GitHub Contribution Heatmap</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-[#00f59b] animate-pulse" />
             </h3>
             <p className="text-[11px] text-slate-400">
               {username ? `@${username}'s` : 'Candidate'} verified commit and pull-request activity
@@ -99,30 +100,41 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
           </div>
         </div>
 
-        {/* Streak Metrics Pills */}
-        <div className="flex items-center gap-3 text-xs">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-            <Calendar className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-[11px]">Last Year:</span>
-            <strong className="text-white font-mono">{totalCommitsLastYear.toLocaleString()}</strong>
+        {/* Streak Metrics Pills (grid on mobile, flex on desktop) */}
+        <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 text-xs">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#131b32] border border-white/5 text-slate-300">
+            <div className="flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-[#00f59b]" />
+              <span className="text-[10px] text-slate-400">Year:</span>
+            </div>
+            <strong className="text-white font-mono text-xs">{totalCommitsLastYear.toLocaleString()}</strong>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-            <Flame className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-[11px]">Current:</span>
-            <strong className="text-amber-400 font-mono">{currentStreak}d</strong>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#131b32] border border-white/5 text-slate-300">
+            <div className="flex items-center gap-1">
+              <Flame className="w-3.5 h-3.5 text-[#ff451a]" />
+              <span className="text-[10px] text-slate-400">Streak:</span>
+            </div>
+            <strong className="text-[#ff7043] font-mono text-xs">{currentStreak}d</strong>
           </div>
 
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300">
-            <Trophy className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-[11px]">Best:</span>
-            <strong className="text-cyan-400 font-mono">{longestStreak}d</strong>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#131b32] border border-white/5 text-slate-300">
+            <div className="flex items-center gap-1">
+              <Trophy className="w-3.5 h-3.5 text-[#00e5ff]" />
+              <span className="text-[10px] text-slate-400">Best:</span>
+            </div>
+            <strong className="text-[#00e5ff] font-mono text-xs">{longestStreak}d</strong>
           </div>
         </div>
       </div>
 
-      {/* Heatmap Grid Container with horizontal scroll */}
-      <div className="relative overflow-x-auto pb-2 pt-1 select-none">
+      {/* Mobile scroll hint */}
+      <div className="flex items-center justify-between text-[10px] font-mono text-cyan-400 sm:hidden">
+        <span>↔ Scroll horizontally to explore full year</span>
+      </div>
+
+      {/* Heatmap Grid Container with strict horizontal overflow isolation */}
+      <div className="w-full max-w-full overflow-x-auto pb-3 pt-1 select-none scrollbar-thin">
         {/* Month Labels aligned to 14px per column */}
         <div className="relative h-4 mb-1.5 ml-8 min-w-[760px]">
           {monthLabels.map((m, i) => (
@@ -152,7 +164,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
               return (
                 <div
                   key={wIdx}
-                  className={`flex flex-col gap-[3px] ${isMonthStart ? 'border-l border-slate-800/80 pl-[2px] ml-[1px]' : ''}`}
+                  className={`flex flex-col gap-[3px] ${isMonthStart ? 'border-l border-slate-700/60 pl-[2px] ml-[1px]' : ''}`}
                 >
                   {week.map((day, dIdx) => (
                     <div
@@ -163,7 +175,7 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
                         setTooltipPos({ x: rect.left + rect.width / 2, y: rect.top });
                       }}
                       onMouseLeave={() => setHoveredDay(null)}
-                      className={`w-[11px] h-[11px] rounded-[2px] border transition-transform hover:scale-125 cursor-pointer ${
+                      className={`w-[11px] h-[11px] rounded-[2px] border transition-transform hover:scale-150 hover:z-10 cursor-pointer ${
                         LEVEL_COLORS[day.level] || LEVEL_COLORS[0]
                       }`}
                     />
@@ -177,10 +189,10 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
         {/* Floating Tooltip */}
         {hoveredDay && tooltipPos && (
           <div
-            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-2 px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-white text-[11px] shadow-xl font-mono whitespace-nowrap"
+            className="fixed z-50 pointer-events-none transform -translate-x-1/2 -translate-y-full mb-2 px-3 py-1.5 rounded-xl bg-[#0e1628] border border-cyan-500/40 text-white text-[11px] shadow-2xl font-mono whitespace-nowrap"
             style={{ left: `${tooltipPos.x}px`, top: `${tooltipPos.y - 8}px` }}
           >
-            <span className="font-bold text-emerald-400">
+            <span className="font-bold text-[#00f59b]">
               {hoveredDay.count === 0 ? 'No contributions' : `${hoveredDay.count} contribution${hoveredDay.count > 1 ? 's' : ''}`}
             </span>{' '}
             on {new Date(hoveredDay.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
@@ -189,17 +201,17 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-between text-[11px] text-slate-400 font-mono pt-1 border-t border-slate-900">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-slate-400 font-mono pt-2 border-t border-white/5 gap-2">
         <span className="text-[10px] text-slate-500">
-          Showing 52 weeks of continuous code commit history
+          Continuous 52-week telemetry directly from verified GitHub events
         </span>
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-1.5 self-end sm:self-auto">
           <span className="text-[10px] text-slate-500">Less</span>
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#161b22] border border-[#21262d]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#0e4429] border border-[#0e4429]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#006d32] border border-[#006d32]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#26a641] border border-[#26a641]" />
-          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#39d353] border border-[#39d353]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#151c30] border border-[#1e2a4a]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#064e3b] border border-[#047857]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#059669] border border-[#10b981]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#10b981] border border-[#34d399]" />
+          <div className="w-2.5 h-2.5 rounded-[2px] bg-[#00f59b] border border-[#00f59b]" />
           <span className="text-[10px] text-slate-500">More</span>
         </div>
       </div>

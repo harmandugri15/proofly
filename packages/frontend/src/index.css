@@ -3,14 +3,44 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
+
   body {
-    @apply bg-[#08090e] text-slate-100 font-sans antialiased min-h-screen;
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    @apply bg-[#080c16] text-slate-100 font-sans antialiased min-h-screen;
     background-image: 
-      radial-gradient(at 10% 10%, rgba(16, 185, 129, 0.05) 0px, transparent 40%),
-      radial-gradient(at 90% 15%, rgba(168, 85, 247, 0.05) 0px, transparent 40%),
-      radial-gradient(at 50% 85%, rgba(6, 182, 212, 0.04) 0px, transparent 50%);
+      radial-gradient(at 0% 0%, rgba(255, 69, 26, 0.09) 0px, transparent 40%),
+      radial-gradient(at 100% 10%, rgba(0, 229, 255, 0.09) 0px, transparent 40%),
+      radial-gradient(at 50% 60%, rgba(16, 231, 117, 0.06) 0px, transparent 50%),
+      radial-gradient(at 20% 90%, rgba(139, 92, 246, 0.08) 0px, transparent 40%),
+      radial-gradient(at 80% 90%, rgba(255, 183, 3, 0.07) 0px, transparent 40%);
     background-attachment: fixed;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  #root {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
   }
 }
 
@@ -21,55 +51,82 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #08090e;
+  background: #080c16;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #1e2842;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #33446b;
 }
 
-/* Glassmorphism & Micro-styling */
+/* Glassmorphism & High-Energy Micro-styling */
 .glass-panel {
-  background: rgba(13, 16, 26, 0.65);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(14, 20, 38, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
 .glass-panel-hover {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .glass-panel-hover:hover {
-  background: rgba(18, 22, 36, 0.8);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(20, 28, 52, 0.88);
+  border-color: rgba(255, 255, 255, 0.18);
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6);
 }
 
 .story-ring {
-  background: linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #a855f7 100%);
+  background: linear-gradient(135deg, #ff451a 0%, #ff8a00 30%, #00f59b 70%, #00e5ff 100%);
   padding: 2.5px;
   border-radius: 9999px;
 }
 
 .story-ring-active {
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 20px rgba(255, 69, 26, 0.45);
 }
 
 .gradient-text-emerald {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 50%, #06b6d4 100%);
+  background: linear-gradient(135deg, #00f59b 0%, #10b981 50%, #00e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-flame {
+  background: linear-gradient(135deg, #ff451a 0%, #ff6e40 50%, #ffb703 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .gradient-text-hyper {
-  background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #f43f5e 100%);
+  background: linear-gradient(135deg, #c084fc 0%, #a855f7 50%, #ff451a 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.gradient-text-studio {
+  background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Boc.Studio style SVG rotating badge animation */
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 20s linear infinite;
 }
 

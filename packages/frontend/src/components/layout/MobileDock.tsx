@@ -39,8 +39,8 @@ export const MobileDock: React.FC = () => {
   const links = isStudent ? studentLinks : recruiterLinks;
 
   return (
-    <div className="fixed bottom-3 left-3 right-3 z-50 md:hidden">
-      <nav className="glass-panel border border-white/15 bg-[#090b14]/90 backdrop-blur-2xl rounded-2xl p-1.5 shadow-[0_10px_30px_rgba(0,0,0,0.8)] flex items-center justify-around">
+    <div className="fixed bottom-3 left-2.5 right-2.5 z-50 md:hidden max-w-[calc(100vw-1.25rem)] mx-auto">
+      <nav className="border border-white/15 bg-[#0c1326]/95 backdrop-blur-2xl rounded-2xl p-1.5 shadow-[0_12px_36px_rgba(0,0,0,0.85)] flex items-center justify-around">
         {links.map((link) => {
           const Icon = link.icon;
           return (
@@ -48,11 +48,11 @@ export const MobileDock: React.FC = () => {
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all relative ${
+                `flex flex-col items-center justify-center py-1.5 px-2 rounded-xl transition-all relative ${
                   isActive
                     ? isStudent
-                      ? 'text-emerald-400 bg-emerald-500/15 font-bold shadow-glow-emerald scale-105'
-                      : 'text-cyan-400 bg-cyan-500/15 font-bold shadow-glow-cyan scale-105'
+                      ? 'text-[#00f59b] bg-emerald-500/15 font-bold shadow-[0_0_12px_rgba(0,245,155,0.35)] scale-105'
+                      : 'text-[#00e5ff] bg-cyan-500/15 font-bold shadow-[0_0_12px_rgba(0,229,255,0.35)] scale-105'
                     : 'text-slate-400 hover:text-white hover:bg-white/5 font-medium'
                 }`
               }
@@ -60,13 +60,13 @@ export const MobileDock: React.FC = () => {
               {({ isActive }) => (
                 <>
                   <Icon className="w-5 h-5 mb-0.5" />
-                  <span className="text-[10px] tracking-tight leading-none font-mono">
+                  <span className="text-[10px] tracking-tight leading-none font-mono font-bold">
                     {link.label}
                   </span>
                   {isActive && (
                     <span
                       className={`w-1 h-1 rounded-full absolute -top-0.5 ${
-                        isStudent ? 'bg-emerald-400' : 'bg-cyan-400'
+                        isStudent ? 'bg-[#00f59b]' : 'bg-[#00e5ff]'
                       } animate-pulse`}
                     />
                   )}
