@@ -18,6 +18,7 @@ export class EmailService {
   private static transporter: Transporter | null = null;
 
   private static getTransporter(): Transporter | null {
+    if (env.NODE_ENV === 'test') return null;
     if (this.transporter) return this.transporter;
 
     if (env.SMTP_USER && env.SMTP_PASS) {
@@ -107,7 +108,7 @@ export class EmailService {
           html,
         });
         logger.info(`📧 Password reset OTP email sent to ${to}`);
-        return { delivered: true };
+        return { delivered: true, devOtp: env.NODE_ENV !== 'production' ? otp : undefined };
       } catch (err: any) {
         logger.error(`❌ Failed to send reset email via SMTP to ${to}: ${err?.message}`);
       }
