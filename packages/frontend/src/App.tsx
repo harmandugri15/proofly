@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
+import { MobileDock } from './components/layout/MobileDock';
 
 // Pages
 import { Home } from './pages/Home';
@@ -34,28 +35,28 @@ const queryClient = new QueryClient();
 // Route Guards
 const ProtectedStudentRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
-  if (isLoading) return <div className="p-12 text-center text-slate-400">Authenticating...</div>;
+  if (isLoading) return <div className="p-12 text-center text-slate-400 font-mono text-xs">Authenticating...</div>;
   if (!isAuthenticated || user?.role !== 'STUDENT') {
     return <Navigate to="/login" replace />;
   }
   return (
     <div className="flex">
       <Sidebar />
-      <main className="flex-1 min-w-0">{children}</main>
+      <main className="flex-1 min-w-0 pb-20 md:pb-6">{children}</main>
     </div>
   );
 };
 
 const ProtectedRecruiterRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isAuthenticated, isLoading } = useAuth();
-  if (isLoading) return <div className="p-12 text-center text-slate-400">Authenticating...</div>;
+  if (isLoading) return <div className="p-12 text-center text-slate-400 font-mono text-xs">Authenticating...</div>;
   if (!isAuthenticated || user?.role !== 'RECRUITER') {
     return <Navigate to="/login" replace />;
   }
   return (
     <div className="flex">
       <Sidebar />
-      <main className="flex-1 min-w-0">{children}</main>
+      <main className="flex-1 min-w-0 pb-20 md:pb-6">{children}</main>
     </div>
   );
 };
@@ -181,6 +182,7 @@ export const App: React.FC = () => {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </div>
+            <MobileDock />
           </div>
         </BrowserRouter>
       </AuthProvider>

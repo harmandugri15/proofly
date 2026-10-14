@@ -310,7 +310,7 @@ export const PublicProfilePage: React.FC = () => {
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   Share this secure link with recruiters, engineering leads, and hiring managers. It grants instant 1-click access to review your verified project evidence, repositories, and certifications.
                 </p>
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-col sm:flex-row gap-2 pt-1">
                   <input
                     type="text"
                     readOnly
@@ -319,7 +319,7 @@ export const PublicProfilePage: React.FC = () => {
                   />
                   <button
                     onClick={() => handleCopy('fastpass', fastPassUrl)}
-                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shrink-0 flex items-center gap-1.5"
+                    className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-teal-400 text-slate-950 font-black text-xs transition-transform hover:scale-105 shrink-0 flex items-center justify-center gap-1.5"
                   >
                     {copiedType === 'fastpass' ? (
                       <>
@@ -340,7 +340,7 @@ export const PublicProfilePage: React.FC = () => {
                 <p className="text-[11px] text-slate-400">
                   Standard public profile link suitable for resumes, X bio, and LinkedIn summaries.
                 </p>
-                <div className="flex gap-2 pt-1">
+                <div className="flex flex-col sm:flex-row gap-2 pt-1">
                   <input
                     type="text"
                     readOnly
@@ -349,7 +349,7 @@ export const PublicProfilePage: React.FC = () => {
                   />
                   <button
                     onClick={() => handleCopy('standard', standardUrl)}
-                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5 border border-white/10"
+                    className="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 border border-white/10"
                   >
                     {copiedType === 'standard' ? (
                       <>

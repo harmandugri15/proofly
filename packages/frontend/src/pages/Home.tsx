@@ -18,6 +18,7 @@ import {
   Heart,
   Eye,
 } from 'lucide-react';
+import { MarqueeTicker } from '../components/common/MarqueeTicker';
 
 export const Home: React.FC = () => {
   return (
@@ -189,8 +190,11 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
+      {/* Boc.Studio High-Energy Marquee Ticker Strip */}
+      <MarqueeTicker />
+
       {/* Real Talk Comparison: Old Way vs Proofly */}
-      <section className="py-20 border-y border-white/[0.07] bg-[#0a0d16]/60 backdrop-blur-lg">
+      <section className="py-20 border-b border-white/[0.07] bg-[#0a0d16]/60 backdrop-blur-lg">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center space-y-3">
             <h2 className="text-3xl sm:text-4xl font-black text-white font-sans">
@@ -292,6 +296,9 @@ export const Home: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Dynamic Marquee Strip */}
+      <MarqueeTicker />
 
       {/* Big Action Footer Banner */}
       <section className="py-20 border-t border-white/[0.07] bg-gradient-to-b from-transparent to-[#0e1220]/80">

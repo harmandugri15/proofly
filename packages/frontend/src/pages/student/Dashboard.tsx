@@ -142,12 +142,12 @@ export const StudentDashboard: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
           <input
             type="text"
             readOnly
             value={`${window.location.origin}/u/${profile?.username}?pass=${profile?.shareToken || ''}`}
-            className="px-3.5 py-2.5 rounded-xl bg-[#080b14] border border-cyan-500/30 text-cyan-300 font-mono text-xs w-64 select-all focus:outline-none"
+            className="px-3.5 py-2.5 rounded-xl bg-[#080b14] border border-cyan-500/30 text-cyan-300 font-mono text-xs w-full sm:w-64 select-all focus:outline-none"
           />
           <button
             onClick={() => {
@@ -156,7 +156,7 @@ export const StudentDashboard: React.FC = () => {
               setCopiedFastPass(true);
               setTimeout(() => setCopiedFastPass(false), 2000);
             }}
-            className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all shrink-0 flex items-center gap-1.5 shadow-glow-cyan"
+            className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black text-xs transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-glow-cyan"
           >
             {copiedFastPass ? (
               <>
