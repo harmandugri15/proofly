@@ -308,17 +308,18 @@ export class AuthService {
   // Google OAuth 2.0 Flow
   // ============================================================================
 
-  static getGoogleAuthUrl(role: string = 'STUDENT'): string {
+  static getGoogleAuthUrl(role: string = 'STUDENT', customRedirectUri?: string): string {
     if (!env.GOOGLE_CLIENT_ID) {
       throw new BadRequestError(
         'Google OAuth is not configured. Please add GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to your environment variables.'
       );
     }
 
-    const state = JSON.stringify({ role });
+    const redirectUri = customRedirectUri || env.GOOGLE_CALLBACK_URL;
+    const state = JSON.stringify({ role, redirectUri });
     const params = new URLSearchParams({
       client_id: env.GOOGLE_CLIENT_ID,
-      redirect_uri: env.GOOGLE_CALLBACK_URL,
+      redirect_uri: redirectUri,
       response_type: 'code',
       scope: 'openid email profile',
       access_type: 'offline',
@@ -335,12 +336,16 @@ export class AuthService {
     }
 
     let role = 'STUDENT';
+    let redirectUri = env.GOOGLE_CALLBACK_URL;
     if (stateStr) {
       try {
         const decoded = Buffer.from(stateStr, 'base64').toString('utf-8');
         const parsed = JSON.parse(decoded);
         if (parsed.role === 'RECRUITER' || parsed.role === 'STUDENT') {
           role = parsed.role;
+        }
+        if (parsed.redirectUri && typeof parsed.redirectUri === 'string') {
+          redirectUri = parsed.redirectUri;
         }
       } catch {
         // Fallback default
@@ -355,7 +360,7 @@ export class AuthService {
         code,
         client_id: env.GOOGLE_CLIENT_ID,
         client_secret: env.GOOGLE_CLIENT_SECRET,
-        redirect_uri: env.GOOGLE_CALLBACK_URL,
+        redirect_uri: redirectUri,
         grant_type: 'authorization_code',
       }),
     });

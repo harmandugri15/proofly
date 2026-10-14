@@ -145,7 +145,22 @@ authRouter.post(
 authRouter.get('/google', (req, res, next) => {
   try {
     const role = (req.query.role as string) || 'STUDENT';
-    const authUrl = AuthService.getGoogleAuthUrl(role);
+    const host = req.get('host');
+    const proto = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+
+    // Intelligently compute redirect URL:
+    // If GOOGLE_CALLBACK_URL is explicitly set and not localhost on a production host, use it.
+    // Otherwise construct the callback using the active domain.
+    let callbackUrl = env.GOOGLE_CALLBACK_URL;
+    if (
+      (!callbackUrl || callbackUrl.includes('localhost')) &&
+      host &&
+      !host.includes('localhost')
+    ) {
+      callbackUrl = `${proto}://${host}${env.API_PREFIX}/auth/google/callback`;
+    }
+
+    const authUrl = AuthService.getGoogleAuthUrl(role, callbackUrl);
     return res.redirect(authUrl);
   } catch (error) {
     next(error);
@@ -153,15 +168,22 @@ authRouter.get('/google', (req, res, next) => {
 });
 
 authRouter.get('/google/callback', async (req, res) => {
+  const host = req.get('host');
+  const proto = req.headers['x-forwarded-proto'] || req.protocol || 'https';
+  const frontendBase =
+    env.FRONTEND_URL && (!env.FRONTEND_URL.includes('localhost') || !host || host.includes('localhost'))
+      ? env.FRONTEND_URL
+      : `${proto}://${host}`;
+
   try {
     const { code, state, error } = req.query;
 
     if (error) {
-      return res.redirect(`${env.FRONTEND_URL}/login?error=${encodeURIComponent(String(error))}`);
+      return res.redirect(`${frontendBase}/login?error=${encodeURIComponent(String(error))}`);
     }
 
     if (!code || typeof code !== 'string') {
-      return res.redirect(`${env.FRONTEND_URL}/login?error=missing_google_code`);
+      return res.redirect(`${frontendBase}/login?error=missing_google_code`);
     }
 
     const { user, token } = await AuthService.handleGoogleOAuthCallback(
@@ -172,10 +194,10 @@ authRouter.get('/google/callback', async (req, res) => {
     res.cookie('proofly_session', token, COOKIE_OPTIONS);
     const redirectPath = user.role === 'RECRUITER' ? '/recruiter/dashboard' : '/student/dashboard';
     return res.redirect(
-      `${env.FRONTEND_URL}/auth/callback?token=${encodeURIComponent(token)}&redirect=${encodeURIComponent(redirectPath)}`
+      `${frontendBase}/auth/callback?token=${encodeURIComponent(token)}&redirect=${encodeURIComponent(redirectPath)}`
     );
   } catch (error: any) {
-    return res.redirect(`${env.FRONTEND_URL}/login?error=${encodeURIComponent(error?.message || 'oauth_failed')}`);
+    return res.redirect(`${frontendBase}/login?error=${encodeURIComponent(error?.message || 'oauth_failed')}`);
   }
 });
 
