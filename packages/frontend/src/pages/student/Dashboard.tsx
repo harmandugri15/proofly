@@ -12,6 +12,8 @@ import {
   AlertTriangle,
   ArrowRight,
   TrendingUp,
+  Key,
+  Copy,
 } from 'lucide-react';
 import { ProfileCompletenessResult } from '@proofly/shared';
 
@@ -21,6 +23,7 @@ export const StudentDashboard: React.FC = () => {
   const [aiAnalysis, setAiAnalysis] = useState<ProfileCompletenessResult | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAiLoading, setIsAiLoading] = useState(false);
+  const [copiedFastPass, setCopiedFastPass] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -93,6 +96,52 @@ export const StudentDashboard: React.FC = () => {
           >
             Add Project
           </Link>
+        </div>
+      </div>
+
+      {/* Recruiter Fast-Pass Link Banner */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-cyan-950/30 via-slate-900 to-slate-900 border border-cyan-500/30 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-400">
+              <Key className="w-4 h-4" />
+            </span>
+            <h2 className="text-sm font-bold text-white">Your Recruiter Fast-Pass Share Link</h2>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+              Direct Recruiter Access
+            </span>
+          </div>
+          <p className="text-xs text-slate-400">
+            Share this link on your resume or directly with hiring teams. Recruiters can instantly inspect your complete verified portfolio, GitHub heatmap, and problem-solving stats without authentication barriers.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <input
+            type="text"
+            readOnly
+            value={`${window.location.origin}/u/${profile?.username}?pass=${profile?.shareToken || ''}`}
+            className="px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 text-cyan-300 font-mono text-xs w-60 select-all focus:outline-none"
+          />
+          <button
+            onClick={() => {
+              const url = `${window.location.origin}/u/${profile?.username}?pass=${profile?.shareToken || ''}`;
+              navigator.clipboard.writeText(url);
+              setCopiedFastPass(true);
+              setTimeout(() => setCopiedFastPass(false), 2000);
+            }}
+            className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5 shadow-md shadow-cyan-500/10"
+          >
+            {copiedFastPass ? (
+              <>
+                <CheckCircle2 className="w-3.5 h-3.5" /> Copied!
+              </>
+            ) : (
+              <>
+                <Copy className="w-3.5 h-3.5" /> Copy Link
+              </>
+            )}
+          </button>
         </div>
       </div>
 

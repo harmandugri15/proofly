@@ -1,7 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { FolderGit2, Plus, ExternalLink, Github, Trash2, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import {
+  FolderGit2,
+  Plus,
+  ExternalLink,
+  Github,
+  Trash2,
+  CheckCircle2,
+  ShieldCheck,
+  Sparkles,
+  Zap,
+  ArrowRight,
+  AlertCircle,
+  RefreshCw,
+  Star,
+  GitFork,
+} from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
+import { AutoFetchedProjectData } from '@proofly/shared';
 
 export const StudentProjectsPage: React.FC = () => {
   const [projects, setProjects] = useState<any[]>([]);
@@ -9,13 +25,22 @@ export const StudentProjectsPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
 
-  // Form
+  // Crawler / Auto-Fetch State
+  const [quickRepoUrl, setQuickRepoUrl] = useState('');
+  const [modalRepoUrl, setModalRepoUrl] = useState('');
+  const [isAutoFetching, setIsAutoFetching] = useState(false);
+  const [crawlerSuccessMsg, setCrawlerSuccessMsg] = useState<string | null>(null);
+  const [crawlerErrorMsg, setCrawlerErrorMsg] = useState<string | null>(null);
+  const [fetchedMeta, setFetchedMeta] = useState<AutoFetchedProjectData | null>(null);
+
+  // Form State
   const [title, setTitle] = useState('');
   const [tagline, setTagline] = useState('');
   const [description, setDescription] = useState('');
   const [repositoryUrl, setRepositoryUrl] = useState('');
   const [demoUrl, setDemoUrl] = useState('');
   const [skillsStr, setSkillsStr] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     loadProjects();
@@ -32,8 +57,44 @@ export const StudentProjectsPage: React.FC = () => {
     }
   };
 
+  const handleAutoFetch = async (repoUrlToFetch: string) => {
+    if (!repoUrlToFetch || !repoUrlToFetch.trim()) {
+      setCrawlerErrorMsg('Please enter a valid GitHub repository URL.');
+      return;
+    }
+
+    setIsAutoFetching(true);
+    setCrawlerSuccessMsg(null);
+    setCrawlerErrorMsg(null);
+
+    try {
+      const fetched = await api.post<AutoFetchedProjectData>('/student/projects/auto-fetch', {
+        repositoryUrl: repoUrlToFetch.trim(),
+      });
+
+      setFetchedMeta(fetched);
+      setTitle(fetched.title);
+      setTagline(fetched.tagline);
+      setDescription(fetched.description);
+      setRepositoryUrl(fetched.repositoryUrl);
+      setDemoUrl(fetched.demoUrl || '');
+      setSkillsStr(fetched.skills.join(', '));
+      setModalRepoUrl(fetched.repositoryUrl);
+
+      setCrawlerSuccessMsg(
+        `Auto-fetched "${fetched.title}"! Crawled repo metadata, README, ${fetched.starsCount} stars, and ${fetched.skills.length} technology tags.`
+      );
+      setShowModal(true);
+    } catch (e: any) {
+      setCrawlerErrorMsg(e?.message || 'Failed to crawl repository. Please check URL or enter manually.');
+    } finally {
+      setIsAutoFetching(false);
+    }
+  };
+
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const skills = skillsStr
         .split(',')
@@ -51,16 +112,27 @@ export const StudentProjectsPage: React.FC = () => {
       });
 
       setShowModal(false);
-      setTitle('');
-      setTagline('');
-      setDescription('');
-      setRepositoryUrl('');
-      setDemoUrl('');
-      setSkillsStr('');
-      loadProjects();
+      resetForm();
+      await loadProjects();
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const resetForm = () => {
+    setTitle('');
+    setTagline('');
+    setDescription('');
+    setRepositoryUrl('');
+    setDemoUrl('');
+    setSkillsStr('');
+    setCrawlerSuccessMsg(null);
+    setCrawlerErrorMsg(null);
+    setFetchedMeta(null);
+    setQuickRepoUrl('');
+    setModalRepoUrl('');
   };
 
   const handleDeleteProject = async (id: string) => {
@@ -90,41 +162,94 @@ export const StudentProjectsPage: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-8">
+      {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Projects & Evidence</h1>
           <p className="text-sm text-slate-400 mt-1">
-            Showcase your best engineering work backed by verifiable repositories and live deployments.
+            Showcase your best engineering work backed by verifiable repositories, live deployments, and automated code inspection.
           </p>
         </div>
         <button
-          onClick={() => setShowModal(true)}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-colors shadow-md shadow-emerald-500/10"
+          onClick={() => {
+            resetForm();
+            setShowModal(true);
+          }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-colors shadow-md shadow-emerald-500/10 shrink-0"
         >
-          <Plus className="w-4 h-4" /> Add Project
+          <Plus className="w-4 h-4" /> Add Project Manually
         </button>
       </div>
 
+      {/* 1-Click Crawler Banner */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-emerald-950/20 to-slate-900 border border-emerald-500/30 shadow-xl space-y-3">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-400">
+            <Zap className="w-4 h-4" />
+          </div>
+          <div>
+            <h2 className="text-sm font-bold text-white">
+              1-Click GitHub Repository Crawler
+            </h2>
+            <p className="text-xs text-slate-400">
+              Paste your repository link below. Proofly's crawler automatically extracts title, architecture summary from README, languages, stars, and live demo link.
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-2 pt-1">
+          <div className="relative flex-1">
+            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+              <Github className="w-4 h-4" />
+            </div>
+            <input
+              type="url"
+              value={quickRepoUrl}
+              onChange={(e) => setQuickRepoUrl(e.target.value)}
+              placeholder="https://github.com/username/repository"
+              className="w-full pl-10 pr-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+            />
+          </div>
+
+          <button
+            onClick={() => handleAutoFetch(quickRepoUrl)}
+            disabled={isAutoFetching || !quickRepoUrl.trim()}
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0 shadow-lg shadow-emerald-500/10"
+          >
+            {isAutoFetching ? (
+              <>
+                <RefreshCw className="w-3.5 h-3.5 animate-spin" /> Crawling Repo...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-3.5 h-3.5" /> Auto-Fetch & Add
+              </>
+            )}
+          </button>
+        </div>
+
+        {crawlerErrorMsg && (
+          <p className="text-xs text-rose-400 flex items-center gap-1.5 pt-1">
+            <AlertCircle className="w-3.5 h-3.5" /> {crawlerErrorMsg}
+          </p>
+        )}
+      </div>
+
+      {/* Projects Grid */}
       {projects.length === 0 ? (
         <div className="p-12 text-center rounded-2xl bg-slate-900 border border-slate-800">
           <FolderGit2 className="w-12 h-12 text-slate-600 mx-auto mb-3" />
           <h3 className="text-base font-bold text-white">No projects added yet</h3>
           <p className="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
-            Projects with repository links or live demos provide essential proof of work for recruiters.
+            Projects with repository links or live demos provide essential proof of work for recruiters. Paste a GitHub link above to get started instantly.
           </p>
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold"
-          >
-            Create Your First Project
-          </button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((project) => (
             <div
               key={project.id}
-              className="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4 hover:border-slate-700 transition-all"
+              className="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between space-y-4 hover:border-slate-700 transition-all shadow-lg"
             >
               <div className="space-y-3">
                 <div className="flex items-start justify-between gap-3">
@@ -194,9 +319,80 @@ export const StudentProjectsPage: React.FC = () => {
 
       {/* Add Project Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h3 className="text-base font-bold text-white mb-4">Add Project & Supporting Evidence</h3>
+        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 w-full max-w-xl shadow-2xl max-h-[92vh] overflow-y-auto space-y-4">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 className="text-base font-bold text-white flex items-center gap-2">
+                <FolderGit2 className="w-5 h-5 text-emerald-400" />
+                Add Project & Evidence
+              </h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowModal(false);
+                  resetForm();
+                }}
+                className="text-slate-400 hover:text-white text-xs"
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            {/* In-Modal Crawler Input */}
+            <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
+                ⚡ Auto-Fetch from GitHub URL
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  value={modalRepoUrl}
+                  onChange={(e) => setModalRepoUrl(e.target.value)}
+                  placeholder="https://github.com/..."
+                  className="flex-1 px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleAutoFetch(modalRepoUrl)}
+                  disabled={isAutoFetching || !modalRepoUrl.trim()}
+                  className="px-3.5 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5"
+                >
+                  <RefreshCw className={`w-3 h-3 ${isAutoFetching ? 'animate-spin' : ''}`} />
+                  {isAutoFetching ? 'Crawling...' : 'Auto-Fetch'}
+                </button>
+              </div>
+
+              {crawlerSuccessMsg && (
+                <p className="text-xs text-emerald-400 flex items-center gap-1.5 pt-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  {crawlerSuccessMsg}
+                </p>
+              )}
+
+              {crawlerErrorMsg && (
+                <p className="text-xs text-rose-400 flex items-center gap-1.5 pt-1">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                  {crawlerErrorMsg}
+                </p>
+              )}
+            </div>
+
+            {/* Fetched Highlights Badge */}
+            {fetchedMeta && (
+              <div className="flex flex-wrap items-center gap-3 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-300 font-mono">
+                <span className="flex items-center gap-1">
+                  <Star className="w-3.5 h-3.5 text-amber-400" /> {fetchedMeta.starsCount} stars
+                </span>
+                <span className="flex items-center gap-1">
+                  <GitFork className="w-3.5 h-3.5 text-slate-300" /> {fetchedMeta.forksCount} forks
+                </span>
+                {fetchedMeta.primaryLanguage && (
+                  <span>Primary: <strong>{fetchedMeta.primaryLanguage}</strong></span>
+                )}
+                {fetchedMeta.license && <span>License: {fetchedMeta.license}</span>}
+              </div>
+            )}
+
             <form onSubmit={handleCreateProject} className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
@@ -235,8 +431,8 @@ export const StudentProjectsPage: React.FC = () => {
                   required
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Explain the problem solved, architectural trade-offs, technologies used, and measurable results (e.g. latency, throughput, scale)."
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  placeholder="Explain the problem solved, architectural trade-offs, technologies used, and measurable results."
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs leading-relaxed focus:outline-none focus:border-emerald-500 font-sans"
                 />
               </div>
 
@@ -250,19 +446,19 @@ export const StudentProjectsPage: React.FC = () => {
                     value={repositoryUrl}
                     onChange={(e) => setRepositoryUrl(e.target.value)}
                     placeholder="https://github.com/..."
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-emerald-500"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-                    Live Demo URL
+                    Live Demo URL (Optional)
                   </label>
                   <input
                     type="url"
                     value={demoUrl}
                     onChange={(e) => setDemoUrl(e.target.value)}
                     placeholder="https://demo.app"
-                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                    className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs font-mono focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -276,23 +472,27 @@ export const StudentProjectsPage: React.FC = () => {
                   value={skillsStr}
                   onChange={(e) => setSkillsStr(e.target.value)}
                   placeholder="e.g. TypeScript, React, Node.js, WebSockets, PostgreSQL"
-                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-sm focus:outline-none focus:border-emerald-500"
+                  className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    resetForm();
+                  }}
                   className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-600"
+                  disabled={isSubmitting}
+                  className="px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 text-xs font-bold hover:bg-emerald-600 disabled:opacity-50 flex items-center gap-1.5"
                 >
-                  Save Project & Verify
+                  {isSubmitting ? 'Saving & Verifying...' : 'Save Project & Verify'}
                 </button>
               </div>
             </form>

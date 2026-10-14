@@ -15,9 +15,15 @@ import {
   Award,
   ChevronRight,
   TrendingUp,
+  Code2,
+  Share2,
+  CheckCircle2,
+  Key,
 } from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 import { RecruiterResearchResult, CandidateMatchResult } from '@proofly/shared';
+import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
+import { CodingProfileCard } from '../../components/common/CodingProfileCard';
 
 export const RecruiterCandidateDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +45,7 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
   const [selectedJobId, setSelectedJobId] = useState('');
   const [isMatching, setIsMatching] = useState(false);
   const [matchResult, setMatchResult] = useState<CandidateMatchResult | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   useEffect(() => {
     loadCandidate();
@@ -170,9 +177,33 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Shortlist Action Dropdown */}
-        <div className="flex flex-col gap-2 shrink-0">
-          <div className="text-xs text-slate-400 font-semibold mb-1">Add to Shortlist:</div>
+        {/* Actions */}
+        <div className="flex flex-col gap-2.5 shrink-0">
+          <div className="flex items-center gap-2">
+            <Link
+              to={`/u/${candidate.username}${candidate.shareToken ? `?pass=${candidate.shareToken}` : ''}`}
+              target="_blank"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition-colors"
+            >
+              <span>Public Portfolio</span>
+              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+            </Link>
+
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/u/${candidate.username}${candidate.shareToken ? `?pass=${candidate.shareToken}` : ''}`;
+                navigator.clipboard.writeText(url);
+                setCopiedLink(true);
+                setTimeout(() => setCopiedLink(false), 2000);
+              }}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 font-semibold text-xs border border-cyan-500/30 transition-colors"
+            >
+              <Key className="w-3.5 h-3.5" />
+              <span>{copiedLink ? 'Fast-Pass Copied!' : 'Copy Fast-Pass'}</span>
+            </button>
+          </div>
+
+          <div className="text-xs text-slate-400 font-semibold">Add to Shortlist:</div>
           <div className="flex gap-2">
             <select
               id="shortlist-select"
@@ -292,32 +323,32 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
             </div>
           </div>
 
-          {/* GitHub Repositories */}
-          {candidate.gitHubRepos?.length > 0 && (
-            <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          {/* GitHub Engineering Signals & 52-Week Contribution Heatmap */}
+          <div className="space-y-4">
+            <h2 className="text-base font-bold text-white flex items-center gap-2">
+              <Github className="w-4 h-4 text-emerald-400" />
+              GitHub Engineering Signals & Activity Heatmap
+            </h2>
+
+            <GitHubProfileCard
+              githubUsername={candidate.githubUsername}
+              githubStats={candidate.githubStats}
+              repos={candidate.gitHubRepos || []}
+              showSyncButton={false}
+            />
+          </div>
+
+          {/* Algorithmic Problem Solving Profiles (LeetCode, HackerRank, Codeforces) */}
+          {candidate.codingProfiles && candidate.codingProfiles.length > 0 && (
+            <div className="space-y-4">
               <h2 className="text-base font-bold text-white flex items-center gap-2">
-                <Github className="w-4 h-4 text-slate-300" />
-                GitHub Activity & Repositories
+                <Code2 className="w-4 h-4 text-amber-400" />
+                Verified Algorithmic Problem Solving Profiles ({candidate.codingProfiles.length})
               </h2>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {candidate.gitHubRepos.map((repo: any) => (
-                  <div key={repo.id} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-1.5">
-                    <a
-                      href={repo.htmlUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-bold text-white hover:text-emerald-400 block"
-                    >
-                      {repo.name}
-                    </a>
-                    <p className="text-slate-400 line-clamp-1">{repo.description || 'No description'}</p>
-                    <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono">
-                      <span>★ {repo.starsCount}</span>
-                      <span>{repo.primaryLanguage || 'Code'}</span>
-                      <span>{repo.recentCommitCount} commits</span>
-                    </div>
-                  </div>
+              <div className="space-y-4">
+                {candidate.codingProfiles.map((cp: any) => (
+                  <CodingProfileCard key={cp.id} profile={cp} showActions={false} />
                 ))}
               </div>
             </div>

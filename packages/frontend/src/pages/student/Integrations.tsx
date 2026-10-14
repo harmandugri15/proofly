@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2 } from 'lucide-react';
-import { EvidenceBadge } from '../../components/common/EvidenceBadge';
+import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, Sparkles } from 'lucide-react';
+import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
+import { CodingProfileCard } from '../../components/common/CodingProfileCard';
 
 export const StudentIntegrationsPage: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSyncingGithub, setIsSyncingGithub] = useState(false);
+  const [githubHandle, setGithubHandle] = useState('');
   const [githubToken, setGithubToken] = useState('');
   const [githubMsg, setGithubMsg] = useState<string | null>(null);
 
@@ -23,6 +25,9 @@ export const StudentIntegrationsPage: React.FC = () => {
     try {
       const data = await api.get<any>('/student/profile');
       setProfile(data);
+      if (data.githubUsername) {
+        setGithubHandle(data.githubUsername);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -30,17 +35,17 @@ export const StudentIntegrationsPage: React.FC = () => {
     }
   };
 
-  const handleSyncGithub = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSyncGithub = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setIsSyncingGithub(true);
     setGithubMsg(null);
 
     try {
       const result = await api.post<any>('/integrations/github/sync', {
         token: githubToken || undefined,
-        username: profile?.username,
+        username: githubHandle || profile?.githubUsername || profile?.username,
       });
-      setGithubMsg(`Successfully synced ${result.syncedCount} repositories.`);
+      setGithubMsg(`Successfully synced ${result.syncedCount} repositories and updated contribution heatmap.`);
       await loadData();
     } catch (e: any) {
       setGithubMsg(`Sync failed: ${e.message}`);
@@ -80,54 +85,66 @@ export const StudentIntegrationsPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
+    <div className="max-w-5xl mx-auto p-6 space-y-10">
       <div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">External Integrations</h1>
+        <h1 className="text-2xl font-bold text-white tracking-tight">External Integrations & Deep Signals</h1>
         <p className="text-sm text-slate-400 mt-1">
-          Connect your GitHub repositories and coding platform handles to showcase real code and algorithmic problem solving.
+          Connect your GitHub account and algorithmic coding profiles. Proofly crawls and aggregates deep evidence (contribution heatmaps, difficulty breakdown, streaks, acceptance rates) directly in-app so recruiters never have to leave the platform.
         </p>
       </div>
 
-      {/* GitHub Integration Card */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
+      {/* 1. GitHub Integration Section */}
+      <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-white">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-white">
               <Github className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">GitHub Integration</h2>
+              <h2 className="text-lg font-bold text-white">GitHub Integration & Activity Heatmap</h2>
               <p className="text-xs text-slate-400">
-                Synchronize public repositories, stars, language statistics, and commit cadence.
+                Live 52-week contribution graph, repositories, language percentages, and commit history.
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            {profile?.gitHubRepos?.length > 0 ? 'Connected' : 'Not Connected'}
-          </span>
         </div>
 
-        <form onSubmit={handleSyncGithub} className="space-y-3 bg-slate-950 p-4 rounded-xl border border-slate-800">
-          <div>
-            <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
-              Personal Access Token or Public Handle (Optional for higher rate limits)
-            </label>
-            <div className="flex gap-2">
+        {/* Sync Controls Form */}
+        <form onSubmit={handleSyncGithub} className="space-y-3 bg-slate-900 p-4 rounded-2xl border border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                GitHub Username / Handle
+              </label>
               <input
                 type="text"
-                value={githubToken}
-                onChange={(e) => setGithubToken(e.target.value)}
-                placeholder="ghp_... or leave empty to sync by public username"
-                className="flex-1 px-3.5 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500"
+                value={githubHandle}
+                onChange={(e) => setGithubHandle(e.target.value)}
+                placeholder="e.g. alexchen"
+                className="w-full px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
               />
-              <button
-                type="submit"
-                disabled={isSyncingGithub}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${isSyncingGithub ? 'animate-spin' : ''}`} />
-                {isSyncingGithub ? 'Syncing...' : 'Sync Repositories'}
-              </button>
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                Personal Access Token (Optional for Private Repos / Rate Limits)
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="password"
+                  value={githubToken}
+                  onChange={(e) => setGithubToken(e.target.value)}
+                  placeholder="ghp_... or leave empty for public data"
+                  className="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white placeholder-slate-500 text-xs focus:outline-none focus:border-emerald-500 font-mono"
+                />
+                <button
+                  type="submit"
+                  disabled={isSyncingGithub}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${isSyncingGithub ? 'animate-spin' : ''}`} />
+                  {isSyncingGithub ? 'Syncing...' : 'Sync GitHub'}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -138,17 +155,27 @@ export const StudentIntegrationsPage: React.FC = () => {
           )}
         </form>
 
-        {/* Repositories List */}
+        {/* Rich GitHub Profile & Heatmap Display Card */}
+        <GitHubProfileCard
+          githubUsername={profile?.githubUsername}
+          githubStats={profile?.githubStats}
+          repos={profile?.gitHubRepos || []}
+          onSync={() => handleSyncGithub()}
+          isSyncing={isSyncingGithub}
+          showSyncButton={true}
+        />
+
+        {/* Selected Repositories List */}
         {profile?.gitHubRepos?.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-3">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Imported Repositories ({profile.gitHubRepos.length})
+              Synchronized Public Repositories ({profile.gitHubRepos.length})
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {profile.gitHubRepos.map((repo: any) => (
                 <div
                   key={repo.id}
-                  className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 flex items-start justify-between gap-3 text-xs"
+                  className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-start justify-between gap-3 text-xs shadow-md"
                 >
                   <div className="space-y-1">
                     <a
@@ -160,14 +187,14 @@ export const StudentIntegrationsPage: React.FC = () => {
                       {repo.name}
                     </a>
                     <p className="text-slate-400 line-clamp-1">{repo.description || 'No description'}</p>
-                    <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono">
+                    <div className="flex items-center gap-3 text-[11px] text-slate-500 font-mono pt-1">
                       <span>★ {repo.starsCount}</span>
                       <span>{repo.primaryLanguage || 'Code'}</span>
                       <span>{repo.recentCommitCount} commits</span>
                     </div>
                   </div>
-                  <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                    Selected
+                  <span className="text-[10px] text-emerald-400 font-mono bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
+                    Active
                   </span>
                 </div>
               ))}
@@ -176,33 +203,33 @@ export const StudentIntegrationsPage: React.FC = () => {
         )}
       </div>
 
-      {/* LeetCode & HackerRank Coding Profiles */}
-      <div className="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-6">
+      {/* 2. Coding Platforms Section (LeetCode, HackerRank, Codeforces) */}
+      <div className="space-y-6 pt-4 border-t border-slate-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-amber-400">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400">
               <Code2 className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">Coding Platforms (LeetCode & HackerRank)</h2>
+              <h2 className="text-lg font-bold text-white">Algorithmic Problem Solving Profiles</h2>
               <p className="text-xs text-slate-400">
-                Link public handles to import verified problem solving stats and contest rankings.
+                Connect LeetCode, HackerRank, and Codeforces handles. Renders verified problem breakdowns, difficulty distributions, acceptance rates, and recent submissions.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Add Coding Profile Form */}
-        <form onSubmit={handleAddCodingProfile} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+        {/* Link Handle Form */}
+        <form onSubmit={handleAddCodingProfile} className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
                 Platform
               </label>
               <select
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value as any)}
-                className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
               >
                 <option value="LEETCODE">LeetCode</option>
                 <option value="HACKERRANK">HackerRank</option>
@@ -211,7 +238,7 @@ export const StudentIntegrationsPage: React.FC = () => {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
                 Profile Username / Handle
               </label>
               <div className="flex gap-2">
@@ -220,59 +247,41 @@ export const StudentIntegrationsPage: React.FC = () => {
                   required
                   value={codingUsername}
                   onChange={(e) => setCodingUsername(e.target.value)}
-                  placeholder="e.g. alexchen_dev"
-                  className="flex-1 px-3.5 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
+                  placeholder="e.g. alexchen_dev or mayap_sys"
+                  className="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500 font-mono"
                 />
                 <button
                   type="submit"
                   disabled={isAddingCoding}
-                  className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0"
+                  className="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50 text-slate-950 font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5"
                 >
-                  {isAddingCoding ? 'Linking...' : 'Link Profile'}
+                  <Plus className="w-3.5 h-3.5" />
+                  {isAddingCoding ? 'Linking...' : 'Link Platform Handle'}
                 </button>
               </div>
             </div>
           </div>
         </form>
 
-        {/* Connected Coding Profiles */}
-        <div className="space-y-3">
-          {profile?.codingProfiles?.map((cp: any) => (
-            <div
-              key={cp.id}
-              className="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-4"
-            >
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-white text-sm">{cp.platform}</span>
-                  <span className="text-xs text-slate-400 font-mono">@{cp.username}</span>
-                  <EvidenceBadge status={cp.syncStatus} />
-                </div>
-                <div className="flex items-center gap-4 text-xs text-slate-300">
-                  <span>Solved: <strong className="text-white">{cp.totalSolved}</strong> problems</span>
-                  {cp.rating && <span>Rating: <strong className="text-emerald-400">{cp.rating}</strong></span>}
-                  {cp.ranking && <span>Global Rank: #{cp.ranking}</span>}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <a
-                  href={cp.profileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors"
-                >
-                  View Profile
-                </a>
-                <button
-                  onClick={() => handleDeleteCodingProfile(cp.id)}
-                  className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+        {/* Coding Profile Cards List */}
+        <div className="space-y-6">
+          {profile?.codingProfiles && profile.codingProfiles.length > 0 ? (
+            profile.codingProfiles.map((cp: any) => (
+              <CodingProfileCard
+                key={cp.id}
+                profile={cp}
+                onDelete={handleDeleteCodingProfile}
+                showActions={true}
+              />
+            ))
+          ) : (
+            <div className="p-8 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-2">
+              <Code2 className="w-8 h-8 text-slate-600 mx-auto" />
+              <p className="text-xs text-slate-400">
+                No coding profiles linked yet. Add your LeetCode, HackerRank, or Codeforces handle above to display verified algorithmic problem counts and acceptance rates.
+              </p>
             </div>
-          ))}
+          )}
         </div>
       </div>
     </div>

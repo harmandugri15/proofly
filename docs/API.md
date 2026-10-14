@@ -47,15 +47,25 @@
 - `POST /projects` / `PUT /projects/:id` / `DELETE /projects/:id` — Projects CRUD.
 - `POST /certificates` / `PUT /certificates/:id` / `DELETE /certificates/:id` — Certificate CRUD.
 - `POST /certificates/:id/verify` — Trigger automated verification workflow for this credential.
+### 2.2 Student Profile Management (`/api/v1/student`)
+- `GET /profile` — Retrieve full profile with projects, credentials, coding stats, and settings.
+- `PUT /profile` — Update headline, bio, location, visibility, open to work status.
+- `POST /projects` — Create project. Body: `{ title, tagline, description, repositoryUrl, demoUrl, skills }`.
+- `POST /projects/auto-fetch` — **1-Click GitHub Repository Crawler**. Body: `{ repositoryUrl }`. Crawls repository metadata, README excerpt, live demo link, star count, and language byte percentages.
+- `POST /projects/:id/verify` — Trigger automated evidence verification for repository & demo reachability.
+- `DELETE /projects/:id` — Delete project.
+- `POST /certificates` — Submit certificate with verification URL or credential ID.
+- `POST /certificates/:id/verify` — Trigger issuer verification engine.
+- `GET /share-link` — **Recruiter Fast-Pass Link**. Returns unique share token and instant bypass URL (`/u/:username?pass=:shareToken`).
 - `GET /preview` — Preview profile as a public viewer or recruiter.
 
 ### 2.3 External Integrations (`/api/v1/integrations`)
 - `GET /github/status` — Get GitHub connection status, rate-limit quota, and last synced timestamp.
 - `POST /github/connect` — Connect GitHub via OAuth code or Personal Access Token.
-- `POST /github/sync` — Trigger immediate synchronization of repositories and commits.
+- `POST /github/sync` — Trigger immediate synchronization of repositories, commits, and 52-week activity heatmap.
 - `PUT /github/repositories` — Select/deselect which repos appear on public profile.
-- `POST /coding-profiles` — Add LeetCode or HackerRank profile link. Body: `{ platform, username }`.
-- `POST /coding-profiles/:id/sync` — Trigger provider adapter sync.
+- `POST /coding-profiles` — Add LeetCode, HackerRank, or Codeforces profile link. Body: `{ platform, username }`.
+- `POST /coding-profiles/:id/sync` — Trigger provider adapter sync (computes acceptance rates, streaks, and difficulty breakdowns).
 - `DELETE /coding-profiles/:id` — Disconnect external profile.
 
 ### 2.4 Technical Content & Case Studies (`/api/v1/posts`)
@@ -69,7 +79,7 @@
 
 ### 2.5 Recruiter Workspace (`/api/v1/recruiter`)
 - `GET /candidates` — Search candidates by skills, query, graduation year, and verified project count.
-- `GET /candidates/:id` — View full candidate profile with evidence provenance.
+- `GET /candidates/:id` — View full candidate profile with evidence provenance, 52-week heatmap, and coding profile signals.
 - `POST /candidates/compare` — Compare up to 4 candidates side-by-side against specific criteria.
 - `GET /jobs` / `POST /jobs` / `PUT /jobs/:id` / `DELETE /jobs/:id` — Manage organization job postings.
 - `GET /shortlists` / `POST /shortlists` / `DELETE /shortlists/:id` — Manage shortlists.
@@ -86,6 +96,6 @@
 - `POST /match-candidate` — Compute explainable candidate match score against a job.
 
 ### 2.7 Public Endpoints
-- `GET /api/v1/public/profile/:username` — Public student portfolio view (respects privacy settings).
+- `GET /api/v1/public/profile/:username` — Public student portfolio view (accepts optional `?pass=:shareToken` for recruiter fast-pass access).
 - `GET /api/v1/public/posts/:slug` — Public article view.
 - `GET /api/v1/health` — Liveness & readiness probe (DB status, cache status, uptime).

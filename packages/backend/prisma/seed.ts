@@ -100,6 +100,51 @@ async function main() {
     },
   });
 
+  // Generate contribution heatmap for Alex Chen
+  const alexHeatmap = [];
+  const today = new Date();
+  let alexTotalCommits = 0;
+  for (let i = 364; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+    const pseudo = Math.sin(i * 0.23 + 42) * 1000;
+    const rand = Math.abs(pseudo - Math.floor(pseudo));
+    let count = 0;
+    if (rand < (isWeekend ? 0.35 : 0.8)) {
+      count = Math.floor(rand * 12) + 1;
+    }
+    let level = 0;
+    if (count > 0 && count <= 2) level = 1;
+    else if (count >= 3 && count <= 5) level = 2;
+    else if (count >= 6 && count <= 9) level = 3;
+    else if (count >= 10) level = 4;
+    alexTotalCommits += count;
+    alexHeatmap.push({ date: dateStr, count, level });
+  }
+
+  const alexGithubStats = {
+    username: 'alexchen',
+    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+    bio: 'CS @ UW | Distributed systems, WebSockets & performant TypeScript tools.',
+    publicRepos: 18,
+    followers: 48,
+    following: 34,
+    totalStars: 142,
+    totalForks: 29,
+    totalCommitsLastYear: alexTotalCommits,
+    currentStreak: 19,
+    longestStreak: 44,
+    topLanguages: [
+      { language: 'TypeScript', percentage: 62, color: '#3178c6' },
+      { language: 'React', percentage: 22, color: '#61dafb' },
+      { language: 'Go', percentage: 16, color: '#00ADD8' },
+    ],
+    contributions: alexHeatmap,
+    lastSyncedAt: new Date().toISOString(),
+  };
+
   const alexProfile = await prisma.studentProfile.create({
     data: {
       userId: alexUser.id,
@@ -111,7 +156,10 @@ async function main() {
       isOpenToWork: true,
       preferredRoles: JSON.stringify(['Full-Stack Engineer', 'Frontend Engineer', 'Backend Engineer']),
       targetGraduationYear: 2025,
-      completenessScore: 92,
+      completenessScore: 95,
+      githubUsername: 'alexchen',
+      githubStats: JSON.stringify(alexGithubStats),
+      shareToken: 'alex-recruiter-fastpass-2025',
     },
   });
 
@@ -281,6 +329,22 @@ async function main() {
       badges: JSON.stringify(['Knight', '50 Days 2024', 'SQL 50']),
       syncStatus: 'SYNCED',
       lastSyncedAt: new Date(),
+      detailedStats: JSON.stringify({
+        acceptanceRate: 68.4,
+        streakDays: 45,
+        percentileRank: 92.5,
+        easyTotal: 830,
+        mediumTotal: 1740,
+        hardTotal: 720,
+        topSkills: ['Dynamic Programming', 'Graph Theory', 'Trees', 'Binary Search', 'Sliding Window'],
+        recentSubmissions: [
+          { title: 'LRU Cache', difficulty: 'Medium', timestamp: '2026-10-12', language: 'TypeScript' },
+          { title: 'Trapping Rain Water', difficulty: 'Hard', timestamp: '2026-10-10', language: 'TypeScript' },
+          { title: 'Number of Islands', difficulty: 'Medium', timestamp: '2026-10-08', language: 'TypeScript' },
+          { title: 'Merge k Sorted Lists', difficulty: 'Hard', timestamp: '2026-10-05', language: 'TypeScript' },
+          { title: 'Valid Parentheses', difficulty: 'Easy', timestamp: '2026-10-02', language: 'TypeScript' },
+        ],
+      }),
     },
   });
 
@@ -319,6 +383,49 @@ By pairing fractional indexing with client-side optimistic reconciliation, we el
   });
 
   // 4. Create Student 2: Maya Patel (Systems & Backend Specialist)
+  const mayaHeatmap = [];
+  let mayaTotalCommits = 0;
+  for (let i = 364; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const dateStr = d.toISOString().split('T')[0];
+    const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+    const pseudo = Math.sin(i * 0.37 + 19) * 1000;
+    const rand = Math.abs(pseudo - Math.floor(pseudo));
+    let count = 0;
+    if (rand < (isWeekend ? 0.4 : 0.85)) {
+      count = Math.floor(rand * 15) + 1;
+    }
+    let level = 0;
+    if (count > 0 && count <= 2) level = 1;
+    else if (count >= 3 && count <= 5) level = 2;
+    else if (count >= 6 && count <= 9) level = 3;
+    else if (count >= 10) level = 4;
+    mayaTotalCommits += count;
+    mayaHeatmap.push({ date: dateStr, count, level });
+  }
+
+  const mayaGithubStats = {
+    username: 'mayapatel',
+    avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+    bio: 'CS @ UC Berkeley | Building high-throughput storage engines and distributed consensus in Rust & Go.',
+    publicRepos: 14,
+    followers: 89,
+    following: 42,
+    totalStars: 210,
+    totalForks: 48,
+    totalCommitsLastYear: mayaTotalCommits,
+    currentStreak: 24,
+    longestStreak: 56,
+    topLanguages: [
+      { language: 'Rust', percentage: 58, color: '#dea584' },
+      { language: 'Go', percentage: 28, color: '#00ADD8' },
+      { language: 'C++', percentage: 14, color: '#f34b7d' },
+    ],
+    contributions: mayaHeatmap,
+    lastSyncedAt: new Date().toISOString(),
+  };
+
   const mayaUser = await prisma.user.create({
     data: {
       email: 'maya.patel@tech.edu',
@@ -341,6 +448,9 @@ By pairing fractional indexing with client-side optimistic reconciliation, we el
       preferredRoles: JSON.stringify(['Backend Systems Engineer', 'Infrastructure Engineer']),
       targetGraduationYear: 2026,
       completenessScore: 88,
+      githubUsername: 'mayapatel',
+      githubStats: JSON.stringify(mayaGithubStats),
+      shareToken: 'maya-recruiter-fastpass-2026',
     },
   });
 
@@ -389,6 +499,39 @@ By pairing fractional indexing with client-side optimistic reconciliation, we el
       isFeatured: true,
       verificationStatus: 'CODE_VERIFIED',
       verificationNotes: 'GitHub repository code and unit tests verified.',
+    },
+  });
+
+  // Maya Coding Profile
+  await prisma.externalCodingProfile.create({
+    data: {
+      studentProfileId: mayaProfile.id,
+      platform: 'CODEFORCES',
+      username: 'mayap_sys',
+      profileUrl: 'https://codeforces.com/profile/mayap_sys',
+      totalSolved: 245,
+      easySolved: 80,
+      mediumSolved: 125,
+      hardSolved: 40,
+      ranking: 8400,
+      rating: 1840,
+      badges: JSON.stringify(['Expert', 'Div. 2 Specialist', 'Round 920 Winner']),
+      syncStatus: 'SYNCED',
+      lastSyncedAt: new Date(),
+      detailedStats: JSON.stringify({
+        acceptanceRate: 74.2,
+        streakDays: 28,
+        percentileRank: 94.1,
+        easyTotal: 500,
+        mediumTotal: 900,
+        hardTotal: 450,
+        topSkills: ['Bit Manipulation', 'Segment Trees', 'Greedy', 'Number Theory', 'Shortest Paths'],
+        recentSubmissions: [
+          { title: 'D. Inversion Counting with Fenwick', difficulty: 'Hard', timestamp: '2026-10-11', language: 'Rust' },
+          { title: 'C. Quests for Treasure', difficulty: 'Medium', timestamp: '2026-10-09', language: 'Rust' },
+          { title: 'B. Minimize the Maximum Difference', difficulty: 'Medium', timestamp: '2026-10-07', language: 'Go' },
+        ],
+      }),
     },
   });
 

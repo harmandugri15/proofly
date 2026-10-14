@@ -216,7 +216,7 @@ export class StudentService {
   }
 
   // Public Profile lookup
-  static async getPublicProfileByUsername(username: string, viewerRole?: string) {
+  static async getPublicProfileByUsername(username: string, viewerRole?: string, shareToken?: string) {
     const profile = await prisma.studentProfile.findUnique({
       where: { username },
       include: {
@@ -236,15 +236,45 @@ export class StudentService {
       throw new NotFoundError('Candidate profile not found');
     }
 
-    if (profile.visibility === 'PRIVATE' && viewerRole !== 'ADMIN') {
+    const hasValidShareToken = shareToken && profile.shareToken && profile.shareToken === shareToken;
+
+    if (profile.visibility === 'PRIVATE' && viewerRole !== 'ADMIN' && !hasValidShareToken) {
       throw new ForbiddenError('This profile is set to private');
     }
 
-    if (profile.visibility === 'RECRUITER_ONLY' && viewerRole !== 'RECRUITER' && viewerRole !== 'ADMIN') {
+    if (
+      profile.visibility === 'RECRUITER_ONLY' &&
+      viewerRole !== 'RECRUITER' &&
+      viewerRole !== 'ADMIN' &&
+      !hasValidShareToken
+    ) {
       throw new ForbiddenError('This profile is only visible to verified recruiters');
     }
 
     return this.formatProfile(profile);
+  }
+
+  // Generate / Retrieve Shareable Link with Fast-Pass Token for recruiters
+  static async getOrCreateShareToken(userId: string) {
+    const profile = await this.requireProfile(userId);
+    let token = profile.shareToken;
+
+    if (!token) {
+      token = (await import('crypto')).randomBytes(16).toString('hex');
+      await prisma.studentProfile.update({
+        where: { id: profile.id },
+        data: { shareToken: token },
+      });
+    }
+
+    const baseUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    return {
+      username: profile.username,
+      shareToken: token,
+      visibility: profile.visibility,
+      shareUrl: `${baseUrl}/u/${profile.username}`,
+      recruiterFastPassUrl: `${baseUrl}/u/${profile.username}?pass=${token}`,
+    };
   }
 
   // Profile Completeness Heuristic (0 - 100%)
@@ -293,11 +323,13 @@ export class StudentService {
     return {
       ...profile,
       preferredRoles: profile.preferredRoles ? JSON.parse(profile.preferredRoles) : [],
+      githubStats: profile.githubStats ? JSON.parse(profile.githubStats) : null,
       projects: profile.projects?.map(this.formatProject) || [],
       codingProfiles:
         profile.codingProfiles?.map((cp: any) => ({
           ...cp,
           badges: cp.badges ? JSON.parse(cp.badges) : [],
+          detailedStats: cp.detailedStats ? JSON.parse(cp.detailedStats) : null,
         })) || [],
       gitHubRepos:
         profile.gitHubRepos?.map((gh: any) => ({

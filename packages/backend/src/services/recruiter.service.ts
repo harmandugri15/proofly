@@ -118,8 +118,16 @@ export class RecruiterService {
       throw new ForbiddenError('Candidate profile is marked private');
     }
 
+    let parsedGithubStats = null;
+    if (candidate.githubStats) {
+      try {
+        parsedGithubStats = JSON.parse(candidate.githubStats);
+      } catch (e) {}
+    }
+
     return {
       ...candidate,
+      githubStats: parsedGithubStats,
       preferredRoles: candidate.preferredRoles ? JSON.parse(candidate.preferredRoles) : [],
       projects: candidate.projects.map((p) => ({
         ...p,
@@ -129,6 +137,7 @@ export class RecruiterService {
       codingProfiles: candidate.codingProfiles.map((cp) => ({
         ...cp,
         badges: cp.badges ? JSON.parse(cp.badges) : [],
+        detailedStats: cp.detailedStats ? JSON.parse(cp.detailedStats) : null,
       })),
       gitHubRepos: candidate.gitHubRepos.map((gh) => ({
         ...gh,

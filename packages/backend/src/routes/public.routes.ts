@@ -23,9 +23,12 @@ publicRouter.get('/profile/:username', async (req, res, next) => {
       } catch {}
     }
 
+    const sharePass = (req.query.pass || req.query.token) as string | undefined;
+
     const profile = await StudentService.getPublicProfileByUsername(
       req.params.username,
-      viewerRole
+      viewerRole,
+      sharePass
     );
 
     return res.json({ success: true, data: profile });

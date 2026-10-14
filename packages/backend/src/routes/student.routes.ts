@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { StudentService } from '../services/student.service.js';
 import { VerificationService } from '../services/verification.service.js';
+import { GitHubService } from '../services/github.service.js';
 import { authenticateToken, requireRole } from '../middlewares/auth.js';
 import { validateBody } from '../middlewares/validate.js';
 import {
@@ -10,6 +11,7 @@ import {
   SkillSchema,
   ProjectSchema,
   CertificateSchema,
+  AutoFetchRepoSchema,
 } from '@proofly/shared';
 
 export const studentRouter = Router();
@@ -93,6 +95,25 @@ studentRouter.delete('/skills/:id', async (req, res, next) => {
 });
 
 // Projects
+studentRouter.post('/projects/auto-fetch', validateBody(AutoFetchRepoSchema), async (req, res, next) => {
+  try {
+    const data = await GitHubService.autoFetchRepository(req.body.repositoryUrl);
+    return res.json({ success: true, data });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Share Link Generation
+studentRouter.get('/share-link', async (req, res, next) => {
+  try {
+    const shareInfo = await StudentService.getOrCreateShareToken(req.user!.id);
+    return res.json({ success: true, data: shareInfo });
+  } catch (error) {
+    next(error);
+  }
+});
+
 studentRouter.post('/projects', validateBody(ProjectSchema), async (req, res, next) => {
   try {
     const item = await StudentService.addProject(req.user!.id, req.body);
