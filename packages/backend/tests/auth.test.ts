@@ -78,4 +78,93 @@ describe('Auth & Session Integration Tests', () => {
     expect(res.status).toBe(401);
     expect(res.body.success).toBe(false);
   });
+
+  it('should reject registration with a weak password missing required complexity', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/register')
+      .send({
+        email: `weak.${Date.now()}@example.com`,
+        password: 'weakpassword',
+        name: 'Weak Password Tester',
+        role: 'STUDENT',
+      });
+
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.code).toBe('VALIDATION_ERROR');
+  });
+
+  it('should complete production-ready OTP generation, verification, and password reset lifecycle', async () => {
+    // 1. Request forgot password OTP
+    const forgotRes = await request(app)
+      .post('/api/v1/auth/forgot-password')
+      .send({ email: testStudentEmail });
+
+    expect(forgotRes.status).toBe(200);
+    expect(forgotRes.body.success).toBe(true);
+    expect(forgotRes.body.data.message).toBeDefined();
+
+    const devOtp = forgotRes.body.data.devOtp;
+    expect(devOtp).toBeDefined();
+    expect(devOtp).toHaveLength(6);
+
+    // 2. Reject verification with wrong OTP code
+    const badVerifyRes = await request(app)
+      .post('/api/v1/auth/verify-reset-otp')
+      .send({
+        email: testStudentEmail,
+        otp: '000000',
+      });
+
+    expect(badVerifyRes.status).toBe(400);
+    expect(badVerifyRes.body.success).toBe(false);
+
+    // 3. Verify OTP successfully
+    const goodVerifyRes = await request(app)
+      .post('/api/v1/auth/verify-reset-otp')
+      .send({
+        email: testStudentEmail,
+        otp: devOtp,
+      });
+
+    expect(goodVerifyRes.status).toBe(200);
+    expect(goodVerifyRes.body.success).toBe(true);
+    expect(goodVerifyRes.body.data.valid).toBe(true);
+    expect(goodVerifyRes.body.data.resetToken).toBeDefined();
+
+    // 4. Reset password with new strong password
+    const newStrongPassword = 'NewStrongPassword2026!';
+    const resetRes = await request(app)
+      .post('/api/v1/auth/reset-password')
+      .send({
+        email: testStudentEmail,
+        otp: devOtp,
+        newPassword: newStrongPassword,
+      });
+
+    expect(resetRes.status).toBe(200);
+    expect(resetRes.body.success).toBe(true);
+
+    // 5. Old password must no longer work
+    const oldLoginRes = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: testStudentEmail,
+        password: testPassword,
+      });
+
+    expect(oldLoginRes.status).toBe(401);
+
+    // 6. New password must authenticate successfully
+    const newLoginRes = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: testStudentEmail,
+        password: newStrongPassword,
+      });
+
+    expect(newLoginRes.status).toBe(200);
+    expect(newLoginRes.body.data.token).toBeDefined();
+  });
 });
+

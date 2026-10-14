@@ -12,12 +12,15 @@ datasource db {
 model User {
   id                     String            @id @default(uuid())
   email                  String            @unique
-  passwordHash           String
+  passwordHash           String?
   role                   String            @default("STUDENT")
   name                   String
+  avatarUrl              String?
+  googleId               String?           @unique
   isEmailVerified        Boolean           @default(false)
   emailVerificationToken String?
   passwordResetToken     String?
+  passwordResetOtp       String?
   passwordResetExpires   DateTime?
   createdAt              DateTime          @default(now())
   updatedAt              DateTime          @updatedAt

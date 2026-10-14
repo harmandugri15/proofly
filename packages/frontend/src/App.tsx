@@ -10,6 +10,9 @@ import { MobileDock } from './components/layout/MobileDock';
 import { Home } from './pages/Home';
 import { Login } from './pages/auth/Login';
 import { Register } from './pages/auth/Register';
+import { ForgotPassword } from './pages/auth/ForgotPassword';
+import { ResetPassword } from './pages/auth/ResetPassword';
+import { OAuthCallback } from './pages/auth/OAuthCallback';
 import { PublicProfilePage } from './pages/public/PublicProfile';
 import { PostsListPage } from './pages/public/PostsList';
 import { PostDetailPage } from './pages/public/PostDetail';
@@ -74,6 +77,9 @@ export const App: React.FC = () => {
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/auth/callback" element={<OAuthCallback />} />
                 <Route path="/u/:username" element={<PublicProfilePage />} />
                 <Route path="/posts" element={<PostsListPage />} />
                 <Route path="/posts/:slug" element={<PostDetailPage />} />

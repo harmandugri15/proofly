@@ -34,6 +34,10 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (data: any) => Promise<void>;
+  loginWithGoogle: (credential: string, role?: string) => Promise<void>;
+  forgotPassword: (email: string) => Promise<{ message: string; devOtp?: string }>;
+  verifyResetOtp: (email: string, otp: string) => Promise<{ valid: boolean; resetToken?: string }>;
+  resetPassword: (data: { email: string; otp?: string; token?: string; newPassword: string }) => Promise<{ message: string }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -69,6 +73,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(data.user);
   };
 
+  const loginWithGoogle = async (credential: string, role?: string) => {
+    const data = await api.post<{ user: AuthUser }>('/auth/google/token', { credential, role });
+    setUser(data.user);
+  };
+
+  const forgotPassword = async (email: string) => {
+    const data = await api.post<{ message: string; devOtp?: string }>('/auth/forgot-password', { email });
+    return data;
+  };
+
+  const verifyResetOtp = async (email: string, otp: string) => {
+    const data = await api.post<{ valid: boolean; resetToken?: string }>('/auth/verify-reset-otp', { email, otp });
+    return data;
+  };
+
+  const resetPassword = async (input: { email: string; otp?: string; token?: string; newPassword: string }) => {
+    const data = await api.post<{ message: string }>('/auth/reset-password', input);
+    return data;
+  };
+
   const logout = async () => {
     await api.post('/auth/logout');
     setUser(null);
@@ -82,6 +106,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         login,
         register,
+        loginWithGoogle,
+        forgotPassword,
+        verifyResetOtp,
+        resetPassword,
         logout,
         refreshUser,
       }}

@@ -4,12 +4,18 @@ import { z } from 'zod';
 // Auth Schemas
 // ============================================================================
 
+export const StrongPasswordSchema = z
+  .string()
+  .min(8, 'Password must be at least 8 characters long')
+  .max(100, 'Password must be under 100 characters')
+  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+  .regex(/[0-9]/, 'Password must contain at least one number')
+  .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character (!@#$%^&* etc.)');
+
 export const RegisterSchema = z.object({
   email: z.string().email('Invalid email address').max(255),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .max(100, 'Password must be under 100 characters'),
+  password: StrongPasswordSchema,
   role: z.enum(['STUDENT', 'RECRUITER']),
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   // Optional recruiter fields
@@ -26,6 +32,35 @@ export const LoginSchema = z.object({
 });
 
 export type LoginInput = z.infer<typeof LoginSchema>;
+
+export const ForgotPasswordSchema = z.object({
+  email: z.string().email('Please provide a valid email address'),
+});
+
+export type ForgotPasswordInput = z.infer<typeof ForgotPasswordSchema>;
+
+export const VerifyResetOtpSchema = z.object({
+  email: z.string().email('Please provide a valid email address'),
+  otp: z.string().length(6, 'Verification code must be exactly 6 digits'),
+});
+
+export type VerifyResetOtpInput = z.infer<typeof VerifyResetOtpSchema>;
+
+export const ResetPasswordSchema = z.object({
+  email: z.string().email('Please provide a valid email address'),
+  otp: z.string().length(6, 'Verification code must be exactly 6 digits').optional(),
+  token: z.string().optional(),
+  newPassword: StrongPasswordSchema,
+});
+
+export type ResetPasswordInput = z.infer<typeof ResetPasswordSchema>;
+
+export const GoogleAuthTokenSchema = z.object({
+  credential: z.string().min(1, 'Google credential token is required'),
+  role: z.enum(['STUDENT', 'RECRUITER']).optional().default('STUDENT'),
+});
+
+export type GoogleAuthTokenInput = z.infer<typeof GoogleAuthTokenSchema>;
 
 // ============================================================================
 // Student Profile Schemas
