@@ -82,6 +82,8 @@ export interface StudentProfileSummary {
   githubUsername?: string | null;
   githubStats?: GitHubProfileStats | null;
   shareToken?: string | null;
+  linkedinUrl?: string | null;
+  linkedinVerified?: boolean;
   user?: UserSummary;
 }
 

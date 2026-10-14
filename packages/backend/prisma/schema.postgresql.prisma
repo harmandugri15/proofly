@@ -95,6 +95,8 @@ model StudentProfile {
   githubUsername       String?
   githubStats          String?
   shareToken           String?                 @unique
+  linkedinUrl          String?
+  linkedinVerified     Boolean                 @default(false)
   createdAt            DateTime                @default(now())
   updatedAt            DateTime                @updatedAt
 

@@ -19,6 +19,7 @@ import {
   Share2,
   CheckCircle2,
   Key,
+  Linkedin,
 } from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 import { RecruiterResearchResult, CandidateMatchResult } from '@proofly/shared';
@@ -179,7 +180,7 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
 
         {/* Actions */}
         <div className="flex flex-col gap-2.5 shrink-0">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Link
               to={`/u/${candidate.username}${candidate.shareToken ? `?pass=${candidate.shareToken}` : ''}`}
               target="_blank"
@@ -188,6 +189,21 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
               <span>Public Portfolio</span>
               <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             </Link>
+
+            {candidate.linkedinUrl && (
+              <a
+                href={candidate.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0077b5]/15 hover:bg-[#0077b5]/25 text-[#38bdf8] font-semibold text-xs border border-[#0077b5]/30 transition-colors"
+              >
+                <Linkedin className="w-3.5 h-3.5 text-[#0a66c2]" />
+                <span>LinkedIn</span>
+                {candidate.linkedinVerified && (
+                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                )}
+              </a>
+            )}
 
             <button
               onClick={() => {

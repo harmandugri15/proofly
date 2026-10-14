@@ -26,80 +26,125 @@ interface GitHubRepoDTO {
 
 export class GitHubService {
   /**
-   * Generates a 52-week (365 days) contribution heatmap matrix
+   * Fetches real contribution calendar from GitHub profile page (no fake data)
    */
-  static generateContributionHeatmap(seedStr: string, activeFactor = 1.0): {
+  static async fetchRealContributions(username: string): Promise<{
     contributions: ContributionDay[];
     totalCommitsLastYear: number;
     currentStreak: number;
     longestStreak: number;
-  } {
-    const contributions: ContributionDay[] = [];
-    const today = new Date();
-    let totalCommits = 0;
-    let currentStreak = 0;
-    let longestStreak = 0;
-    let tempStreak = 0;
-
-    // Use seed characters for deterministic pseudo-randomness
-    let seedNum = 0;
-    for (let i = 0; i < seedStr.length; i++) {
-      seedNum += seedStr.charCodeAt(i);
-    }
-
-    for (let i = 364; i >= 0; i--) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - i);
-      const dateStr = d.toISOString().split('T')[0];
-
-      // Pseudo-random commit count based on day of week and seed
-      const dayOfWeek = d.getDay(); // 0 is Sunday, 6 is Saturday
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-      const pseudo = Math.sin((i + seedNum) * 0.17) * 10000;
-      const randVal = Math.abs(pseudo - Math.floor(pseudo));
-
-      let count = 0;
-      // Active developer pattern: higher probability on weekdays
-      const chance = isWeekend ? 0.35 * activeFactor : 0.72 * activeFactor;
-
-      if (randVal < chance) {
-        if (randVal < 0.25) count = Math.floor(randVal * 8) + 1; // 1-2
-        else if (randVal < 0.5) count = Math.floor(randVal * 10) + 3; // 3-5
-        else if (randVal < 0.65) count = Math.floor(randVal * 12) + 6; // 6-9
-        else count = Math.floor(randVal * 15) + 10; // 10+
-      }
-
-      let level: 0 | 1 | 2 | 3 | 4 = 0;
-      if (count > 0 && count <= 2) level = 1;
-      else if (count >= 3 && count <= 5) level = 2;
-      else if (count >= 6 && count <= 9) level = 3;
-      else if (count >= 10) level = 4;
-
-      totalCommits += count;
-
-      if (count > 0) {
-        tempStreak++;
-        if (tempStreak > longestStreak) longestStreak = tempStreak;
-      } else {
-        tempStreak = 0;
-      }
-
-      contributions.push({
-        date: dateStr,
-        count,
-        level,
+  }> {
+    try {
+      const res = await fetch(`https://github.com/users/${encodeURIComponent(username)}/contributions`, {
+        headers: {
+          'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          Accept: 'text/html,application/xhtml+xml',
+        },
+        signal: AbortSignal.timeout(6000),
       });
+
+      if (res.ok) {
+        const html = await res.text();
+        let totalCommitsLastYear = 0;
+        const headlineMatch = html.match(/([0-9,]+)\s+contributions\s+in\s+the\s+last\s+year/i);
+        if (headlineMatch) {
+          totalCommitsLastYear = parseInt(headlineMatch[1].replace(/,/g, ''), 10);
+        }
+
+        const tooltipsById = new Map<string, number>();
+        const tooltipRegex = /<tool-tip[^>]*for="([^"]+)"[^>]*>([^<]+)<\/tool-tip>/g;
+        let tipMatch;
+        while ((tipMatch = tooltipRegex.exec(html)) !== null) {
+          const elementId = tipMatch[1];
+          const text = tipMatch[2].trim();
+          let count = 0;
+          const countMatch = text.match(/^([0-9,]+)\s+contribution/i);
+          if (countMatch) {
+            count = parseInt(countMatch[1].replace(/,/g, ''), 10);
+          }
+          tooltipsById.set(elementId, count);
+        }
+
+        const tdRegex = /<td\s+[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*>/g;
+        const contributions: ContributionDay[] = [];
+        let tdMatch;
+        while ((tdMatch = tdRegex.exec(html)) !== null) {
+          const tdTag = tdMatch[0];
+          const date = tdMatch[1];
+          const levelMatch = tdTag.match(/data-level="([0-4])"/);
+          const idMatch = tdTag.match(/id="([^"]+)"/);
+
+          const rawLevel = levelMatch ? parseInt(levelMatch[1], 10) : 0;
+          const level = (rawLevel >= 0 && rawLevel <= 4 ? rawLevel : 0) as 0 | 1 | 2 | 3 | 4;
+          const elementId = idMatch ? idMatch[1] : null;
+          const count =
+            elementId && tooltipsById.has(elementId)
+              ? tooltipsById.get(elementId)!
+              : level > 0
+              ? level * 2
+              : 0;
+
+          contributions.push({ date, count, level });
+        }
+
+        contributions.sort((a, b) => a.date.localeCompare(b.date));
+
+        if (contributions.length > 0) {
+          let currentStreak = 0;
+          let longestStreak = 0;
+          let runningStreak = 0;
+
+          for (let i = 0; i < contributions.length; i++) {
+            if (contributions[i].count > 0) {
+              runningStreak++;
+              if (runningStreak > longestStreak) {
+                longestStreak = runningStreak;
+              }
+            } else {
+              runningStreak = 0;
+            }
+          }
+
+          for (let i = contributions.length - 1; i >= 0; i--) {
+            if (contributions[i].count > 0) {
+              currentStreak++;
+            } else {
+              break;
+            }
+          }
+
+          return {
+            contributions,
+            totalCommitsLastYear,
+            currentStreak,
+            longestStreak,
+          };
+        }
+      }
+    } catch (err: any) {
+      logger.warn(`Real GitHub contribution scraping failed for ${username}: ${err?.message}`);
     }
 
-    // Current streak is streak leading up to today
-    currentStreak = tempStreak;
-
+    // Default clean zeros for offline or newly created profiles
     return {
-      contributions,
-      totalCommitsLastYear: totalCommits,
-      currentStreak,
-      longestStreak: Math.max(longestStreak, currentStreak),
+      contributions: [],
+      totalCommitsLastYear: 0,
+      currentStreak: 0,
+      longestStreak: 0,
     };
+  }
+
+  /**
+   * Generates or fetches contribution heatmap
+   */
+  static async generateContributionHeatmap(username: string): Promise<{
+    contributions: ContributionDay[];
+    totalCommitsLastYear: number;
+    currentStreak: number;
+    longestStreak: number;
+  }> {
+    return this.fetchRealContributions(username);
   }
 
   /**
@@ -223,26 +268,22 @@ export class GitHubService {
         }))
         .sort((a, b) => b.percentage - a.percentage);
 
-      // 5. Generate Colored 52-Week Contribution Matrix
-      const heatmap = this.generateContributionHeatmap(username, 1.2);
+      // 5. Generate Colored 52-Week Contribution Matrix (from actual GitHub profile)
+      const heatmap = await this.fetchRealContributions(username);
 
       const githubStats: GitHubProfileStats = {
         username,
         avatarUrl,
         bio: userBio,
-        publicRepos: publicReposCount || (reposData.length || 8),
-        followers: followersCount || 18,
-        following: followingCount || 24,
-        totalStars: totalStars || 126,
-        totalForks: totalForks || 23,
+        publicRepos: publicReposCount,
+        followers: followersCount,
+        following: followingCount,
+        totalStars: totalStars,
+        totalForks: totalForks,
         totalCommitsLastYear: heatmap.totalCommitsLastYear,
         currentStreak: heatmap.currentStreak,
         longestStreak: heatmap.longestStreak,
-        topLanguages: topLanguages.length > 0 ? topLanguages : [
-          { language: 'TypeScript', percentage: 55, color: '#3178c6' },
-          { language: 'React', percentage: 25, color: '#61dafb' },
-          { language: 'Rust', percentage: 20, color: '#dea584' },
-        ],
+        topLanguages,
         contributions: heatmap.contributions,
         lastSyncedAt: now.toISOString(),
       };
@@ -396,6 +437,9 @@ export class GitHubService {
     if (!tagline) {
       tagline = `Full-stack engineering project built with ${primaryLanguage || 'modern technologies'}.`;
     }
+    // Clean and strictly limit tagline and title length to prevent validation errors
+    tagline = tagline.replace(/[\r\n]+/g, ' ').slice(0, 480).trim();
+    title = title.slice(0, 115).trim();
 
     if (!description) {
       description = `Engineered and deployed **${title}**, featuring a robust architecture built with ${Array.from(extractedSkills).join(', ') || 'modern developer tooling'}.\n\nIncludes automated tests, modular component hierarchy, and performant data retrieval patterns.`;

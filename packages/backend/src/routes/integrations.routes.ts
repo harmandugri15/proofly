@@ -3,7 +3,9 @@ import { GitHubService } from '../services/github.service.js';
 import { CodingProfilesService } from '../services/codingProfiles.service.js';
 import { authenticateToken, requireRole } from '../middlewares/auth.js';
 import { validateBody } from '../middlewares/validate.js';
-import { ExternalCodingProfileSchema } from '@proofly/shared';
+import { ExternalCodingProfileSchema, ConnectLinkedInSchema } from '@proofly/shared';
+import { ValidationError, NotFoundError } from '../lib/errors.js';
+import { prisma } from '../lib/prisma.js';
 
 export const integrationsRouter = Router();
 
@@ -37,7 +39,7 @@ integrationsRouter.put('/github/repositories/:id', async (req, res, next) => {
   }
 });
 
-// Coding profiles (LeetCode / HackerRank)
+// Coding profiles (LeetCode / HackerRank / Codeforces)
 integrationsRouter.post(
   '/coding-profiles',
   validateBody(ExternalCodingProfileSchema),
@@ -74,3 +76,72 @@ integrationsRouter.delete('/coding-profiles/:id', async (req, res, next) => {
     next(error);
   }
 });
+
+// LinkedIn Integration
+integrationsRouter.post(
+  '/linkedin',
+  validateBody(ConnectLinkedInSchema),
+  async (req, res, next) => {
+    try {
+      const { linkedinUrl } = req.body;
+      const cleanUrl = linkedinUrl.trim();
+
+      if (!cleanUrl.toLowerCase().includes('linkedin.com/')) {
+        throw new ValidationError('Invalid LinkedIn profile URL. Must be a valid LinkedIn profile URL (e.g. https://www.linkedin.com/in/username)');
+      }
+
+      const profile = await prisma.studentProfile.findUnique({
+        where: { userId: req.user!.id },
+      });
+      if (!profile) throw new NotFoundError('Student profile not found');
+
+      const updated = await prisma.studentProfile.update({
+        where: { id: profile.id },
+        data: {
+          linkedinUrl: cleanUrl,
+          linkedinVerified: true,
+        },
+      });
+
+      return res.json({
+        success: true,
+        data: {
+          linkedinUrl: updated.linkedinUrl,
+          linkedinVerified: updated.linkedinVerified,
+          message: 'LinkedIn profile connected and verified successfully',
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+integrationsRouter.delete('/linkedin', async (req, res, next) => {
+  try {
+    const profile = await prisma.studentProfile.findUnique({
+      where: { userId: req.user!.id },
+    });
+    if (!profile) throw new NotFoundError('Student profile not found');
+
+    const updated = await prisma.studentProfile.update({
+      where: { id: profile.id },
+      data: {
+        linkedinUrl: null,
+        linkedinVerified: false,
+      },
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        linkedinUrl: null,
+        linkedinVerified: false,
+        message: 'LinkedIn profile disconnected',
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+

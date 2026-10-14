@@ -16,6 +16,7 @@ import {
   Copy,
   Lock,
   Sparkles,
+  Linkedin,
 } from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
@@ -113,12 +114,39 @@ export const PublicProfilePage: React.FC = () => {
             {profile.bio}
           </p>
 
-          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-400 pt-2 font-mono">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-slate-400 pt-2 font-mono">
             {profile.location && <span>Location: {profile.location}</span>}
             {profile.targetGraduationYear && <span>Class of {profile.targetGraduationYear}</span>}
             <span className="text-emerald-400 flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5" /> Verified Candidate
             </span>
+
+            {profile.githubUsername && (
+              <a
+                href={`https://github.com/${profile.githubUsername}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors"
+              >
+                <Github className="w-3.5 h-3.5 text-slate-400" />
+                <span>@{profile.githubUsername}</span>
+              </a>
+            )}
+
+            {profile.linkedinUrl && (
+              <a
+                href={profile.linkedinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#0077b5]/15 hover:bg-[#0077b5]/25 text-[#38bdf8] border border-[#0077b5]/30 transition-colors"
+              >
+                <Linkedin className="w-3.5 h-3.5 text-[#0a66c2]" />
+                <span>LinkedIn</span>
+                {profile.linkedinVerified && (
+                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                )}
+              </a>
+            )}
           </div>
         </div>
 

@@ -14,6 +14,7 @@ import {
   TrendingUp,
   Key,
   Copy,
+  Linkedin,
 } from 'lucide-react';
 import { ProfileCompletenessResult } from '@proofly/shared';
 
@@ -146,7 +147,7 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* Metrics Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
           <div className="flex items-center justify-between text-slate-400 mb-2">
             <span className="text-xs font-medium">Profile Proof Score</span>
@@ -187,6 +188,29 @@ export const StudentDashboard: React.FC = () => {
           </div>
           <div className="text-2xl font-extrabold text-white">{profile?.gitHubRepos?.length || 0}</div>
           <p className="text-[11px] text-slate-400 mt-1">Synchronized</p>
+        </div>
+
+        <div className="p-4 rounded-xl bg-slate-900 border border-slate-800">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium">LinkedIn</span>
+            <Linkedin className="w-4 h-4 text-[#0a66c2]" />
+          </div>
+          <div className="text-base font-bold text-white flex items-center gap-1.5 mt-1">
+            {profile?.linkedinVerified ? (
+              <span className="text-emerald-400 text-sm flex items-center gap-1">
+                <CheckCircle2 className="w-4 h-4" /> Verified
+              </span>
+            ) : profile?.linkedinUrl ? (
+              <span className="text-cyan-400 text-sm">Linked</span>
+            ) : (
+              <span className="text-slate-500 text-xs font-normal">Not Linked</span>
+            )}
+          </div>
+          <p className="text-[11px] text-slate-400 mt-1">
+            <Link to="/student/integrations" className="text-emerald-400 hover:underline">
+              {profile?.linkedinUrl ? 'Manage' : 'Connect'}
+            </Link>
+          </p>
         </div>
       </div>
 

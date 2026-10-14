@@ -46,6 +46,7 @@ export class StudentService {
         isOpenToWork: input.isOpenToWork !== undefined ? input.isOpenToWork : profile.isOpenToWork,
         preferredRoles: input.preferredRoles ? JSON.stringify(input.preferredRoles) : profile.preferredRoles,
         targetGraduationYear: input.targetGraduationYear !== undefined ? input.targetGraduationYear : profile.targetGraduationYear,
+        linkedinUrl: (input as any).linkedinUrl !== undefined ? (input as any).linkedinUrl : profile.linkedinUrl,
       },
     });
 
@@ -303,6 +304,7 @@ export class StudentService {
     if (profile.projects.some((p) => p.verificationStatus !== 'UNVERIFIED')) score += 10;
     if (profile.certificates.length > 0) score += 10;
     if (profile.gitHubRepos.length > 0 || profile.codingProfiles.length > 0) score += 10;
+    if (profile.linkedinVerified) score += 5;
 
     const finalScore = Math.min(100, score);
     await prisma.studentProfile.update({

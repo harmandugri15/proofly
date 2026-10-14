@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, Sparkles } from 'lucide-react';
+import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, Sparkles, Linkedin, ExternalLink } from 'lucide-react';
 import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
 import { CodingProfileCard } from '../../components/common/CodingProfileCard';
 
@@ -16,6 +16,12 @@ export const StudentIntegrationsPage: React.FC = () => {
   const [platform, setPlatform] = useState<'LEETCODE' | 'HACKERRANK' | 'CODEFORCES'>('LEETCODE');
   const [codingUsername, setCodingUsername] = useState('');
   const [isAddingCoding, setIsAddingCoding] = useState(false);
+
+  // LinkedIn form
+  const [linkedinInput, setLinkedinInput] = useState('');
+  const [isConnectingLinkedin, setIsConnectingLinkedin] = useState(false);
+  const [linkedinMsg, setLinkedinMsg] = useState<string | null>(null);
+  const [linkedinError, setLinkedinError] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -77,6 +83,36 @@ export const StudentIntegrationsPage: React.FC = () => {
       await loadData();
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleConnectLinkedin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!linkedinInput.trim()) return;
+    setIsConnectingLinkedin(true);
+    setLinkedinMsg(null);
+    setLinkedinError(null);
+    try {
+      const res = await api.post<any>('/integrations/linkedin', {
+        linkedinUrl: linkedinInput.trim(),
+      });
+      setLinkedinMsg(res.message || 'LinkedIn connected and verified!');
+      setLinkedinInput('');
+      await loadData();
+    } catch (e: any) {
+      setLinkedinError(e?.message || 'Failed to connect LinkedIn. Please ensure it is a valid LinkedIn profile URL.');
+    } finally {
+      setIsConnectingLinkedin(false);
+    }
+  };
+
+  const handleDisconnectLinkedin = async () => {
+    if (!confirm('Are you sure you want to disconnect your LinkedIn profile?')) return;
+    try {
+      await api.delete('/integrations/linkedin');
+      await loadData();
+    } catch (e: any) {
+      alert(e?.message || 'Failed to disconnect LinkedIn');
     }
   };
 
@@ -283,6 +319,99 @@ export const StudentIntegrationsPage: React.FC = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* 3. LinkedIn Integration Section */}
+      <div className="space-y-6 pt-4 border-t border-slate-800">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#0077b5]/15 border border-[#0077b5]/30 flex items-center justify-center text-[#0a66c2]">
+              <Linkedin className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-white">LinkedIn Profile & Verification</h2>
+              <p className="text-xs text-slate-400">
+                Connect your LinkedIn profile to display a verified badge on your public portfolio and recruiter candidate view.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {profile?.linkedinUrl ? (
+          <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#0077b5]/20 flex items-center justify-center text-[#0a66c2] shrink-0">
+                <Linkedin className="w-5 h-5" />
+              </div>
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <a
+                    href={profile.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm font-bold text-white hover:text-[#0a66c2] transition-colors flex items-center gap-1.5"
+                  >
+                    <span>{profile.linkedinUrl}</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
+                  </a>
+                  {profile.linkedinVerified && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold">
+                      <CheckCircle2 className="w-3 h-3" /> Verified
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-400">
+                  Visible to verified recruiters and linked on your public candidate portfolio.
+                </p>
+              </div>
+            </div>
+
+            <button
+              onClick={handleDisconnectLinkedin}
+              className="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-rose-500/20 hover:text-rose-400 text-slate-400 text-xs font-semibold border border-slate-700 transition-colors shrink-0"
+            >
+              Disconnect
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleConnectLinkedin} className="bg-slate-900 p-4 rounded-2xl border border-slate-800 space-y-3">
+            <div>
+              <label className="block text-[11px] font-semibold text-slate-300 uppercase tracking-wider mb-1">
+                LinkedIn Profile URL
+              </label>
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  required
+                  value={linkedinInput}
+                  onChange={(e) => setLinkedinInput(e.target.value)}
+                  placeholder="https://www.linkedin.com/in/your-handle"
+                  className="flex-1 px-3.5 py-2 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-[#0a66c2] font-mono"
+                />
+                <button
+                  type="submit"
+                  disabled={isConnectingLinkedin || !linkedinInput.trim()}
+                  className="px-4 py-2 rounded-lg bg-[#0077b5] hover:bg-[#006097] disabled:opacity-50 text-white font-bold text-xs transition-colors shrink-0 flex items-center gap-1.5"
+                >
+                  <Linkedin className="w-3.5 h-3.5" />
+                  {isConnectingLinkedin ? 'Connecting...' : 'Connect & Verify'}
+                </button>
+              </div>
+            </div>
+
+            {linkedinMsg && (
+              <p className="text-xs text-emerald-400 flex items-center gap-1.5 pt-1">
+                <CheckCircle2 className="w-3.5 h-3.5" /> {linkedinMsg}
+              </p>
+            )}
+
+            {linkedinError && (
+              <p className="text-xs text-rose-400 flex items-center gap-1.5 pt-1">
+                <AlertCircle className="w-3.5 h-3.5" /> {linkedinError}
+              </p>
+            )}
+          </form>
+        )}
       </div>
     </div>
   );

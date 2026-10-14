@@ -41,6 +41,7 @@ export const StudentProjectsPage: React.FC = () => {
   const [demoUrl, setDemoUrl] = useState('');
   const [skillsStr, setSkillsStr] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     loadProjects();
@@ -66,6 +67,7 @@ export const StudentProjectsPage: React.FC = () => {
     setIsAutoFetching(true);
     setCrawlerSuccessMsg(null);
     setCrawlerErrorMsg(null);
+    setSubmitError(null);
 
     try {
       const fetched = await api.post<AutoFetchedProjectData>('/student/projects/auto-fetch', {
@@ -95,6 +97,7 @@ export const StudentProjectsPage: React.FC = () => {
   const handleCreateProject = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const skills = skillsStr
         .split(',')
@@ -102,11 +105,11 @@ export const StudentProjectsPage: React.FC = () => {
         .filter(Boolean);
 
       await api.post('/student/projects', {
-        title,
-        tagline,
-        description,
-        repositoryUrl: repositoryUrl || null,
-        demoUrl: demoUrl || null,
+        title: title.trim().slice(0, 120),
+        tagline: tagline.trim().slice(0, 480),
+        description: description.trim(),
+        repositoryUrl: repositoryUrl.trim() || null,
+        demoUrl: demoUrl.trim() || null,
         skills,
         isFeatured: true,
       });
@@ -114,8 +117,9 @@ export const StudentProjectsPage: React.FC = () => {
       setShowModal(false);
       resetForm();
       await loadProjects();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      setSubmitError(e?.message || 'Failed to save project. Please check fields.');
     } finally {
       setIsSubmitting(false);
     }
@@ -133,6 +137,7 @@ export const StudentProjectsPage: React.FC = () => {
     setFetchedMeta(null);
     setQuickRepoUrl('');
     setModalRepoUrl('');
+    setSubmitError(null);
   };
 
   const handleDeleteProject = async (id: string) => {
@@ -475,6 +480,13 @@ export const StudentProjectsPage: React.FC = () => {
                   className="w-full px-3.5 py-2.5 rounded-lg bg-slate-950 border border-slate-800 text-white text-xs focus:outline-none focus:border-emerald-500"
                 />
               </div>
+
+              {submitError && (
+                <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{submitError}</span>
+                </div>
+              )}
 
               <div className="flex justify-end gap-2 pt-2 border-t border-slate-800">
                 <button

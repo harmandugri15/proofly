@@ -45,6 +45,7 @@ export const UpdateProfileSchema = z.object({
     .max(2040)
     .optional()
     .nullable(),
+  linkedinUrl: z.string().max(300).optional().nullable(),
 });
 
 export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>;
@@ -97,7 +98,7 @@ export type SkillInput = z.infer<typeof SkillSchema>;
 
 export const ProjectSchema = z.object({
   title: z.string().min(1, 'Project title is required').max(120),
-  tagline: z.string().min(1, 'Tagline is required').max(250),
+  tagline: z.string().min(1, 'Tagline is required').max(500),
   description: z.string().min(10, 'Description must be at least 10 characters').max(10000),
   demoUrl: z.string().url('Must be a valid URL').optional().nullable().or(z.literal('')),
   repositoryUrl: z.string().url('Must be a valid URL').optional().nullable().or(z.literal('')),
@@ -112,6 +113,12 @@ export const AutoFetchRepoSchema = z.object({
 });
 
 export type AutoFetchRepoInput = z.infer<typeof AutoFetchRepoSchema>;
+
+export const ConnectLinkedInSchema = z.object({
+  linkedinUrl: z.string().min(1, 'LinkedIn profile URL is required').max(300),
+});
+
+export type ConnectLinkedInInput = z.infer<typeof ConnectLinkedInSchema>;
 
 export const CertificateSchema = z.object({
   title: z.string().min(1, 'Certificate title is required').max(150),

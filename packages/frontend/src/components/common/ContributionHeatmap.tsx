@@ -31,22 +31,34 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number } | null>(null);
 
   // Group days into weeks (columns of 7 days)
-  // Ensure we have 52 weeks
   const weeks: ContributionDay[][] = [];
   let currentWeek: ContributionDay[] = [];
 
-  // If contributions are provided, chunk them into weeks of 7
-  if (contributions.length > 0) {
-    contributions.forEach((day, index) => {
-      currentWeek.push(day);
-      if (currentWeek.length === 7 || index === contributions.length - 1) {
-        weeks.push(currentWeek);
-        currentWeek = [];
-      }
-    });
+  let effectiveContributions = contributions;
+  if (!effectiveContributions || effectiveContributions.length === 0) {
+    const emptyDays: ContributionDay[] = [];
+    const today = new Date();
+    for (let i = 363; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(d.getDate() - i);
+      emptyDays.push({
+        date: d.toISOString().split('T')[0],
+        count: 0,
+        level: 0,
+      });
+    }
+    effectiveContributions = emptyDays;
   }
 
-  // Calculate month labels positions across the 52 weeks
+  effectiveContributions.forEach((day, index) => {
+    currentWeek.push(day);
+    if (currentWeek.length === 7 || index === effectiveContributions.length - 1) {
+      weeks.push(currentWeek);
+      currentWeek = [];
+    }
+  });
+
+  // Calculate month labels with exact column indices
   const monthLabels: { index: number; label: string }[] = [];
   let lastMonth = -1;
 
@@ -55,14 +67,19 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
       const date = new Date(week[0].date);
       const month = date.getMonth();
       if (month !== lastMonth) {
-        monthLabels.push({
-          index: weekIdx,
-          label: date.toLocaleString('default', { month: 'short' }),
-        });
+        // Prevent squishing month labels if too close to the end (within 1 week)
+        if (weeks.length - weekIdx > 1) {
+          monthLabels.push({
+            index: weekIdx,
+            label: date.toLocaleString('en-US', { month: 'short' }),
+          });
+        }
         lastMonth = month;
       }
     }
   });
+
+  const newMonthIndices = new Set(monthLabels.map((m) => m.index));
 
   return (
     <div className={`p-5 rounded-2xl bg-slate-950/80 border border-slate-800 space-y-4 ${className}`}>
@@ -104,50 +121,56 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
         </div>
       </div>
 
-      {/* Heatmap Grid Container with horizontal scrollbar */}
+      {/* Heatmap Grid Container with horizontal scroll */}
       <div className="relative overflow-x-auto pb-2 pt-1 select-none">
-        {/* Month Labels */}
-        <div className="flex text-[10px] text-slate-500 font-mono h-4 ml-7 mb-1 relative min-w-[750px]">
+        {/* Month Labels aligned to 14px per column */}
+        <div className="relative h-4 mb-1.5 ml-8 min-w-[760px]">
           {monthLabels.map((m, i) => (
             <span
               key={i}
-              className="absolute transform -translate-x-1"
-              style={{ left: `${(m.index / (weeks.length || 52)) * 100}%` }}
+              className="absolute text-[10px] text-slate-400 font-mono whitespace-nowrap"
+              style={{ left: `${m.index * 14}px` }}
             >
               {m.label}
             </span>
           ))}
         </div>
 
-        {/* Grid: Day-of-week labels + 52-week columns */}
-        <div className="flex gap-2 min-w-[750px]">
+        {/* Grid: Day-of-week labels + exact week columns */}
+        <div className="flex gap-2 min-w-[760px]">
           {/* Day of week labels */}
-          <div className="flex flex-col justify-between text-[9px] text-slate-500 font-mono py-0.5 h-[98px]">
+          <div className="w-6 flex flex-col justify-between text-[9px] text-slate-500 font-mono py-0.5 h-[98px]">
             <span>Mon</span>
             <span>Wed</span>
             <span>Fri</span>
           </div>
 
-          {/* 52 Columns */}
-          <div className="flex gap-[3px] flex-1">
-            {weeks.map((week, wIdx) => (
-              <div key={wIdx} className="flex flex-col gap-[3px]">
-                {week.map((day, dIdx) => (
-                  <div
-                    key={`${wIdx}-${dIdx}`}
-                    onMouseEnter={(e) => {
-                      setHoveredDay(day);
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      setTooltipPos({ x: rect.left + rect.width / 2, y: rect.top });
-                    }}
-                    onMouseLeave={() => setHoveredDay(null)}
-                    className={`w-[11px] h-[11px] rounded-[2px] border transition-transform hover:scale-125 cursor-pointer ${
-                      LEVEL_COLORS[day.level] || LEVEL_COLORS[0]
-                    }`}
-                  />
-                ))}
-              </div>
-            ))}
+          {/* 52 Columns (11px cell + 3px gap = 14px per column) */}
+          <div className="flex gap-[3px]">
+            {weeks.map((week, wIdx) => {
+              const isMonthStart = newMonthIndices.has(wIdx) && wIdx !== 0;
+              return (
+                <div
+                  key={wIdx}
+                  className={`flex flex-col gap-[3px] ${isMonthStart ? 'border-l border-slate-800/80 pl-[2px] ml-[1px]' : ''}`}
+                >
+                  {week.map((day, dIdx) => (
+                    <div
+                      key={`${wIdx}-${dIdx}`}
+                      onMouseEnter={(e) => {
+                        setHoveredDay(day);
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        setTooltipPos({ x: rect.left + rect.width / 2, y: rect.top });
+                      }}
+                      onMouseLeave={() => setHoveredDay(null)}
+                      className={`w-[11px] h-[11px] rounded-[2px] border transition-transform hover:scale-125 cursor-pointer ${
+                        LEVEL_COLORS[day.level] || LEVEL_COLORS[0]
+                      }`}
+                    />
+                  ))}
+                </div>
+              );
+            })}
           </div>
         </div>
 
