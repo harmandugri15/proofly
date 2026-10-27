@@ -25,6 +25,27 @@ interface GitHubRepoDTO {
 }
 
 export class GitHubService {
+  static cleanUsername(input?: string | null): string {
+    if (!input) return '';
+    return input
+      .trim()
+      .replace(/^https?:\/\/(?:www\.)?github\.com\//i, '')
+      .replace(/^@/, '')
+      .replace(/\/+$/, '')
+      .split('/')[0]
+      .split('?')[0]
+      .trim();
+  }
+
+  private static hashCode(str: string): number {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = (hash << 5) - hash + str.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash) || Math.floor(Math.random() * 1000000);
+  }
+
   /**
    * Fetches real contribution calendar from GitHub profile page (no fake data)
    */
@@ -34,8 +55,9 @@ export class GitHubService {
     currentStreak: number;
     longestStreak: number;
   }> {
+    const cleanUser = this.cleanUsername(username);
     try {
-      const res = await fetch(`https://github.com/users/${encodeURIComponent(username)}/contributions`, {
+      const res = await fetch(`https://github.com/users/${encodeURIComponent(cleanUser)}/contributions`, {
         headers: {
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -158,7 +180,8 @@ export class GitHubService {
 
     if (!profile) throw new NotFoundError('Student profile not found');
 
-    const username = usernameInput || profile.githubUsername || profile.username;
+    const rawUsername = usernameInput || profile.githubUsername || profile.username;
+    const username = this.cleanUsername(rawUsername);
     const now = new Date();
 
     try {
@@ -167,9 +190,10 @@ export class GitHubService {
         Accept: 'application/vnd.github.v3+json',
       };
 
-      const hasToken = !!(tokenInput && tokenInput.startsWith('ghp_'));
+      const trimmedToken = tokenInput?.trim();
+      const hasToken = !!(trimmedToken && (trimmedToken.startsWith('ghp_') || trimmedToken.startsWith('github_pat_') || trimmedToken.length > 15));
       if (hasToken) {
-        headers['Authorization'] = `token ${tokenInput}`;
+        headers['Authorization'] = `Bearer ${trimmedToken}`;
       }
 
       // 1. Fetch User Profile
@@ -180,9 +204,12 @@ export class GitHubService {
       let followingCount = 0;
 
       try {
-        const userRes = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`, {
+        const userApiUrl = hasToken
+          ? 'https://api.github.com/user'
+          : `https://api.github.com/users/${encodeURIComponent(username)}`;
+        const userRes = await fetch(userApiUrl, {
           headers,
-          signal: AbortSignal.timeout(4000),
+          signal: AbortSignal.timeout(5000),
         });
         if (userRes.ok) {
           const userObj: any = await userRes.json();
@@ -196,20 +223,100 @@ export class GitHubService {
         logger.warn(`GitHub user profile fetch failed for ${username}`);
       }
 
-      // 2. Fetch Repositories
+      // 1b. Fallback to scraping user profile page if API was rate-limited (403) or missing avatar
+      if (!avatarUrl) {
+        try {
+          const profilePageRes = await fetch(`https://github.com/${encodeURIComponent(username)}`, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' },
+            signal: AbortSignal.timeout(5000),
+          });
+          if (profilePageRes.ok) {
+            const html = await profilePageRes.text();
+            const avatarMatch = html.match(/<img[^>]*class="[^"]*avatar-user[^"]*"[^>]*src="([^"]+)"/i) || html.match(/class="avatar[^"]*"[^>]*src="([^"]+)"/i);
+            if (avatarMatch) avatarUrl = avatarMatch[1].replace(/&amp;/g, '&');
+            const bioMatch = html.match(/<div class="p-note user-profile-bio[^"]*"[^>]*>([\s\S]*?)<\/div>/i);
+            if (bioMatch) userBio = bioMatch[1].replace(/<[^>]+>/g, '').trim();
+          }
+        } catch (e) {}
+      }
+
+      // 2. Fetch Repositories (API first, then web scraping fallback)
       let reposData: GitHubRepoDTO[] = [];
       try {
-        // When a token is provided, use authenticated /user/repos to include private repos
         const repoApiUrl = hasToken
-          ? `https://api.github.com/user/repos?sort=updated&per_page=30&type=all&visibility=all`
-          : `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=30&type=public`;
+          ? `https://api.github.com/user/repos?sort=updated&per_page=100&type=all&visibility=all`
+          : `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=100&type=public`;
 
         const reposRes = await fetch(repoApiUrl, { headers, signal: AbortSignal.timeout(6000) });
         if (reposRes.ok) {
-          reposData = (await reposRes.json()) as GitHubRepoDTO[];
+          const jsonResult = await reposRes.json();
+          if (Array.isArray(jsonResult)) {
+            reposData = jsonResult as GitHubRepoDTO[];
+          }
         }
       } catch (err) {
         logger.warn(`GitHub repos fetch failed for ${username}`);
+      }
+
+      // 2b. Web scraping fallback for public repositories when API is rate-limited (403) or returns empty
+      if (!Array.isArray(reposData) || reposData.length === 0) {
+        try {
+          const scrapeRes = await fetch(`https://github.com/${encodeURIComponent(username)}?tab=repositories`, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              Accept: 'text/html',
+            },
+            signal: AbortSignal.timeout(6000),
+          });
+          if (scrapeRes.ok) {
+            const html = await scrapeRes.text();
+            const liRegex = /<li[^>]*class="[^"]*col-12[^"]*"[^>]*>([\s\S]*?)<\/li>/gi;
+            let match;
+            while ((match = liRegex.exec(html)) !== null) {
+              const block = match[1];
+              const nameMatch = block.match(/href="\/([^"/]+)\/([^"/]+)"[^>]*itemprop="name codeRepository"/i);
+              if (!nameMatch) continue;
+              const owner = nameMatch[1];
+              const name = nameMatch[2].trim();
+
+              const descMatch = block.match(/itemprop="description">([\s\S]*?)<\/p>/i);
+              const desc = descMatch ? descMatch[1].replace(/<[^>]+>/g, '').trim() : null;
+
+              const langMatch = block.match(/itemprop="programmingLanguage">([^<]+)<\/span>/i);
+              const lang = langMatch ? langMatch[1].trim() : null;
+
+              const starMatch = block.match(/href="\/[^/]+\/[^/]+\/stargazers"[^>]*>[\s\S]*?<\/svg>\s*([0-9,]+)/i);
+              const stars = starMatch ? parseInt(starMatch[1].replace(/,/g, ''), 10) : 0;
+
+              const forkMatch = block.match(/href="\/[^/]+\/[^/]+\/forks"[^>]*>[\s\S]*?<\/svg>\s*([0-9,]+)/i);
+              const forks = forkMatch ? parseInt(forkMatch[1].replace(/,/g, ''), 10) : 0;
+
+              const isFork = block.includes('forked from');
+
+              reposData.push({
+                id: Math.abs(this.hashCode(`${owner}/${name}`)),
+                name,
+                full_name: `${owner}/${name}`,
+                description: desc,
+                html_url: `https://github.com/${owner}/${name}`,
+                homepage: null,
+                language: lang,
+                stargazers_count: stars,
+                forks_count: forks,
+                open_issues_count: 0,
+                license: null,
+                fork: isFork,
+                updated_at: new Date().toISOString(),
+              });
+            }
+          }
+        } catch (scrapeErr: any) {
+          logger.warn(`GitHub web scraping fallback failed for ${username}: ${scrapeErr?.message}`);
+        }
+      }
+
+      if (publicReposCount === 0 && reposData.length > 0) {
+        publicReposCount = reposData.length;
       }
 
       // 3. Upsert Repositories
@@ -288,13 +395,12 @@ export class GitHubService {
               description: repoDescription.slice(0, 4000),
               repositoryUrl: repo.html_url,
               demoUrl: repo.homepage && repo.homepage.startsWith('http') ? repo.homepage : null,
-              skills: JSON.stringify(repo.language ? [repo.language] : []),
+              skills: JSON.stringify(repo.language ? [repo.language] : ['Git']),
               verificationStatus: 'CODE_VERIFIED',
               isFeatured: false,
             },
           });
         } else {
-          // Update title/tagline if description changed
           await prisma.project.update({
             where: { id: existingProject.id },
             data: {
@@ -336,7 +442,7 @@ export class GitHubService {
         lastSyncedAt: now.toISOString(),
       };
 
-      // 6. Update Student Profile with rich GitHub signals
+      // 6. Update Student Profile with rich GitHub signals & clean username
       await prisma.studentProfile.update({
         where: { id: profile.id },
         data: {
@@ -363,11 +469,7 @@ export class GitHubService {
     }
   }
 
-  /**
-   * Automatic Repository Crawler / Inspector
-   * Fetches title, tagline, description, demo link, tech stack, and README from repository URL
-   */
-  static async autoFetchRepository(repositoryUrl: string): Promise<AutoFetchedProjectData> {
+  static async autoFetchRepository(repositoryUrl: string, token?: string): Promise<AutoFetchedProjectData> {
     const trimmed = repositoryUrl.trim();
     const githubRegex = /github\.com\/([a-zA-Z0-9-_.]+)\/([a-zA-Z0-9-_.]+)/i;
     const match = trimmed.match(githubRegex);
@@ -383,6 +485,11 @@ export class GitHubService {
       'User-Agent': 'Proofly-Talent-Platform',
       Accept: 'application/vnd.github.v3+json',
     };
+
+    const trimmedToken = token?.trim();
+    if (trimmedToken && trimmedToken.length > 10) {
+      headers['Authorization'] = `Bearer ${trimmedToken}`;
+    }
 
     let title = repoName
       .replace(/[-_]/g, ' ')
@@ -401,16 +508,16 @@ export class GitHubService {
     let readmeExcerpt = '';
 
     try {
-      // 1. Fetch Repository Details
+      // 1. Fetch Repository Details via API
       const repoRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}`, {
         headers,
         signal: AbortSignal.timeout(5000),
       });
 
       if (repoRes.ok) {
-        const repo: GitHubRepoDTO = (await repoRes.json()) as any;
+        const repo: any = await repoRes.json();
         if (repo.name) {
-          title = repo.name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+          title = repo.name.replace(/[-_]/g, ' ').replace(/\b\w/g, (c: string) => c.toUpperCase());
         }
         if (repo.description) {
           tagline = repo.description;
@@ -424,7 +531,7 @@ export class GitHubService {
           languages[repo.language] = 45000;
         }
         if (repo.topics && Array.isArray(repo.topics)) {
-          repo.topics.forEach((t) => extractedSkills.add(t));
+          repo.topics.forEach((t: string) => extractedSkills.add(t));
         }
         starsCount = repo.stargazers_count || 0;
         forksCount = repo.forks_count || 0;
@@ -440,7 +547,32 @@ export class GitHubService {
       logger.warn(`GitHub API repo query failed: ${e?.message}`);
     }
 
-    // 2. Fetch README content
+    // 1b. Fallback to scraping repository HTML page if API was rate-limited or tagline is missing
+    if (!tagline) {
+      try {
+        const pageRes = await fetch(`https://github.com/${owner}/${repoName}`, {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' },
+          signal: AbortSignal.timeout(5000),
+        });
+        if (pageRes.ok) {
+          const html = await pageRes.text();
+          const descMatch = html.match(/<p class="f4 my-3">([\s\S]*?)<\/p>/i) || html.match(/itemprop="description">([\s\S]*?)<\/span>/i);
+          if (descMatch) tagline = descMatch[1].replace(/<[^>]+>/g, '').trim();
+
+          const starMatch = html.match(/id="repo-stars-counter-star"[^>]*>([^<]+)<\/span>/i);
+          if (starMatch) starsCount = parseInt(starMatch[1].replace(/,/g, ''), 10) || 0;
+
+          const langRegex = /class="color-fg-default text-bold mr-1">([^<]+)<\/span>/gi;
+          let lMatch;
+          while ((lMatch = langRegex.exec(html)) !== null) {
+            extractedSkills.add(lMatch[1].trim());
+            if (!primaryLanguage) primaryLanguage = lMatch[1].trim();
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 2. Fetch README content (API first, then raw GitHub content fallback)
     try {
       const readmeRes = await fetch(`https://api.github.com/repos/${owner}/${repoName}/readme`, {
         headers,
@@ -453,15 +585,11 @@ export class GitHubService {
           const decoded = Buffer.from(readmeObj.content, 'base64').toString('utf-8');
           readmeExcerpt = decoded.slice(0, 3000);
 
-          // Extract demo URL from README if not already discovered
           if (!demoUrl) {
             const demoMatch = decoded.match(/(https?:\/\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]+(?:vercel\.app|netlify\.app|fly\.dev|onrender\.com|demo|app|io))/i);
-            if (demoMatch) {
-              demoUrl = demoMatch[1];
-            }
+            if (demoMatch) demoUrl = demoMatch[1];
           }
 
-          // Scan README for tech keywords
           const techKeywords = [
             'TypeScript', 'JavaScript', 'React', 'Next.js', 'Vue', 'Node.js', 'Express',
             'PostgreSQL', 'MongoDB', 'Redis', 'Docker', 'Kubernetes', 'AWS', 'GraphQL',
@@ -474,7 +602,6 @@ export class GitHubService {
             }
           });
 
-          // Generate clean structured description
           description = this.cleanReadmeToSummary(decoded, title, tagline);
         }
       }
@@ -482,10 +609,44 @@ export class GitHubService {
       logger.warn(`GitHub README fetch failed: ${e?.message}`);
     }
 
+    // 2b. Raw README fallback if API failed or was rate-limited
+    if (!readmeExcerpt) {
+      for (const branch of ['main', 'master']) {
+        try {
+          const rawRes = await fetch(`https://raw.githubusercontent.com/${owner}/${repoName}/${branch}/README.md`, {
+            signal: AbortSignal.timeout(5000),
+          });
+          if (rawRes.ok) {
+            const decoded = await rawRes.text();
+            readmeExcerpt = decoded.slice(0, 3000);
+
+            if (!demoUrl) {
+              const demoMatch = decoded.match(/(https?:\/\/[a-zA-Z0-9-._~:/?#[\]@!$&'()*+,;=]+(?:vercel\.app|netlify\.app|fly\.dev|onrender\.com|demo|app|io))/i);
+              if (demoMatch) demoUrl = demoMatch[1];
+            }
+
+            const techKeywords = [
+              'TypeScript', 'JavaScript', 'React', 'Next.js', 'Vue', 'Node.js', 'Express',
+              'PostgreSQL', 'MongoDB', 'Redis', 'Docker', 'Kubernetes', 'AWS', 'GraphQL',
+              'Tailwind CSS', 'Python', 'Go', 'Rust', 'Prisma', 'FastAPI', 'Kafka'
+            ];
+            techKeywords.forEach((tech) => {
+              const regex = new RegExp(`\\b${tech.replace('+', '\\+')}\\b`, 'i');
+              if (regex.test(decoded)) {
+                extractedSkills.add(tech);
+              }
+            });
+
+            description = this.cleanReadmeToSummary(decoded, title, tagline);
+            break;
+          }
+        } catch (e) {}
+      }
+    }
+
     if (!tagline) {
       tagline = `Full-stack engineering project built with ${primaryLanguage || 'modern technologies'}.`;
     }
-    // Clean and strictly limit tagline and title length to prevent validation errors
     tagline = tagline.replace(/[\r\n]+/g, ' ').slice(0, 480).trim();
     title = title.slice(0, 115).trim();
 

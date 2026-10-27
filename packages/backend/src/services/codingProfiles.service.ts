@@ -1,4 +1,4 @@
-﻿import { prisma } from '../lib/prisma.js';
+import { prisma } from '../lib/prisma.js';
 import { NotFoundError } from '../lib/errors.js';
 import {
   ExternalCodingProfileInput,
@@ -22,14 +22,46 @@ interface PlatformSyncResult {
 }
 
 export class CodingProfilesService {
+  static cleanUsername(platform: string, input: string): string {
+    if (!input) return '';
+    let cleaned = input.trim();
+    if (platform === 'LEETCODE') {
+      cleaned = cleaned
+        .replace(/^https?:\/\/(?:www\.)?leetcode\.com\/(?:u\/)?/i, '')
+        .replace(/^@/, '')
+        .replace(/\/+$/, '')
+        .split('/')[0]
+        .split('?')[0]
+        .trim();
+    } else if (platform === 'CODEFORCES') {
+      cleaned = cleaned
+        .replace(/^https?:\/\/(?:www\.)?codeforces\.com\/(?:profile\/)?/i, '')
+        .replace(/^@/, '')
+        .replace(/\/+$/, '')
+        .split('/')[0]
+        .split('?')[0]
+        .trim();
+    } else if (platform === 'HACKERRANK') {
+      cleaned = cleaned
+        .replace(/^https?:\/\/(?:www\.)?hackerrank\.com\/(?:profile\/)?/i, '')
+        .replace(/^@/, '')
+        .replace(/\/+$/, '')
+        .split('/')[0]
+        .split('?')[0]
+        .trim();
+    }
+    return cleaned;
+  }
+
   static async addOrUpdateProfile(userId: string, input: ExternalCodingProfileInput) {
     const student = await prisma.studentProfile.findUnique({ where: { userId } });
     if (!student) throw new NotFoundError('Student profile not found');
 
-    const profileUrl = this.buildProfileUrl(input.platform, input.username);
+    const username = this.cleanUsername(input.platform, input.username);
+    const profileUrl = this.buildProfileUrl(input.platform, username);
 
     // Initial sync attempt
-    const syncResult = await this.fetchPlatformStats(input.platform, input.username);
+    const syncResult = await this.fetchPlatformStats(input.platform, username);
 
     const record = await prisma.externalCodingProfile.upsert({
       where: {
@@ -41,7 +73,7 @@ export class CodingProfilesService {
       create: {
         studentProfileId: student.id,
         platform: input.platform,
-        username: input.username,
+        username,
         profileUrl,
         totalSolved: syncResult.totalSolved,
         easySolved: syncResult.easySolved,
@@ -56,7 +88,7 @@ export class CodingProfilesService {
         lastSyncedAt: new Date(),
       },
       update: {
-        username: input.username,
+        username,
         profileUrl,
         totalSolved: syncResult.totalSolved,
         easySolved: syncResult.easySolved,
@@ -89,14 +121,16 @@ export class CodingProfilesService {
 
     if (!profile) throw new NotFoundError('Coding profile not found');
 
+    const username = this.cleanUsername(profile.platform, profile.username);
     const syncResult = await this.fetchPlatformStats(
       profile.platform as CodingPlatform,
-      profile.username
+      username
     );
 
     const updated = await prisma.externalCodingProfile.update({
       where: { id: profile.id },
       data: {
+        username,
         totalSolved: syncResult.totalSolved,
         easySolved: syncResult.easySolved,
         mediumSolved: syncResult.mediumSolved,

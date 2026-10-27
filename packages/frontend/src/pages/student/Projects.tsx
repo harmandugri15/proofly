@@ -33,6 +33,11 @@ export const StudentProjectsPage: React.FC = () => {
   const [crawlerSuccessMsg, setCrawlerSuccessMsg] = useState<string | null>(null);
   const [crawlerErrorMsg, setCrawlerErrorMsg] = useState<string | null>(null);
   const [fetchedMeta, setFetchedMeta] = useState<AutoFetchedProjectData | null>(null);
+  const [quickToken, setQuickToken] = useState('');
+  const [modalToken, setModalToken] = useState('');
+  const [showTokenInput, setShowTokenInput] = useState(false);
+  const [isSyncingGithub, setIsSyncingGithub] = useState(false);
+  const [githubSyncMsg, setGithubSyncMsg] = useState<string | null>(null);
 
   // Form State
   const [title, setTitle] = useState('');
@@ -59,7 +64,21 @@ export const StudentProjectsPage: React.FC = () => {
     }
   };
 
-  const handleAutoFetch = async (urlToFetch: string) => {
+  const handleSyncGithubRepos = async () => {
+    setIsSyncingGithub(true);
+    setGithubSyncMsg(null);
+    try {
+      const res = await api.post<any>('/integrations/github/sync', {});
+      setGithubSyncMsg(`Successfully imported ${res.syncedCount} repositories as verified projects!`);
+      await loadProjects();
+    } catch (e: any) {
+      setGithubSyncMsg(`GitHub sync failed: ${e?.message}`);
+    } finally {
+      setIsSyncingGithub(false);
+    }
+  };
+
+  const handleAutoFetch = async (urlToFetch: string, tokenToUse?: string) => {
     if (!urlToFetch || !urlToFetch.trim()) return;
     setIsAutoFetching(true);
     setCrawlerSuccessMsg(null);
@@ -68,12 +87,15 @@ export const StudentProjectsPage: React.FC = () => {
     try {
       const rawRes = await api.post<any>(
         '/student/projects/auto-fetch',
-        { repositoryUrl: urlToFetch.trim() }
+        {
+          repositoryUrl: urlToFetch.trim(),
+          token: (tokenToUse || quickToken || modalToken || '').trim() || undefined,
+        }
       );
 
       const p: AutoFetchedProjectData = rawRes?.project || rawRes;
       if (!p || typeof p !== 'object' || !p.title) {
-        throw new Error('Could not extract project details. Please ensure the repository is public.');
+        throw new Error('Could not extract project details. Please ensure the repository is public or provide an access token.');
       }
 
       setFetchedMeta(p);
@@ -192,16 +214,28 @@ export const StudentProjectsPage: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={() => {
-            resetForm();
-            setShowModal(true);
-          }}
-          className="relative z-10 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm shrink-0 self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add Project Manually</span>
-        </button>
+        <div className="relative z-10 flex flex-wrap items-center gap-2.5 shrink-0 self-start sm:self-auto">
+          <button
+            onClick={handleSyncGithubRepos}
+            disabled={isSyncingGithub}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/20 hover:bg-white/30 text-white font-medium text-xs transition-all backdrop-blur-sm border border-white/30 disabled:opacity-50"
+            title="Automatically import and count all your repositories from GitHub as projects"
+          >
+            <RefreshCw className={`w-4 h-4 ${isSyncingGithub ? 'animate-spin' : ''}`} />
+            <span>{isSyncingGithub ? 'Syncing Repos...' : 'Sync GitHub Repos'}</span>
+          </button>
+
+          <button
+            onClick={() => {
+              resetForm();
+              setShowModal(true);
+            }}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Manually</span>
+          </button>
+        </div>
       </div>
 
       {/* 1-Click Crawler Banner */}
@@ -238,7 +272,7 @@ export const StudentProjectsPage: React.FC = () => {
           </div>
 
           <button
-            onClick={() => handleAutoFetch(quickRepoUrl)}
+            onClick={() => handleAutoFetch(quickRepoUrl, quickToken)}
             disabled={isAutoFetching || !quickRepoUrl.trim()}
             className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 disabled:opacity-50 text-white font-medium text-xs transition-all shrink-0 shadow-sm hover:scale-105"
           >
@@ -253,6 +287,41 @@ export const StudentProjectsPage: React.FC = () => {
             )}
           </button>
         </div>
+
+        {/* Private Repo Token Option */}
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={() => setShowTokenInput(!showTokenInput)}
+            className="text-[11px] font-mono text-forest-700/70 hover:text-forest-900 underline flex items-center gap-1"
+          >
+            {showTokenInput ? '− Hide Access Token' : '+ Add Access Token for Private Repository'}
+          </button>
+
+          {showTokenInput && (
+            <div className="mt-2 p-3 rounded-xl bg-sand-50/90 border border-sand-300 space-y-1.5 animate-fadeIn">
+              <label className="block text-[10px] font-mono font-bold uppercase text-forest-800">
+                GitHub Personal Access Token (Classic ghp_... or Fine-grained github_pat_...)
+              </label>
+              <input
+                type="password"
+                value={quickToken}
+                onChange={(e) => setQuickToken(e.target.value)}
+                placeholder="Paste token with repo scope to crawl private repos"
+                className="w-full px-3 py-1.5 rounded-lg bg-white border border-sand-300 text-forest-900 text-xs font-mono focus:outline-none focus:border-sage-500"
+              />
+              <p className="text-[10px] text-forest-700/60 font-mono">
+                Tokens are used in-memory for this single fetch request and never persisted unencrypted.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {githubSyncMsg && (
+          <p className="text-xs text-sage-800 bg-sage-50 border border-sage-200 p-2.5 rounded-xl flex items-center gap-1.5 font-mono">
+            <CheckCircle2 className="w-4 h-4 text-sage-600 shrink-0" /> {githubSyncMsg}
+          </p>
+        )}
 
         {crawlerErrorMsg && (
           <p className="text-xs text-terracotta-600 flex items-center gap-1.5 pt-1 font-mono">
@@ -373,18 +442,27 @@ export const StudentProjectsPage: React.FC = () => {
                 ⚡ Auto-Fetch from GitHub URL
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
-                <input
-                  type="url"
-                  value={modalRepoUrl}
-                  onChange={(e) => setModalRepoUrl(e.target.value)}
-                  placeholder="https://github.com/..."
-                  className="flex-1 px-3.5 py-2 rounded-xl bg-sand-50 border border-sand-300 text-forest-900 placeholder:text-forest-700/40 text-xs focus:outline-none focus:border-sage-500 font-mono"
-                />
+                <div className="flex-1 space-y-2">
+                  <input
+                    type="url"
+                    value={modalRepoUrl}
+                    onChange={(e) => setModalRepoUrl(e.target.value)}
+                    placeholder="https://github.com/..."
+                    className="w-full px-3.5 py-2 rounded-xl bg-sand-50 border border-sand-300 text-forest-900 placeholder:text-forest-700/40 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                  />
+                  <input
+                    type="password"
+                    value={modalToken}
+                    onChange={(e) => setModalToken(e.target.value)}
+                    placeholder="Access Token (optional for private repo, ghp_... or github_pat_...)"
+                    className="w-full px-3.5 py-1.5 rounded-lg bg-sand-50/70 border border-sand-200 text-forest-900 text-[11px] font-mono focus:outline-none focus:border-sage-500"
+                  />
+                </div>
                 <button
                   type="button"
-                  onClick={() => handleAutoFetch(modalRepoUrl)}
+                  onClick={() => handleAutoFetch(modalRepoUrl, modalToken)}
                   disabled={isAutoFetching || !modalRepoUrl.trim()}
-                  className="px-4 py-2 rounded-full bg-terracotta-500 hover:bg-terracotta-600 disabled:opacity-50 text-white font-medium text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 shadow-sm"
+                  className="px-4 py-2 rounded-full bg-terracotta-500 hover:bg-terracotta-600 disabled:opacity-50 text-white font-medium text-xs transition-colors shrink-0 flex items-center justify-center gap-1.5 shadow-sm self-start"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isAutoFetching ? 'animate-spin' : ''}`} />
                   {isAutoFetching ? 'Crawling...' : 'Auto-Fetch'}

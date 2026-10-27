@@ -145,6 +145,7 @@ export type ProjectInput = z.infer<typeof ProjectSchema>;
 
 export const AutoFetchRepoSchema = z.object({
   repositoryUrl: z.string().url('Must be a valid repository URL'),
+  token: z.string().optional(),
 });
 
 export type AutoFetchRepoInput = z.infer<typeof AutoFetchRepoSchema>;

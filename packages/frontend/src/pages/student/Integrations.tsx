@@ -17,6 +17,7 @@ export const StudentIntegrationsPage: React.FC = () => {
   const [platform, setPlatform] = useState<'LEETCODE' | 'HACKERRANK' | 'CODEFORCES'>('LEETCODE');
   const [codingUsername, setCodingUsername] = useState('');
   const [isAddingCoding, setIsAddingCoding] = useState(false);
+  const [syncingProfileId, setSyncingProfileId] = useState<string | null>(null);
 
   // LinkedIn form
   const [linkedinInput, setLinkedinInput] = useState('');
@@ -75,6 +76,18 @@ export const StudentIntegrationsPage: React.FC = () => {
       console.error(e);
     } finally {
       setIsAddingCoding(false);
+    }
+  };
+
+  const handleSyncCodingProfile = async (id: string) => {
+    setSyncingProfileId(id);
+    try {
+      await api.post(`/integrations/coding-profiles/${id}/sync`);
+      await loadData();
+    } catch (e: any) {
+      console.error(e);
+    } finally {
+      setSyncingProfileId(null);
     }
   };
 
@@ -186,7 +199,7 @@ export const StudentIntegrationsPage: React.FC = () => {
                   type="password"
                   value={githubToken}
                   onChange={(e) => setGithubToken(e.target.value)}
-                  placeholder="ghp_... or leave empty for public data"
+                  placeholder="ghp_... or github_pat_... (for private repositories / rate limit bypass)"
                   className="flex-1 px-4 py-2.5 rounded-xl bg-sand-50/70 border border-sand-300 text-forest-900 placeholder:text-forest-700/40 text-xs focus:outline-none focus:border-sage-500 font-mono"
                 />
                 <button
@@ -324,6 +337,8 @@ export const StudentIntegrationsPage: React.FC = () => {
                 key={cp.id}
                 profile={cp}
                 onDelete={handleDeleteCodingProfile}
+                onSync={handleSyncCodingProfile}
+                isSyncing={syncingProfileId === cp.id}
                 showActions={true}
               />
             ))

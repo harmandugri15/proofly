@@ -12,11 +12,14 @@ import {
   Trash2,
   Activity,
   Layers,
+  RefreshCw,
 } from 'lucide-react';
 
 interface CodingProfileCardProps {
   profile: ExternalCodingProfileItem;
   onDelete?: (id: string) => void;
+  onSync?: (id: string) => void | Promise<void>;
+  isSyncing?: boolean;
   showActions?: boolean;
 }
 
@@ -47,6 +50,8 @@ const PLATFORM_THEMES: Record<
 export const CodingProfileCard: React.FC<CodingProfileCardProps> = ({
   profile,
   onDelete,
+  onSync,
+  isSyncing = false,
   showActions = true,
 }) => {
   const theme = PLATFORM_THEMES[profile.platform] || PLATFORM_THEMES.LEETCODE;
@@ -90,6 +95,18 @@ export const CodingProfileCard: React.FC<CodingProfileCardProps> = ({
             <ExternalLink className="w-3.5 h-3.5 text-forest-700/50" />
           </a>
 
+          {showActions && onSync && (
+            <button
+              onClick={() => onSync(profile.id)}
+              disabled={isSyncing}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-900 text-xs font-mono font-medium border border-sand-200 transition-colors disabled:opacity-50"
+              title="Sync latest platform statistics"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Sync</span>
+            </button>
+          )}
+
           {showActions && onDelete && (
             <button
               onClick={() => onDelete(profile.id)}
@@ -118,7 +135,7 @@ export const CodingProfileCard: React.FC<CodingProfileCardProps> = ({
             <Percent className="w-3.5 h-3.5 text-sage-600" /> Acceptance Rate
           </div>
           <div className="text-2xl font-serif font-normal text-sage-700">
-            {detailed?.acceptanceRate ? `${detailed.acceptanceRate}%` : '68.4%'}
+            {detailed?.acceptanceRate != null ? `${detailed.acceptanceRate}%` : (profile.totalSolved > 0 ? '--' : '0%')}
           </div>
         </div>
 
@@ -127,7 +144,7 @@ export const CodingProfileCard: React.FC<CodingProfileCardProps> = ({
             <Flame className="w-3.5 h-3.5 text-terracotta-600" /> Solving Streak
           </div>
           <div className="text-2xl font-serif font-normal text-terracotta-600">
-            {detailed?.streakDays ? `${detailed.streakDays} days` : '32 days'}
+            {detailed?.streakDays != null ? `${detailed.streakDays} days` : '0 days'}
           </div>
         </div>
 
@@ -136,7 +153,7 @@ export const CodingProfileCard: React.FC<CodingProfileCardProps> = ({
             <Trophy className="w-3.5 h-3.5 text-amber-600" /> Contest Rating
           </div>
           <div className="text-2xl font-serif font-normal text-amber-700">
-            {profile.rating ? `${profile.rating}` : profile.ranking ? `#${profile.ranking.toLocaleString()}` : 'Top 8%'}
+            {profile.rating ? `${profile.rating}` : profile.ranking ? `#${profile.ranking.toLocaleString()}` : detailed?.percentileRank != null ? `Top ${Math.max(1, 100 - detailed.percentileRank)}%` : (profile.totalSolved > 0 ? 'Active' : 'Unrated')}
           </div>
         </div>
       </div>
@@ -207,17 +224,20 @@ export const CodingProfileCard: React.FC<CodingProfileCardProps> = ({
             <Activity className="w-3.5 h-3.5 text-sage-600" /> Algorithmic Focus Areas
           </span>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            {(detailed?.topSkills && detailed.topSkills.length > 0
-              ? detailed.topSkills
-              : ['Dynamic Programming', 'Graph Algorithms', 'Binary Search', 'Trees', 'Greedy']
-            ).map((skill, idx) => (
-              <span
-                key={idx}
-                className="text-[11px] font-mono px-3 py-1 rounded-full bg-white text-forest-800 border border-sand-200"
-              >
-                {skill}
+            {detailed?.topSkills && detailed.topSkills.length > 0 ? (
+              detailed.topSkills.map((skill, idx) => (
+                <span
+                  key={idx}
+                  className="text-[11px] font-mono px-3 py-1 rounded-full bg-white text-forest-800 border border-sand-200"
+                >
+                  {skill}
+                </span>
+              ))
+            ) : (
+              <span className="text-xs font-mono text-forest-700/50 py-1">
+                {profile.totalSolved > 0 ? 'Algorithms & Problem Solving' : 'No topics recorded'}
               </span>
-            ))}
+            )}
           </div>
         </div>
 
@@ -227,17 +247,20 @@ export const CodingProfileCard: React.FC<CodingProfileCardProps> = ({
             <Award className="w-3.5 h-3.5 text-amber-600" /> Platform Badges & Accreditations
           </span>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            {(profile.badges && profile.badges.length > 0
-              ? profile.badges
-              : ['50 Days Streak', 'SQL 50', 'Problem Solver Bronze']
-            ).map((badge, idx) => (
-              <span
-                key={idx}
-                className="text-[11px] font-mono px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200"
-              >
-                🏆 {badge}
+            {profile.badges && profile.badges.length > 0 ? (
+              profile.badges.map((badge, idx) => (
+                <span
+                  key={idx}
+                  className="text-[11px] font-mono px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200"
+                >
+                  🏆 {badge}
+                </span>
+              ))
+            ) : (
+              <span className="text-xs font-mono text-forest-700/50 py-1">
+                {profile.totalSolved > 0 ? '🏆 Verified Platform Solver' : 'No badges recorded'}
               </span>
-            ))}
+            )}
           </div>
         </div>
       </div>

@@ -97,7 +97,7 @@ studentRouter.delete('/skills/:id', async (req, res, next) => {
 // Projects
 studentRouter.post('/projects/auto-fetch', validateBody(AutoFetchRepoSchema), async (req, res, next) => {
   try {
-    const data = await GitHubService.autoFetchRepository(req.body.repositoryUrl);
+    const data = await GitHubService.autoFetchRepository(req.body.repositoryUrl, req.body.token);
     return res.json({ success: true, data: { ...data, project: data } });
   } catch (error) {
     next(error);
