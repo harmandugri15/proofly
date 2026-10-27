@@ -12,6 +12,7 @@ export const StudentIntegrationsPage: React.FC = () => {
   const [githubHandle, setGithubHandle] = useState('');
   const [githubToken, setGithubToken] = useState('');
   const [githubMsg, setGithubMsg] = useState<string | null>(null);
+  const [isDisconnectingGithub, setIsDisconnectingGithub] = useState(false);
 
   // Coding profile form
   const [platform, setPlatform] = useState<'LEETCODE' | 'HACKERRANK' | 'CODEFORCES'>('LEETCODE');
@@ -40,6 +41,25 @@ export const StudentIntegrationsPage: React.FC = () => {
       console.error(e);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleDisconnectGithub = async () => {
+    if (!window.confirm('Are you sure you want to disconnect GitHub? All auto-synced repositories and projects from this account will be removed.')) {
+      return;
+    }
+    setIsDisconnectingGithub(true);
+    setGithubMsg(null);
+    try {
+      await api.delete('/integrations/github');
+      setGithubHandle('');
+      setGithubToken('');
+      setGithubMsg('GitHub account disconnected. Synced projects and repositories have been removed.');
+      await loadData();
+    } catch (e: any) {
+      setGithubMsg(`Failed to disconnect GitHub: ${e.message}`);
+    } finally {
+      setIsDisconnectingGithub(false);
     }
   };
 

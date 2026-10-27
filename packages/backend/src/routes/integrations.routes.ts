@@ -26,6 +26,15 @@ integrationsRouter.post('/github/sync', async (req, res, next) => {
   }
 });
 
+integrationsRouter.delete('/github', async (req, res, next) => {
+  try {
+    const result = await GitHubService.disconnectGitHub(req.user!.id);
+    return res.json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
 integrationsRouter.put('/github/repositories/:id', async (req, res, next) => {
   try {
     const { isSelected } = req.body;

@@ -10,12 +10,16 @@ export function errorHandler(
   next: NextFunction
 ) {
   if (err instanceof AppError) {
-    logger.warn(`AppError [${err.code}]: ${err.message}`, {
-      path: req.originalUrl,
-      method: req.method,
-      statusCode: err.statusCode,
-      details: err.details,
-    });
+    // Probe check on /auth/me for unauthenticated visitors is expected; do not log as warning
+    const isSessionProbe = err.statusCode === 401 && (req.originalUrl.includes('/auth/me') || req.path === '/api/v1/auth/me');
+    if (!isSessionProbe) {
+      logger.warn(`AppError [${err.code}]: ${err.message}`, {
+        path: req.originalUrl,
+        method: req.method,
+        statusCode: err.statusCode,
+        details: err.details,
+      });
+    }
 
     return res.status(err.statusCode).json({
       success: false,

@@ -368,7 +368,38 @@ export class GitHubService {
         }
       }
 
-      // 3b. Auto-upsert Project records from non-fork repos (so project count is populated)
+      // 3a. Clean up obsolete / foreign repositories (only current account's repos remain)
+      const currentRepoIds = new Set(reposData.map((r) => String(r.id)));
+      await prisma.gitHubRepo.deleteMany({
+        where: {
+          studentProfileId: profile.id,
+          githubRepoId: { notIn: Array.from(currentRepoIds) },
+        },
+      });
+
+      // 3b. Clean up obsolete / foreign projects
+      // Any project whose repo URL belongs to another GitHub user, or was auto-synced from an older account
+      const validRepoUrls = new Set(reposData.map((r) => r.html_url.toLowerCase()));
+      const studentProjects = await prisma.project.findMany({
+        where: { studentProfileId: profile.id },
+      });
+
+      for (const p of studentProjects) {
+        if (!p.repositoryUrl) continue;
+        const match = p.repositoryUrl.match(/github\.com\/([a-zA-Z0-9-_.]+)/i);
+        if (match) {
+          const owner = match[1].toLowerCase();
+          const isForeignOwner = owner !== username.toLowerCase();
+          const isStaleAutoSync =
+            p.verificationNotes === 'AUTO_GITHUB_SYNC' && !validRepoUrls.has(p.repositoryUrl.toLowerCase());
+
+          if (isForeignOwner || isStaleAutoSync) {
+            await prisma.project.delete({ where: { id: p.id } });
+          }
+        }
+      }
+
+      // 3c. Auto-upsert Project records from non-fork repos of CURRENT user only
       for (const repo of reposData.filter((r) => !r.fork)) {
         const repoTitle = repo.name
           .replace(/[-_]/g, ' ')
@@ -397,6 +428,8 @@ export class GitHubService {
               demoUrl: repo.homepage && repo.homepage.startsWith('http') ? repo.homepage : null,
               skills: JSON.stringify(repo.language ? [repo.language] : ['Git']),
               verificationStatus: 'CODE_VERIFIED',
+              verificationNotes: 'AUTO_GITHUB_SYNC',
+              evidenceMetadata: JSON.stringify({ autoSynced: true, githubOwner: username.toLowerCase() }),
               isFeatured: false,
             },
           });
@@ -407,6 +440,7 @@ export class GitHubService {
               tagline: repoTagline.slice(0, 480),
               repositoryUrl: repo.html_url,
               demoUrl: repo.homepage && repo.homepage.startsWith('http') ? repo.homepage : existingProject.demoUrl,
+              verificationNotes: 'AUTO_GITHUB_SYNC',
             },
           });
         }
@@ -711,6 +745,39 @@ export class GitHubService {
       CSS: '#563d7c',
     };
     return map[lang] || '#10b981';
+  }
+
+  static async disconnectGitHub(userId: string) {
+    const profile = await prisma.studentProfile.findUnique({
+      where: { userId },
+    });
+    if (!profile) throw new NotFoundError('Student profile not found');
+
+    // 1. Delete all GitHub repo records
+    await prisma.gitHubRepo.deleteMany({
+      where: { studentProfileId: profile.id },
+    });
+
+    // 2. Delete auto-synced projects
+    const allProjects = await prisma.project.findMany({
+      where: { studentProfileId: profile.id },
+    });
+    for (const p of allProjects) {
+      if (p.verificationNotes === 'AUTO_GITHUB_SYNC' || (p.repositoryUrl && p.repositoryUrl.toLowerCase().includes('github.com/'))) {
+        await prisma.project.delete({ where: { id: p.id } });
+      }
+    }
+
+    // 3. Clear GitHub profile data
+    await prisma.studentProfile.update({
+      where: { id: profile.id },
+      data: {
+        githubUsername: null,
+        githubStats: null,
+      },
+    });
+
+    return { message: 'GitHub account disconnected successfully and synced projects removed' };
   }
 
   static async toggleRepoSelection(userId: string, repoId: string, isSelected: boolean) {
