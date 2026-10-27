@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma.js';
+﻿import { prisma } from '../lib/prisma.js';
 import { NotFoundError } from '../lib/errors.js';
 import {
   ExternalCodingProfileInput,
@@ -157,13 +157,28 @@ export class CodingProfilesService {
               profile {
                 ranking
                 reputation
+                userAvatar
+                skillTags
               }
-              submitStats: submitStatsGlobal {
+              submitStatsGlobal {
                 acSubmissionNum {
                   difficulty
                   count
                   submissions
                 }
+                totalSubmissionNum {
+                  difficulty
+                  count
+                  submissions
+                }
+              }
+              badges {
+                id
+                displayName
+              }
+              userCalendar {
+                streak
+                totalActiveDays
               }
             }
             recentAcSubmissionList(username: $username, limit: 10) {
@@ -171,6 +186,10 @@ export class CodingProfilesService {
               title
               titleSlug
               timestamp
+            }
+            allQuestionsCount {
+              difficulty
+              count
             }
           }
         `;
@@ -183,25 +202,51 @@ export class CodingProfilesService {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
           },
           body: JSON.stringify({ query, variables: { username } }),
-          signal: AbortSignal.timeout(6000),
+          signal: AbortSignal.timeout(8000),
         });
 
         if (response.ok) {
           const json: any = await response.json();
           const user = json?.data?.matchedUser;
-          if (user && user.submitStats?.acSubmissionNum) {
-            const stats = user.submitStats.acSubmissionNum;
-            const allItem = stats.find((s: any) => s.difficulty === 'All');
-            const all = allItem?.count || 0;
-            const allSubmissions = allItem?.submissions || 0;
-            const easy = stats.find((s: any) => s.difficulty === 'Easy')?.count || 0;
-            const medium = stats.find((s: any) => s.difficulty === 'Medium')?.count || 0;
-            const hard = stats.find((s: any) => s.difficulty === 'Hard')?.count || 0;
+          if (user && user.submitStatsGlobal?.acSubmissionNum) {
+            const acStats = user.submitStatsGlobal.acSubmissionNum;
+            const totalStats = user.submitStatsGlobal.totalSubmissionNum || [];
+            const allQCount = json?.data?.allQuestionsCount || [];
+
+            const acAllItem = acStats.find((s: any) => s.difficulty === 'All');
+            const totalAllItem = totalStats.find((s: any) => s.difficulty === 'All');
+
+            const solved = acAllItem?.count || 0;
+            const acSubmissions = acAllItem?.submissions || 0;    // accepted submission attempts
+            const totalSubmissions = totalAllItem?.submissions || 0; // ALL submission attempts
+
+            const easy = acStats.find((s: any) => s.difficulty === 'Easy')?.count || 0;
+            const medium = acStats.find((s: any) => s.difficulty === 'Medium')?.count || 0;
+            const hard = acStats.find((s: any) => s.difficulty === 'Hard')?.count || 0;
+
+            // Total available questions for percentile
+            const totalEasyQ = allQCount.find((q: any) => q.difficulty === 'Easy')?.count || 974;
+            const totalMediumQ = allQCount.find((q: any) => q.difficulty === 'Medium')?.count || 2135;
+            const totalHardQ = allQCount.find((q: any) => q.difficulty === 'Hard')?.count || 986;
+
+            // Correct acceptance rate: accepted_attempts / total_attempts
+            const acceptanceRate = totalSubmissions > 0
+              ? Math.round((acSubmissions / totalSubmissions) * 1000) / 10
+              : null;
+
+            const streakDays = user.userCalendar?.streak ?? null;
+            const totalActiveDays = user.userCalendar?.totalActiveDays || 0;
+
+            // Real badges from API
+            const rawBadges: string[] = (user.badges || []).map((b: any) => b.displayName).filter(Boolean);
+            if (rawBadges.length === 0 && solved > 0) rawBadges.push('LeetCode Verified');
 
             const recentList = json?.data?.recentAcSubmissionList || [];
             const recentSubmissions = recentList.map((sub: any) => {
               const ts = parseInt(sub.timestamp, 10);
-              const dateStr = !isNaN(ts) ? new Date(ts * 1000).toLocaleDateString() : 'Recent';
+              const dateStr = !isNaN(ts)
+                ? new Date(ts * 1000).toLocaleDateString('en-GB')
+                : 'Recent';
               return {
                 title: sub.title || sub.titleSlug,
                 difficulty: 'Accepted',
@@ -210,25 +255,35 @@ export class CodingProfilesService {
               };
             });
 
-            const acceptanceRate = allSubmissions > 0 ? Math.round((all / allSubmissions) * 1000) / 10 : null;
+            // Skills from profile tags, fallback to standard skills
+            const skillTags: string[] = user.profile?.skillTags || [];
+            const topSkills = skillTags.length > 0
+              ? skillTags.slice(0, 5)
+              : solved > 0 ? ['Algorithms', 'Data Structures', 'Problem Solving'] : [];
+
+            // Percentile: based on ranking out of ~5M users
+            const ranking = user.profile?.ranking || null;
+            const percentileRank = ranking
+              ? Math.min(99, Math.max(1, Math.round((1 - ranking / 5000000) * 100)))
+              : null;
 
             return {
-              totalSolved: all,
+              totalSolved: solved,
               easySolved: easy,
               mediumSolved: medium,
               hardSolved: hard,
-              ranking: user.profile?.ranking || null,
+              ranking,
               rating: null,
-              badges: all > 0 ? ['LeetCode Verified'] : [],
+              badges: rawBadges,
               syncStatus: 'SYNCED',
               detailedStats: {
                 acceptanceRate,
-                streakDays: null,
-                percentileRank: user.profile?.ranking ? Math.max(1, Math.round((1 - (user.profile.ranking / 5000000)) * 100)) : null,
-                easyTotal: easy,
-                mediumTotal: medium,
-                hardTotal: hard,
-                topSkills: all > 0 ? ['Algorithms', 'Data Structures'] : [],
+                streakDays,
+                percentileRank,
+                easyTotal: totalEasyQ,
+                mediumTotal: totalMediumQ,
+                hardTotal: totalHardQ,
+                topSkills,
                 recentSubmissions,
               },
             };
@@ -257,7 +312,6 @@ export class CodingProfilesService {
           }
         }
       }
-
       if (platform === 'CODEFORCES') {
         const infoRes = await fetch(`https://codeforces.com/api/user.info?handles=${encodeURIComponent(username)}`, {
           signal: AbortSignal.timeout(5000),
@@ -357,7 +411,7 @@ export class CodingProfilesService {
         if (hrRes.ok) {
           const hrData: any = await hrRes.json();
           const models = hrData?.models || [];
-          const badges = models.map((b: any) => `${b.badge_name || 'HackerRank'} (${b.stars || 0}★)`);
+          const badges = models.map((b: any) => `${b.badge_name || 'HackerRank'} (${b.stars || 0}â˜…)`);
           const totalPoints = models.reduce((acc: number, b: any) => acc + (b.current_points || b.stars || 0), 0);
 
           return {

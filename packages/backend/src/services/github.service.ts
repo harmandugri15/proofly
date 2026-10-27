@@ -1,4 +1,4 @@
-import { prisma } from '../lib/prisma.js';
+﻿import { prisma } from '../lib/prisma.js';
 import { NotFoundError, ValidationError } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
 import {
@@ -47,7 +47,7 @@ export class GitHubService {
       if (res.ok) {
         const html = await res.text();
         let totalCommitsLastYear = 0;
-        const headlineMatch = html.match(/([0-9,]+)\s+contributions\s+in\s+the\s+last\s+year/i);
+        const headlineMatch = html.match(/([0-9,]+)\s+contributions/i);
         if (headlineMatch) {
           totalCommitsLastYear = parseInt(headlineMatch[1].replace(/,/g, ''), 10);
         }
@@ -150,7 +150,7 @@ export class GitHubService {
   /**
    * Syncs user repositories and computes full GitHubProfileStats with heatmap
    */
-  static async syncUserRepositories(userId: string, usernameOrToken?: string) {
+  static async syncUserRepositories(userId: string, usernameInput?: string, tokenInput?: string) {
     const profile = await prisma.studentProfile.findUnique({
       where: { userId },
       include: { gitHubRepos: true },
@@ -158,7 +158,7 @@ export class GitHubService {
 
     if (!profile) throw new NotFoundError('Student profile not found');
 
-    const username = usernameOrToken || profile.githubUsername || profile.username;
+    const username = usernameInput || profile.githubUsername || profile.username;
     const now = new Date();
 
     try {
@@ -167,8 +167,9 @@ export class GitHubService {
         Accept: 'application/vnd.github.v3+json',
       };
 
-      if (usernameOrToken && usernameOrToken.startsWith('ghp_')) {
-        headers['Authorization'] = `token ${usernameOrToken}`;
+      const hasToken = !!(tokenInput && tokenInput.startsWith('ghp_'));
+      if (hasToken) {
+        headers['Authorization'] = `token ${tokenInput}`;
       }
 
       // 1. Fetch User Profile
@@ -198,10 +199,12 @@ export class GitHubService {
       // 2. Fetch Repositories
       let reposData: GitHubRepoDTO[] = [];
       try {
-        const reposRes = await fetch(
-          `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=12`,
-          { headers, signal: AbortSignal.timeout(4000) }
-        );
+        // When a token is provided, use authenticated /user/repos to include private repos
+        const repoApiUrl = hasToken
+          ? `https://api.github.com/user/repos?sort=updated&per_page=30&type=all&visibility=all`
+          : `https://api.github.com/users/${encodeURIComponent(username)}/repos?sort=updated&per_page=30&type=public`;
+
+        const reposRes = await fetch(repoApiUrl, { headers, signal: AbortSignal.timeout(6000) });
         if (reposRes.ok) {
           reposData = (await reposRes.json()) as GitHubRepoDTO[];
         }
@@ -253,6 +256,51 @@ export class GitHubService {
               forksCount: repo.forks_count,
               lastCommitAt: repo.updated_at ? new Date(repo.updated_at) : now,
               lastSyncedAt: now,
+            },
+          });
+        }
+      }
+
+      // 3b. Auto-upsert Project records from non-fork repos (so project count is populated)
+      for (const repo of reposData.filter((r) => !r.fork)) {
+        const repoTitle = repo.name
+          .replace(/[-_]/g, ' ')
+          .replace(/\b\w/g, (c: string) => c.toUpperCase());
+        const repoTagline = repo.description ||
+          `Open-source project built with ${repo.language || 'modern technologies'}.`;
+        const repoDescription = repo.description
+          ? `${repo.description}\n\nRepository: ${repo.html_url}`
+          : `Engineering project at ${repo.html_url}. Built with ${repo.language || 'modern developer tooling'}.`;
+
+        const existingProject = await prisma.project.findFirst({
+          where: {
+            studentProfileId: profile.id,
+            repositoryUrl: repo.html_url,
+          },
+        });
+
+        if (!existingProject) {
+          await prisma.project.create({
+            data: {
+              studentProfileId: profile.id,
+              title: repoTitle.slice(0, 115),
+              tagline: repoTagline.slice(0, 480),
+              description: repoDescription.slice(0, 4000),
+              repositoryUrl: repo.html_url,
+              demoUrl: repo.homepage && repo.homepage.startsWith('http') ? repo.homepage : null,
+              skills: JSON.stringify(repo.language ? [repo.language] : []),
+              verificationStatus: 'CODE_VERIFIED',
+              isFeatured: false,
+            },
+          });
+        } else {
+          // Update title/tagline if description changed
+          await prisma.project.update({
+            where: { id: existingProject.id },
+            data: {
+              tagline: repoTagline.slice(0, 480),
+              repositoryUrl: repo.html_url,
+              demoUrl: repo.homepage && repo.homepage.startsWith('http') ? repo.homepage : existingProject.demoUrl,
             },
           });
         }

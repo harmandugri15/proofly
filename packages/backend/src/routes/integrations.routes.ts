@@ -17,7 +17,8 @@ integrationsRouter.post('/github/sync', async (req, res, next) => {
     const { token, username } = req.body || {};
     const result = await GitHubService.syncUserRepositories(
       req.user!.id,
-      token || username
+      username,
+      token
     );
     return res.json({ success: true, data: result });
   } catch (error) {
