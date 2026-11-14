@@ -123,7 +123,7 @@ export class EmailService {
           html,
         });
         logger.info(`📧 Email verification OTP sent to ${to}`);
-        return { delivered: true, devOtp: env.NODE_ENV !== 'production' ? otp : undefined };
+        return { delivered: true, devOtp: env.NODE_ENV === 'test' ? otp : undefined };
       } catch (err: any) {
         logger.error(`❌ Failed to send verification email via SMTP to ${to}: ${err?.message}`);
       }
@@ -138,7 +138,7 @@ export class EmailService {
     console.log('⏱️  Valid for:  15 minutes');
     console.log('======================================================\n');
 
-    return { delivered: false, devOtp: env.NODE_ENV !== 'production' ? otp : undefined };
+    return { delivered: false, devOtp: env.NODE_ENV === 'test' ? otp : undefined };
   }
 
   static async sendPasswordResetOtp({ to, name, otp, resetToken }: SendResetOtpOptions): Promise<{ delivered: boolean; devOtp?: string }> {
@@ -197,7 +197,7 @@ export class EmailService {
           html,
         });
         logger.info(`📧 Password reset OTP email sent to ${to}`);
-        return { delivered: true, devOtp: env.NODE_ENV !== 'production' ? otp : undefined };
+        return { delivered: true, devOtp: env.NODE_ENV === 'test' ? otp : undefined };
       } catch (err: any) {
         logger.error(`❌ Failed to send reset email via SMTP to ${to}: ${err?.message}`);
       }
@@ -212,7 +212,7 @@ export class EmailService {
     console.log(`⏱️  Valid for:  15 minutes`);
     console.log('======================================================\n');
 
-    return { delivered: false, devOtp: env.NODE_ENV !== 'production' ? otp : undefined };
+    return { delivered: false, devOtp: env.NODE_ENV === 'test' ? otp : undefined };
   }
 
   /**

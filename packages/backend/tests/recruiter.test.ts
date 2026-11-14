@@ -1,25 +1,27 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app.js';
+import { createTestRecruiter, createTestStudent } from './fixtures.js';
 
 describe('Recruiter Workspace & Permissions Tests', () => {
   let recruiterToken: string;
   let studentToken: string;
+  let cleanups: (() => Promise<void>)[] = [];
 
   beforeAll(async () => {
-    // Recruiter login
-    const recRes = await request(app).post('/api/v1/auth/login').send({
-      email: 'recruiter@vanguard.com',
-      password: 'Password123!',
-    });
-    recruiterToken = recRes.body.data.token;
+    const recruiter = await createTestRecruiter();
+    const student = await createTestStudent();
+    cleanups.push(recruiter.cleanup);
+    cleanups.push(student.cleanup);
 
-    // Student login
-    const stuRes = await request(app).post('/api/v1/auth/login').send({
-      email: 'alex.chen@university.edu',
-      password: 'Password123!',
-    });
-    studentToken = stuRes.body.data.token;
+    recruiterToken = recruiter.token;
+    studentToken = student.token;
+  });
+
+  afterAll(async () => {
+    for (const cleanup of cleanups) {
+      await cleanup();
+    }
   });
 
   it('should allow recruiter to search candidates and filter by skills', async () => {

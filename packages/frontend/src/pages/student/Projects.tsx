@@ -568,7 +568,7 @@ export const StudentProjectsPage: React.FC = () => {
                     type="url"
                     value={demoUrl}
                     onChange={(e) => setDemoUrl(e.target.value)}
-                    placeholder="https://demo.app"
+                    placeholder="https://my-app.vercel.app"
                     className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs font-mono focus:outline-none focus:border-sage-500"
                   />
                 </div>

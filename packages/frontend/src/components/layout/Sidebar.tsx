@@ -31,7 +31,7 @@ export const Sidebar: React.FC = () => {
     {
       title: 'VERIFIED EVIDENCE',
       links: [
-        { to: '/student/projects', label: 'Projects & Demos', icon: FolderGit2, badge: 'Live' },
+        { to: '/student/projects', label: 'Projects & Apps', icon: FolderGit2, badge: 'Live' },
         { to: '/student/integrations', label: 'GitHub & Coding', icon: GitBranch, badge: 'Heatmap' },
         { to: '/student/evidence', label: 'Certs & Badges', icon: ShieldCheck },
       ],

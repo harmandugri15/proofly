@@ -180,7 +180,7 @@ export class AuthService {
         {
           code: 'EMAIL_NOT_VERIFIED',
           email: user.email,
-          devOtp: process.env.NODE_ENV !== 'production' ? otp : undefined,
+          devOtp: process.env.NODE_ENV === 'test' ? otp : undefined,
         }
       );
     }

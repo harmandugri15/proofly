@@ -1,32 +1,29 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app.js';
-import { prisma } from '../src/lib/prisma.js';
+import { createTestRecruiter, createTestStudent } from './fixtures.js';
 
 describe('AI Assistants & Grounding Tests', () => {
   let studentToken: string;
   let recruiterToken: string;
   let candidateId: string;
+  let cleanups: (() => Promise<void>)[] = [];
 
   beforeAll(async () => {
-    // Log in student
-    const stuRes = await request(app).post('/api/v1/auth/login').send({
-      email: 'alex.chen@university.edu',
-      password: 'Password123!',
-    });
-    studentToken = stuRes.body.data.token;
+    const student = await createTestStudent();
+    const recruiter = await createTestRecruiter();
+    cleanups.push(student.cleanup);
+    cleanups.push(recruiter.cleanup);
 
-    // Log in recruiter
-    const recRes = await request(app).post('/api/v1/auth/login').send({
-      email: 'recruiter@vanguard.com',
-      password: 'Password123!',
-    });
-    recruiterToken = recRes.body.data.token;
+    studentToken = student.token;
+    recruiterToken = recruiter.token;
+    candidateId = student.profile.id;
+  });
 
-    const studentProfile = await prisma.studentProfile.findFirst({
-      where: { username: 'alexchen' },
-    });
-    candidateId = studentProfile!.id;
+  afterAll(async () => {
+    for (const cleanup of cleanups) {
+      await cleanup();
+    }
   });
 
   it('Agent 1: should generate actionable profile completeness checklist for student', async () => {
@@ -67,8 +64,8 @@ describe('AI Assistants & Grounding Tests', () => {
       .set('Authorization', `Bearer ${recruiterToken}`)
       .send({
         candidateId,
-        requiredSkills: ['TypeScript', 'React', 'PostgreSQL'],
-        preferredSkills: ['AWS', 'Docker'],
+        requiredSkills: ['TypeScript', 'React', 'Node.js'],
+        preferredSkills: ['AWS'],
       });
 
     expect(res.status).toBe(200);

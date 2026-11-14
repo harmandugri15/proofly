@@ -1,17 +1,22 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app.js';
+import { createTestStudent } from './fixtures.js';
 
 describe('Evidence Verification Engine Tests', () => {
   let studentToken: string;
+  let cleanupStudent: () => Promise<void>;
 
   beforeAll(async () => {
-    // Log in as seeded student Alex Chen
-    const res = await request(app).post('/api/v1/auth/login').send({
-      email: 'alex.chen@university.edu',
-      password: 'Password123!',
-    });
-    studentToken = res.body.data.token;
+    const student = await createTestStudent();
+    studentToken = student.token;
+    cleanupStudent = student.cleanup;
+  });
+
+  afterAll(async () => {
+    if (cleanupStudent) {
+      await cleanupStudent();
+    }
   });
 
   it('should verify a Credly certificate URL with ISSUER_VERIFIED status and confidence >= 0.9', async () => {

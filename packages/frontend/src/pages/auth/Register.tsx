@@ -29,7 +29,6 @@ export const Register: React.FC = () => {
 
   // Verification step state
   const [otp, setOtp] = useState('');
-  const [devOtpHint, setDevOtpHint] = useState<string | null>(null);
   const [resendStatus, setResendStatus] = useState<string | null>(null);
   const [resendCooldown, setResendCooldown] = useState(0);
 
@@ -81,7 +80,6 @@ export const Register: React.FC = () => {
       });
 
       if (res.requiresEmailVerification) {
-        setDevOtpHint(res.devOtp || null);
         setStep('VERIFY_OTP');
         setResendCooldown(60);
       } else {
@@ -123,9 +121,6 @@ export const Register: React.FC = () => {
     setResendStatus(null);
     try {
       const res = await resendVerification(email.trim());
-      if (res.devOtp) {
-        setDevOtpHint(res.devOtp);
-      }
       setResendStatus(res.message || 'A fresh 6-digit code has been sent to your email.');
       setResendCooldown(60);
     } catch (err: any) {
@@ -221,7 +216,7 @@ export const Register: React.FC = () => {
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder={role === 'STUDENT' ? 'Maya Lin' : 'Alex Mercer'}
+                  placeholder="Your full name"
                   className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
                 />
               </div>
@@ -235,7 +230,7 @@ export const Register: React.FC = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder={role === 'STUDENT' ? 'maya@stanford.edu' : 'alex@company.com'}
+                  placeholder={role === 'STUDENT' ? 'student@university.edu' : 'recruiter@company.com'}
                   className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
                 />
               </div>
@@ -251,7 +246,7 @@ export const Register: React.FC = () => {
                       required
                       value={orgName}
                       onChange={(e) => setOrgName(e.target.value)}
-                      placeholder="Acme Ventures"
+                      placeholder="Company or Studio Name"
                       className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F]"
                     />
                   </div>
@@ -264,7 +259,7 @@ export const Register: React.FC = () => {
                       required
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Lead Tech Talent Partner"
+                      placeholder="Technical Recruiter / Talent Lead"
                       className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F]"
                     />
                   </div>
@@ -330,20 +325,6 @@ export const Register: React.FC = () => {
                 <strong className="text-[#1F2C23] font-semibold">{email}</strong>. Please enter it below to confirm your account.
               </p>
             </div>
-
-            {/* Dev Mode OTP Banner for Local Frictionless Testing */}
-            {devOtpHint && (
-              <div className="p-3 rounded-2xl bg-[#E8EEF5] border border-[#CCD8E6] text-[#25466A] text-xs flex items-center justify-between">
-                <span className="font-mono text-[11px]">Dev Mode Code: <strong>{devOtpHint}</strong></span>
-                <button
-                  type="button"
-                  onClick={() => setOtp(devOtpHint)}
-                  className="text-[11px] underline font-semibold hover:text-[#18304C]"
-                >
-                  Auto-fill
-                </button>
-              </div>
-            )}
 
             {/* Feedback Alerts */}
             {error && (

@@ -132,60 +132,66 @@ export const RecruiterDashboard: React.FC = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {candidates.map((candidate) => (
-            <Link
-              key={candidate.id}
-              to={`/recruiter/candidates/${candidate.id}`}
-              className="p-5 sm:p-6 rounded-3xl bg-white/90 border border-sand-200/80 hover:border-sage-400/60 transition-all flex flex-col justify-between space-y-3 group shadow-sm hover:shadow-md hover:-translate-y-0.5"
-            >
-              <div className="space-y-2.5">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-3">
-                    <div className="p-0.5 rounded-full shrink-0 bg-sand-200">
-                      <div className="w-8 h-8 rounded-full bg-forest-900 flex items-center justify-center text-xs font-bold text-sand-100">
-                        {candidate.user?.name ? candidate.user.name[0] : 'U'}
+        {candidates.length === 0 ? (
+          <div className="p-12 text-center rounded-3xl bg-white/80 border border-sand-200/80 text-forest-700/60 text-xs">
+            No verified candidates registered yet. Candidates will appear here as students join and verify their profiles.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {candidates.map((candidate) => (
+              <Link
+                key={candidate.id}
+                to={`/recruiter/candidates/${candidate.id}`}
+                className="p-5 sm:p-6 rounded-3xl bg-white/90 border border-sand-200/80 hover:border-sage-400/60 transition-all flex flex-col justify-between space-y-3 group shadow-sm hover:shadow-md hover:-translate-y-0.5"
+              >
+                <div className="space-y-2.5">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                      <div className="p-0.5 rounded-full shrink-0 bg-sand-200">
+                        <div className="w-8 h-8 rounded-full bg-forest-900 flex items-center justify-center text-xs font-bold text-sand-100">
+                          {candidate.user?.name ? candidate.user.name[0] : 'U'}
+                        </div>
+                      </div>
+                      <div>
+                        <h3 className="text-sm sm:text-base font-serif font-normal text-forest-900 group-hover:text-terracotta-600 transition-colors">
+                          {candidate.user?.name}
+                        </h3>
+                        <p className="text-xs font-mono text-forest-700/60">@{candidate.username}</p>
                       </div>
                     </div>
-                    <div>
-                      <h3 className="text-sm sm:text-base font-serif font-normal text-forest-900 group-hover:text-terracotta-600 transition-colors">
-                        {candidate.user?.name}
-                      </h3>
-                      <p className="text-xs font-mono text-forest-700/60">@{candidate.username}</p>
-                    </div>
+                    <span className="text-xs font-mono font-bold text-sage-800 bg-sage-50 px-2.5 py-0.5 rounded-full border border-sage-200">
+                      {candidate.completenessScore}% Proof
+                    </span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-sage-800 bg-sage-50 px-2.5 py-0.5 rounded-full border border-sage-200">
-                    {candidate.completenessScore}% Proof
+
+                  <p className="text-xs text-forest-700/80 font-medium line-clamp-1">
+                    {candidate.headline || 'Software Engineer'}
+                  </p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {candidate.skills?.slice(0, 4).map((s: any) => (
+                      <span
+                        key={s.id}
+                        className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sand-100 text-forest-800 border border-sand-200"
+                      >
+                        {s.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-sand-100 flex items-center justify-between text-xs">
+                  <span className="text-forest-700/60 font-mono text-[11px]">
+                    {candidate.projects?.length || 0} projects • {candidate.certificates?.length || 0} credentials
+                  </span>
+                  <span className="text-terracotta-600 font-mono font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                    Inspect <ArrowRight className="w-3.5 h-3.5" />
                   </span>
                 </div>
-
-                <p className="text-xs text-forest-700/80 font-medium line-clamp-1">
-                  {candidate.headline || 'Software Engineer'}
-                </p>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {candidate.skills?.slice(0, 4).map((s: any) => (
-                    <span
-                      key={s.id}
-                      className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-sand-100 text-forest-800 border border-sand-200"
-                    >
-                      {s.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-sand-100 flex items-center justify-between text-xs">
-                <span className="text-forest-700/60 font-mono text-[11px]">
-                  {candidate.projects?.length || 0} projects • {candidate.certificates?.length || 0} credentials
-                </span>
-                <span className="text-terracotta-600 font-mono font-bold flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
-                  Inspect <ArrowRight className="w-3.5 h-3.5" />
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,28 +1,29 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app.js';
 import { GitHubService } from '../src/services/github.service.js';
+import { createTestStudent } from './fixtures.js';
 
 describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () => {
   let studentCookie: string;
+  let studentUsername: string;
+  let cleanupStudent: () => Promise<void>;
 
   beforeAll(async () => {
-    // Login as seeded student Alex Chen
-    const res = await request(app)
-      .post('/api/v1/auth/login')
-      .send({ email: 'alex.chen@university.edu', password: 'Password123!' });
+    const student = await createTestStudent();
+    cleanupStudent = student.cleanup;
+    studentUsername = student.profile.username;
+    studentCookie = `proofly_session=${student.token}`;
+  });
 
-    expect(res.status).toBe(200);
-    const cookies = res.headers['set-cookie'];
-    if (Array.isArray(cookies)) {
-      studentCookie = cookies.map((c) => c.split(';')[0]).join('; ');
-    } else if (cookies) {
-      studentCookie = (cookies as string).split(';')[0];
+  afterAll(async () => {
+    if (cleanupStudent) {
+      await cleanupStudent();
     }
   });
 
   it('GitHubService: should generate 365 days contribution heatmap with 0-4 levels and streak metrics', async () => {
-    const stats = await GitHubService.generateContributionHeatmap('alexchen');
+    const stats = await GitHubService.generateContributionHeatmap('torvalds');
     expect(stats.contributions.length).toBeGreaterThanOrEqual(365);
     expect(stats.totalCommitsLastYear).toBeGreaterThanOrEqual(0);
     expect(stats.currentStreak).toBeGreaterThanOrEqual(0);
@@ -50,13 +51,13 @@ describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () =>
     const res = await request(app)
       .post('/api/v1/student/projects/auto-fetch')
       .set('Cookie', studentCookie)
-      .send({ repositoryUrl: 'https://github.com/alexchen/syncflow-canvas' });
+      .send({ repositoryUrl: 'https://github.com/facebook/react' });
 
     expect(res.status).toBe(200);
     expect(res.body.data).toHaveProperty('title');
     expect(res.body.data).toHaveProperty('tagline');
     expect(res.body.data).toHaveProperty('description');
-    expect(res.body.data.repositoryUrl).toBe('https://github.com/alexchen/syncflow-canvas');
+    expect(res.body.data.repositoryUrl).toBe('https://github.com/facebook/react');
     expect(Array.isArray(res.body.data.skills)).toBe(true);
     expect(res.body.data.isVerified).toBe(true);
   }, 15000);
@@ -70,7 +71,7 @@ describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () =>
     expect(res.body.data).toHaveProperty('shareToken');
     expect(res.body.data).toHaveProperty('shareUrl');
     expect(res.body.data).toHaveProperty('recruiterFastPassUrl');
-    expect(res.body.data.username).toBe('alexchen');
+    expect(res.body.data.username).toBe(studentUsername);
     expect(res.body.data.recruiterFastPassUrl).toContain('pass=');
   });
 
@@ -82,10 +83,10 @@ describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () =>
     const { shareToken } = tokenRes.body.data;
 
     const publicRes = await request(app)
-      .get(`/api/v1/public/profile/alexchen?pass=${shareToken}`);
+      .get(`/api/v1/public/profile/${studentUsername}?pass=${shareToken}`);
 
     expect(publicRes.status).toBe(200);
-    expect(publicRes.body.data.username).toBe('alexchen');
+    expect(publicRes.body.data.username).toBe(studentUsername);
     expect(publicRes.body.data).toHaveProperty('githubStats');
     expect(publicRes.body.data.githubStats).toHaveProperty('contributions');
     expect(Array.isArray(publicRes.body.data.codingProfiles)).toBe(true);
@@ -96,10 +97,10 @@ describe('Auto-Fetch Crawler, Contribution Heatmap & Recruiter Fast-Pass', () =>
     const connectRes = await request(app)
       .post('/api/v1/integrations/linkedin')
       .set('Cookie', studentCookie)
-      .send({ linkedinUrl: 'https://www.linkedin.com/in/alexchen-dev' });
+      .send({ linkedinUrl: 'https://www.linkedin.com/in/test-student-engineer' });
 
     expect(connectRes.status).toBe(200);
-    expect(connectRes.body.data.linkedinUrl).toBe('https://www.linkedin.com/in/alexchen-dev');
+    expect(connectRes.body.data.linkedinUrl).toBe('https://www.linkedin.com/in/test-student-engineer');
     expect(connectRes.body.data.linkedinVerified).toBe(true);
 
     // Disconnect LinkedIn

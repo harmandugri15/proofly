@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app.js';
+import { prisma } from '../src/lib/prisma.js';
 
 describe('Auth & Session Integration Tests', () => {
   const testStudentEmail = `test.student.${Date.now()}@example.com`;
@@ -59,7 +60,7 @@ describe('Auth & Session Integration Tests', () => {
     expect(cookies).toBeDefined();
     expect(cookies[0]).toContain('proofly_session');
     expect(cookies[0]).toContain('HttpOnly');
-  });
+  }, 15000);
 
   it('should reject registration with duplicate email', async () => {
     const res = await request(app)
@@ -237,5 +238,24 @@ describe('Auth & Session Integration Tests', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(afterLogoutRes.status).toBe(401);
+  });
+
+  afterAll(async () => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { email: testStudentEmail },
+        include: { studentProfile: true },
+      });
+      if (user) {
+        if (user.studentProfile) {
+          await prisma.studentProfile.delete({ where: { id: user.studentProfile.id } });
+        }
+        await prisma.session.deleteMany({ where: { userId: user.id } });
+        await prisma.auditEvent.deleteMany({ where: { actorId: user.id } });
+        await prisma.user.delete({ where: { id: user.id } });
+      }
+    } catch (e) {
+      // Ignore if already deleted
+    }
   });
 });

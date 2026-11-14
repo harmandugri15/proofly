@@ -70,11 +70,6 @@ export const Login: React.FC = () => {
     window.location.href = '/api/v1/auth/google';
   };
 
-  const handleFillDemo = (demoEmail: string) => {
-    setEmail(demoEmail);
-    setPassword('Password123!');
-  };
-
   return (
     <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-[#FAF7F2] text-[#1F2C23]">
       <div className="w-full max-w-md bg-[#FAF7F2] border border-[#EBE5D8] rounded-[36px] p-7 sm:p-9 shadow-sm relative space-y-6">
@@ -209,29 +204,6 @@ export const Login: React.FC = () => {
             {isSubmitting ? 'Authenticating Session...' : 'Sign In'}
           </button>
         </form>
-
-        {/* Demo Fast Fill */}
-        <div className="pt-2 border-t border-[#EBE5D8] text-center space-y-2">
-          <span className="text-[11px] font-mono text-[#758C7D]">
-            Quick Demo Autofill:
-          </span>
-          <div className="flex justify-center gap-2">
-            <button
-              type="button"
-              onClick={() => handleFillDemo('alex.chen@university.edu')}
-              className="px-3.5 py-1.5 rounded-full bg-[#E4ECE6] hover:bg-[#C7D9CD] text-[#24362A] text-[11px] font-mono font-medium border border-[#C7D9CD] transition-colors flex items-center gap-1.5"
-            >
-              <span>Alex Chen (Student)</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => handleFillDemo('recruiter@vanguard.com')}
-              className="px-3.5 py-1.5 rounded-full bg-[#E4ECE6] hover:bg-[#C7D9CD] text-[#24362A] text-[11px] font-mono font-medium border border-[#C7D9CD] transition-colors flex items-center gap-1.5"
-            >
-              <span>Elena Rostova (Recruiter)</span>
-            </button>
-          </div>
-        </div>
 
         {/* Footer */}
         <div className="text-center text-xs text-[#586E5F]">

@@ -445,7 +445,7 @@ export class CodingProfilesService {
         if (hrRes.ok) {
           const hrData: any = await hrRes.json();
           const models = hrData?.models || [];
-          const badges = models.map((b: any) => `${b.badge_name || 'HackerRank'} (${b.stars || 0}â˜…)`);
+          const badges = models.map((b: any) => `${b.badge_name || 'HackerRank'} (${b.stars || 0}★)`);
           const totalPoints = models.reduce((acc: number, b: any) => acc + (b.current_points || b.stars || 0), 0);
 
           return {
