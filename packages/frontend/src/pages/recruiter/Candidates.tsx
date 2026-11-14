@@ -1,13 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../lib/api';
-import { Search, Filter, ShieldCheck, ArrowRight, CheckSquare, Square, Columns, Sparkles, User, Layers, Award } from 'lucide-react';
+import {
+  Search,
+  Filter,
+  ShieldCheck,
+  ArrowRight,
+  CheckSquare,
+  Square,
+  Columns,
+  Sparkles,
+  User,
+  Layers,
+  Award,
+  Key,
+  CheckCircle2,
+  AlertCircle,
+} from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 
 export const RecruiterCandidatesPage: React.FC = () => {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Unlock Candidate via Card Info
+  const [unlockInput, setUnlockInput] = useState('');
+  const [isUnlocking, setIsUnlocking] = useState(false);
+  const [unlockMessage, setUnlockMessage] = useState<{
+    type: 'success' | 'error';
+    text: string;
+  } | null>(null);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -41,6 +64,35 @@ export const RecruiterCandidatesPage: React.FC = () => {
       console.error(e);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleUnlockSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!unlockInput.trim()) return;
+    setIsUnlocking(true);
+    setUnlockMessage(null);
+    try {
+      const data = await api.post<any>('/recruiter/candidates/unlock', {
+        cardUrlOrToken: unlockInput.trim(),
+      });
+      setUnlockMessage({
+        type: 'success',
+        text:
+          data.message ||
+          `Candidate ${data.name || ''} successfully unlocked and added to your radar.`,
+      });
+      setUnlockInput('');
+      fetchCandidates();
+    } catch (err: any) {
+      setUnlockMessage({
+        type: 'error',
+        text:
+          err?.message ||
+          'Invalid Public Card link or Fast-Pass code. Please verify the code or URL and try again.',
+      });
+    } finally {
+      setIsUnlocking(false);
     }
   };
 
@@ -90,7 +142,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
             Verified Talent Radar
           </h1>
           <p className="text-xs sm:text-sm text-[#586E5F] max-w-xl leading-relaxed">
-            Discover student software engineers with independently verified code evidence, authentic GitHub heatmaps, and zero resume padding.
+            Discover student software engineers who have granted access to your organization via their Public Card or Fast-Pass link. Independently verified code evidence and zero resume padding.
           </p>
         </div>
 
@@ -104,6 +156,59 @@ export const RecruiterCandidatesPage: React.FC = () => {
         )}
       </div>
 
+      {/* Unlock Candidate with Public Card / Fast-Pass Form */}
+      <div className="p-6 rounded-[32px] bg-white border border-[#DDD5C4] shadow-xs space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-[#E4ECE6] flex items-center justify-center text-[#24362A] shrink-0">
+              <Key className="w-4 h-4 text-[#D97043]" />
+            </div>
+            <div>
+              <h2 className="text-sm font-serif font-bold text-[#1F2C23]">
+                Unlock Candidate via Public Card or Fast-Pass
+              </h2>
+              <p className="text-[11px] text-[#586E5F]">
+                Paste a student's public card link (e.g. <code className="bg-[#FAF7F2] px-1 py-0.5 rounded text-[10px] border border-[#DDD5C4]">proofly.app/u/username?pass=token</code>) or raw Fast-Pass code to add them to your Radar.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <form onSubmit={handleUnlockSubmit} className="flex flex-col sm:flex-row gap-2.5 pt-1">
+          <input
+            type="text"
+            value={unlockInput}
+            onChange={(e) => setUnlockInput(e.target.value)}
+            placeholder="Paste public card link (proofly.app/u/...) or fast-pass token..."
+            className="flex-1 px-4 py-2.5 rounded-full bg-[#FAF7F2] border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs focus:outline-none focus:border-[#74947F]"
+          />
+          <button
+            type="submit"
+            disabled={isUnlocking || !unlockInput.trim()}
+            className="px-6 py-2.5 rounded-full bg-[#385241] hover:bg-[#24362A] disabled:opacity-50 text-white text-xs font-semibold transition-all shrink-0 shadow-2xs"
+          >
+            {isUnlocking ? 'Unlocking...' : 'Unlock Candidate'}
+          </button>
+        </form>
+
+        {unlockMessage && (
+          <div
+            className={`p-3 rounded-2xl flex items-center gap-2 text-xs font-medium ${
+              unlockMessage.type === 'success'
+                ? 'bg-[#E4ECE6] text-[#24362A] border border-[#C7D9CD]'
+                : 'bg-red-50 text-red-800 border border-red-200'
+            }`}
+          >
+            {unlockMessage.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 text-[#385241] shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            )}
+            <span>{unlockMessage.text}</span>
+          </div>
+        )}
+      </div>
+
       {/* Filter Bar */}
       <div className="p-6 rounded-[32px] bg-[#FAF7F2] border border-[#EBE5D8] space-y-4 shadow-sm">
         <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
@@ -113,7 +218,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by candidate name, headline, bio, or tech keywords..."
+              placeholder="Search unlocked candidates by name, headline, bio, or tech keywords..."
               className="w-full pl-11 pr-4 py-2.5 rounded-full bg-white border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs sm:text-sm focus:outline-none focus:border-[#74947F] shadow-2xs"
             />
           </div>
@@ -179,8 +284,11 @@ export const RecruiterCandidatesPage: React.FC = () => {
           Scanning verified candidate network...
         </div>
       ) : candidates.length === 0 ? (
-        <div className="p-12 text-center rounded-[32px] bg-[#FAF7F2] border border-[#EBE5D8] text-[#586E5F] text-xs">
-          No candidates found matching the selected filters.
+        <div className="p-12 text-center rounded-[32px] bg-white border border-[#DDD5C4] text-[#586E5F] text-xs space-y-2">
+          <p className="font-serif text-sm font-semibold text-[#1F2C23]">No Candidates in your Radar Yet</p>
+          <p className="max-w-md mx-auto text-[#586E5F] leading-relaxed">
+            Candidates only appear here when they have explicitly shared their Public Card info or Recruiter Fast-Pass with your organization. Paste a student's card link in the box above to unlock their profile.
+          </p>
         </div>
       ) : (
         <div className="space-y-4">

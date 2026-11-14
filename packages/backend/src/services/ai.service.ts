@@ -1,6 +1,6 @@
 import { prisma } from '../lib/prisma.js';
 import { env } from '../config/env.js';
-import { NotFoundError } from '../lib/errors.js';
+import { NotFoundError, ForbiddenError } from '../lib/errors.js';
 import { logger } from '../lib/logger.js';
 import {
   ProfileCompletenessResult,
@@ -164,8 +164,25 @@ export class AIService {
     jobId?: string,
     jobDescription?: string,
     requiredSkillsInput?: string[],
-    preferredSkillsInput?: string[]
+    preferredSkillsInput?: string[],
+    organizationId?: string
   ): Promise<CandidateMatchResult> {
+    if (organizationId) {
+      const access = await prisma.candidateAccess.findUnique({
+        where: {
+          organizationId_studentProfileId: {
+            organizationId,
+            studentProfileId: candidateId,
+          },
+        },
+      });
+      if (!access) {
+        throw new ForbiddenError(
+          'Candidate access restricted: This student has not shared their Public Card info or Recruiter Fast-Pass with your organization.'
+        );
+      }
+    }
+
     const candidate = await prisma.studentProfile.findUnique({
       where: { id: candidateId },
       include: {
@@ -323,8 +340,25 @@ export class AIService {
   // --------------------------------------------------------------------------
   static async researchCandidate(
     candidateId: string,
-    query: string
+    query: string,
+    organizationId?: string
   ): Promise<RecruiterResearchResult> {
+    if (organizationId) {
+      const access = await prisma.candidateAccess.findUnique({
+        where: {
+          organizationId_studentProfileId: {
+            organizationId,
+            studentProfileId: candidateId,
+          },
+        },
+      });
+      if (!access) {
+        throw new ForbiddenError(
+          'Candidate access restricted: This student has not shared their Public Card info or Recruiter Fast-Pass with your organization.'
+        );
+      }
+    }
+
     const candidate = await prisma.studentProfile.findUnique({
       where: { id: candidateId },
       include: {

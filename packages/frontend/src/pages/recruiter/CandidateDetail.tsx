@@ -37,6 +37,12 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
   const [shortlists, setShortlists] = useState<any[]>([]);
   const [jobs, setJobs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  // Inline Fast-Pass Unlock
+  const [unlockInput, setUnlockInput] = useState('');
+  const [isUnlocking, setIsUnlocking] = useState(false);
+  const [unlockError, setUnlockError] = useState<string | null>(null);
 
   // Recruiter Note Form
   const [noteContent, setNoteContent] = useState('');
@@ -58,6 +64,8 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
   }, [id]);
 
   const loadCandidate = async () => {
+    setIsLoading(true);
+    setLoadError(null);
     try {
       const [candData, shortlistsData, jobsData] = await Promise.all([
         api.get<any>(`/recruiter/candidates/${id}`),
@@ -70,10 +78,32 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
       if (jobsData && jobsData.length > 0) {
         setSelectedJobId(jobsData[0].id);
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
+      setLoadError(
+        e?.message ||
+          'Candidate access restricted: This candidate has not shared their Public Card info or Recruiter Fast-Pass with your organization.'
+      );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleInlineUnlock = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!unlockInput.trim()) return;
+    setIsUnlocking(true);
+    setUnlockError(null);
+    try {
+      await api.post('/recruiter/candidates/unlock', {
+        cardUrlOrToken: unlockInput.trim(),
+      });
+      setUnlockInput('');
+      await loadCandidate();
+    } catch (err: any) {
+      setUnlockError(err?.message || 'Invalid card link or Fast-Pass code. Please verify and try again.');
+    } finally {
+      setIsUnlocking(false);
     }
   };
 
@@ -152,11 +182,51 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
 
   if (!candidate) {
     return (
-      <div className="max-w-md mx-auto my-24 p-8 rounded-3xl bg-white/90 border border-sand-300 text-center space-y-4 shadow-sm">
-        <p className="text-sm font-serif font-normal text-terracotta-600">Candidate record not found.</p>
-        <Link to="/recruiter/candidates" className="text-xs font-mono text-forest-700/60 hover:text-forest-900">
-          &larr; Return to Candidate Radar
-        </Link>
+      <div className="max-w-lg mx-auto my-16 p-8 rounded-[36px] bg-[#FAF7F2] border border-[#DDD5C4] text-center space-y-5 shadow-sm text-[#1F2C23]">
+        <div className="w-12 h-12 mx-auto rounded-2xl bg-[#E4ECE6] border border-[#C7D9CD] flex items-center justify-center text-[#24362A]">
+          <Key className="w-6 h-6 text-[#D97043]" />
+        </div>
+        <div className="space-y-1.5">
+          <h2 className="text-lg font-serif font-bold text-[#1F2C23]">Candidate Access Restricted</h2>
+          <p className="text-xs text-[#586E5F] leading-relaxed max-w-md mx-auto">
+            {loadError ||
+              'This student has not shared their Public Card info or Recruiter Fast-Pass with your organization.'}
+          </p>
+        </div>
+
+        <form onSubmit={handleInlineUnlock} className="space-y-3 pt-2 text-left">
+          <label className="block text-[11px] font-semibold text-[#385241]">
+            Unlock with Public Card Link or Fast-Pass Code:
+          </label>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={unlockInput}
+              onChange={(e) => setUnlockInput(e.target.value)}
+              placeholder="Paste /u/username?pass=token or token..."
+              className="flex-1 px-4 py-2.5 rounded-full bg-white border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs focus:outline-none focus:border-[#74947F]"
+            />
+            <button
+              type="submit"
+              disabled={isUnlocking || !unlockInput.trim()}
+              className="px-5 py-2.5 rounded-full bg-[#385241] hover:bg-[#24362A] disabled:opacity-50 text-white text-xs font-semibold transition-all shrink-0"
+            >
+              {isUnlocking ? 'Unlocking...' : 'Unlock'}
+            </button>
+          </div>
+          {unlockError && (
+            <p className="text-[11px] text-[#D97043] font-medium pt-1">{unlockError}</p>
+          )}
+        </form>
+
+        <div className="pt-3 border-t border-[#EBE5D8]">
+          <Link
+            to="/recruiter/candidates"
+            className="text-xs font-semibold text-[#586E5F] hover:text-[#1F2C23] transition-colors"
+          >
+            &larr; Return to Candidate Radar
+          </Link>
+        </div>
       </div>
     );
   }

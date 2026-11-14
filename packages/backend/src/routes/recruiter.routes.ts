@@ -13,13 +13,16 @@ export const recruiterRouter = Router();
 
 recruiterRouter.use(authenticateToken, requireRole('RECRUITER'));
 
-// Candidate Search
+// Candidate Search (Only candidates with granted Public Card access)
 recruiterRouter.get(
   '/candidates',
   validateQuery(CandidateSearchQuerySchema),
   async (req, res, next) => {
     try {
-      const result = await RecruiterService.searchCandidates(req.query as any);
+      const result = await RecruiterService.searchCandidates(
+        req.user!.organizationId!,
+        req.query as any
+      );
       return res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -27,12 +30,27 @@ recruiterRouter.get(
   }
 );
 
+// Unlock Candidate via Public Card or Fast-Pass Code
+recruiterRouter.post('/candidates/unlock', async (req, res, next) => {
+  try {
+    const { cardUrlOrToken } = req.body;
+    const result = await RecruiterService.unlockCandidateViaCardInfo(
+      req.user!.organizationId!,
+      cardUrlOrToken
+    );
+    return res.status(200).json({ success: true, data: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // Candidate Detail
 recruiterRouter.get('/candidates/:id', async (req, res, next) => {
   try {
     const candidate = await RecruiterService.getCandidateProfile(
       req.params.id,
-      req.user!.organizationId!
+      req.user!.organizationId!,
+      req.query.pass as string | undefined
     );
     return res.json({ success: true, data: candidate });
   } catch (error) {

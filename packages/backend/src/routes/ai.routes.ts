@@ -28,13 +28,17 @@ aiRouter.post(
 
 // Agent 4: Recruiter Research Assistant (with citations & grounding)
 aiRouter.post(
-  '/research-candidate',
+  ['/research-candidate', '/recruiter-research'],
   requireRole('RECRUITER'),
   validateBody(RecruiterResearchQuerySchema),
   async (req, res, next) => {
     try {
       const { candidateId, query } = req.body;
-      const result = await AIService.researchCandidate(candidateId, query);
+      const result = await AIService.researchCandidate(
+        candidateId,
+        query,
+        req.user?.organizationId || undefined
+      );
       return res.json({ success: true, data: result });
     } catch (error) {
       next(error);
@@ -44,7 +48,7 @@ aiRouter.post(
 
 // Agent 3 & 5: Explainable Candidate Matching
 aiRouter.post(
-  '/match-candidate',
+  ['/match-candidate', '/candidate-match'],
   requireRole('RECRUITER'),
   validateBody(CandidateMatchQuerySchema),
   async (req, res, next) => {
@@ -62,7 +66,8 @@ aiRouter.post(
         jobId,
         jobDescription,
         requiredSkills,
-        preferredSkills
+        preferredSkills,
+        req.user?.organizationId || undefined
       );
 
       return res.json({ success: true, data: result });

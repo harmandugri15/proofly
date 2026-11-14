@@ -102,6 +102,7 @@ export async function createTestStudent(customUsername?: string) {
         await prisma.externalCodingProfile.deleteMany({ where: { studentProfileId: studentProfile.id } });
         await prisma.recruiterNote.deleteMany({ where: { studentProfileId: studentProfile.id } });
         await prisma.shortlistCandidate.deleteMany({ where: { studentProfileId: studentProfile.id } });
+        await prisma.candidateAccess.deleteMany({ where: { studentProfileId: studentProfile.id } });
         await prisma.studentProfile.delete({ where: { id: studentProfile.id } });
       }
       await prisma.session.deleteMany({ where: { userId: user.id } });
@@ -170,6 +171,7 @@ export async function createTestRecruiter() {
       await prisma.jobPosting.deleteMany({ where: { organizationId: org.id } });
       await prisma.shortlistCandidate.deleteMany({ where: { shortlist: { organizationId: org.id } } });
       await prisma.shortlist.deleteMany({ where: { organizationId: org.id } });
+      await prisma.candidateAccess.deleteMany({ where: { organizationId: org.id } });
       if (user.recruiterProfile) {
         await prisma.recruiterNote.deleteMany({ where: { recruiterId: user.recruiterProfile.id } });
         await prisma.recruiterProfile.delete({ where: { id: user.recruiterProfile.id } });
@@ -184,4 +186,25 @@ export async function createTestRecruiter() {
   };
 
   return { user, profile: user.recruiterProfile!, organization: org, token, cleanup };
+}
+
+export async function grantCandidateAccess(
+  organizationId: string,
+  studentProfileId: string,
+  source: string = 'TEST_GRANT'
+) {
+  return prisma.candidateAccess.upsert({
+    where: {
+      organizationId_studentProfileId: {
+        organizationId,
+        studentProfileId,
+      },
+    },
+    create: {
+      organizationId,
+      studentProfileId,
+      source,
+    },
+    update: {},
+  });
 }

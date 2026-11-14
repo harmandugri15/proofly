@@ -2,10 +2,14 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import { app } from '../src/app.js';
 import { createTestRecruiter, createTestStudent } from './fixtures.js';
+import { StudentService } from '../src/services/student.service.js';
 
 describe('Recruiter Workspace & Permissions Tests', () => {
   let recruiterToken: string;
   let studentToken: string;
+  let studentProfileId: string;
+  let studentUsername: string;
+  let shareToken: string;
   let cleanups: (() => Promise<void>)[] = [];
 
   beforeAll(async () => {
@@ -16,6 +20,12 @@ describe('Recruiter Workspace & Permissions Tests', () => {
 
     recruiterToken = recruiter.token;
     studentToken = student.token;
+    studentProfileId = student.profile.id;
+    studentUsername = student.profile.username;
+
+    // Generate public card fast-pass for the student
+    const shareInfo = await StudentService.getOrCreateShareToken(student.user.id);
+    shareToken = shareInfo.shareToken;
   });
 
   afterAll(async () => {
@@ -24,7 +34,40 @@ describe('Recruiter Workspace & Permissions Tests', () => {
     }
   });
 
-  it('should allow recruiter to search candidates and filter by skills', async () => {
+  it('should prevent recruiter from viewing unshared candidate (403 Forbidden)', async () => {
+    const res = await request(app)
+      .get(`/api/v1/recruiter/candidates/${studentProfileId}`)
+      .set('Authorization', `Bearer ${recruiterToken}`);
+
+    expect(res.status).toBe(403);
+    expect(res.body.success).toBe(false);
+  });
+
+  it('should return 0 candidates in radar before candidate shares public card info', async () => {
+    const res = await request(app)
+      .get('/api/v1/recruiter/candidates?skills=TypeScript')
+      .set('Authorization', `Bearer ${recruiterToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.candidates.length).toBe(0);
+  });
+
+  it('should unlock candidate access when recruiter inputs student public card info or fast-pass', async () => {
+    const unlockRes = await request(app)
+      .post('/api/v1/recruiter/candidates/unlock')
+      .set('Authorization', `Bearer ${recruiterToken}`)
+      .send({
+        cardUrlOrToken: `https://proofly.app/u/${studentUsername}?pass=${shareToken}`,
+      });
+
+    expect(unlockRes.status).toBe(200);
+    expect(unlockRes.body.success).toBe(true);
+    expect(unlockRes.body.data.unlocked).toBe(true);
+    expect(unlockRes.body.data.candidate.id).toBe(studentProfileId);
+  });
+
+  it('should now allow recruiter to search the unlocked candidate and filter by skills', async () => {
     const res = await request(app)
       .get('/api/v1/recruiter/candidates?skills=TypeScript')
       .set('Authorization', `Bearer ${recruiterToken}`);
@@ -32,6 +75,17 @@ describe('Recruiter Workspace & Permissions Tests', () => {
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.data.candidates.length).toBeGreaterThan(0);
+    expect(res.body.data.candidates.some((c: any) => c.id === studentProfileId)).toBe(true);
+  });
+
+  it('should allow recruiter to view unlocked candidate dossier', async () => {
+    const res = await request(app)
+      .get(`/api/v1/recruiter/candidates/${studentProfileId}`)
+      .set('Authorization', `Bearer ${recruiterToken}`);
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data.id).toBe(studentProfileId);
   });
 
   it('should prevent student from accessing recruiter candidate search (403 Forbidden)', async () => {

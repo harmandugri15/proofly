@@ -1,5 +1,5 @@
 import { prisma } from '../lib/prisma.js';
-import { NotFoundError, ForbiddenError } from '../lib/errors.js';
+import { NotFoundError, ForbiddenError, ValidationError } from '../lib/errors.js';
 import {
   JobPostingInput,
   ShortlistInput,
@@ -8,12 +8,17 @@ import {
 } from '@proofly/shared';
 
 export class RecruiterService {
-  // Candidate Search & Discovery
-  static async searchCandidates(query: CandidateSearchQuery) {
+  // Candidate Search & Discovery (Restricted strictly to candidates whose Public Card info was granted)
+  static async searchCandidates(organizationId: string, query: CandidateSearchQuery) {
     const { query: searchStr, skills, graduationYear, minProjects, isVerifiedOnly, page = 1, limit = 20 } = query;
     const skip = (page - 1) * limit;
 
     const where: any = {
+      candidateAccess: {
+        some: {
+          organizationId,
+        },
+      },
       visibility: { in: ['PUBLIC', 'RECRUITER_ONLY'] },
     };
 
@@ -91,8 +96,39 @@ export class RecruiterService {
     };
   }
 
-  // Deep Candidate Inspection
-  static async getCandidateProfile(candidateId: string, organizationId: string) {
+  // Deep Candidate Inspection (Restricted to granted candidates)
+  static async getCandidateProfile(candidateId: string, organizationId: string, passToken?: string) {
+    let access = await prisma.candidateAccess.findUnique({
+      where: {
+        organizationId_studentProfileId: {
+          organizationId,
+          studentProfileId: candidateId,
+        },
+      },
+    });
+
+    if (!access && passToken) {
+      const cand = await prisma.studentProfile.findUnique({
+        where: { id: candidateId },
+        select: { id: true, shareToken: true },
+      });
+      if (cand?.shareToken && cand.shareToken === passToken) {
+        access = await prisma.candidateAccess.create({
+          data: {
+            organizationId,
+            studentProfileId: candidateId,
+            source: 'FAST_PASS',
+          },
+        });
+      }
+    }
+
+    if (!access) {
+      throw new ForbiddenError(
+        'Access Denied: You do not have permission to view this candidate dossier. Access is only permitted for candidates who have shared their Public Card info or Recruiter Fast-Pass with your organization.'
+      );
+    }
+
     const candidate = await prisma.studentProfile.findUnique({
       where: { id: candidateId },
       include: {
@@ -147,6 +183,89 @@ export class RecruiterService {
         ...n,
         tags: n.tags ? JSON.parse(n.tags) : [],
       })),
+    };
+  }
+
+  // Unlock candidate via student's Public Card link or Recruiter Fast-Pass code
+  static async unlockCandidateViaCardInfo(organizationId: string, rawInput: string) {
+    if (!rawInput || typeof rawInput !== 'string') {
+      throw new ValidationError('Please provide a valid Public Card link or Recruiter Fast-Pass code.');
+    }
+
+    const trimmed = rawInput.trim();
+    let username: string | undefined;
+    let token: string | undefined;
+
+    if (trimmed.includes('/u/')) {
+      const match = trimmed.match(/\/u\/([a-zA-Z0-9-._]+)/i);
+      if (match) {
+        username = match[1].toLowerCase();
+      }
+      const passMatch = trimmed.match(/[?&]pass=([a-zA-Z0-9-._]+)/i);
+      if (passMatch) {
+        token = passMatch[1];
+      }
+    } else if (trimmed.includes('pass=')) {
+      const passMatch = trimmed.match(/pass=([a-zA-Z0-9-._]+)/i);
+      if (passMatch) token = passMatch[1];
+    } else {
+      token = trimmed;
+    }
+
+    let student = null;
+    if (username && token) {
+      student = await prisma.studentProfile.findFirst({
+        where: {
+          username: { equals: username },
+          shareToken: token,
+        },
+        include: {
+          user: { select: { name: true, email: true } },
+        },
+      });
+    } else if (token) {
+      student = await prisma.studentProfile.findFirst({
+        where: {
+          shareToken: token,
+        },
+        include: {
+          user: { select: { name: true, email: true } },
+        },
+      });
+    }
+
+    if (!student) {
+      throw new ValidationError(
+        'Invalid Public Card credentials. No candidate found with the provided Fast-Pass pass code or authorization token.'
+      );
+    }
+
+    await prisma.candidateAccess.upsert({
+      where: {
+        organizationId_studentProfileId: {
+          organizationId,
+          studentProfileId: student.id,
+        },
+      },
+      create: {
+        organizationId,
+        studentProfileId: student.id,
+        source: 'FAST_PASS',
+      },
+      update: {},
+    });
+
+    return {
+      unlocked: true,
+      message: `Candidate ${student.user.name} (@${student.username}) successfully unlocked and added to your Radar.`,
+      candidateId: student.id,
+      username: student.username,
+      name: student.user.name,
+      candidate: {
+        id: student.id,
+        name: student.user.name,
+        username: student.username,
+      },
     };
   }
 
@@ -260,6 +379,18 @@ export class RecruiterService {
     });
     if (!shortlist) throw new NotFoundError('Shortlist not found');
 
+    const access = await prisma.candidateAccess.findUnique({
+      where: {
+        organizationId_studentProfileId: {
+          organizationId,
+          studentProfileId,
+        },
+      },
+    });
+    if (!access) {
+      throw new ForbiddenError('Candidate access restricted: This student has not shared their Public Card info with your organization.');
+    }
+
     return prisma.shortlistCandidate.upsert({
       where: {
         shortlistId_studentProfileId: {
@@ -297,6 +428,18 @@ export class RecruiterService {
     recruiterProfileId: string,
     input: RecruiterNoteInput
   ) {
+    const access = await prisma.candidateAccess.findUnique({
+      where: {
+        organizationId_studentProfileId: {
+          organizationId,
+          studentProfileId: input.studentProfileId,
+        },
+      },
+    });
+    if (!access) {
+      throw new ForbiddenError('Candidate access restricted: This student has not shared their Public Card info with your organization.');
+    }
+
     const note = await prisma.recruiterNote.create({
       data: {
         organizationId,

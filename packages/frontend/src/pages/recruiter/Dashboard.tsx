@@ -133,8 +133,20 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
 
         {candidates.length === 0 ? (
-          <div className="p-12 text-center rounded-3xl bg-white/80 border border-sand-200/80 text-forest-700/60 text-xs">
-            No verified candidates registered yet. Candidates will appear here as students join and verify their profiles.
+          <div className="p-10 text-center rounded-3xl bg-white/80 border border-sand-200/80 text-forest-700/60 text-xs space-y-3">
+            <p className="font-serif text-sm font-semibold text-forest-900">
+              No candidates unlocked in your Radar yet
+            </p>
+            <p className="max-w-md mx-auto text-forest-700/70 text-xs leading-relaxed">
+              In Proofly, recruiters only see candidates who have shared their Public Card or Fast-Pass code with your organization.
+            </p>
+            <Link
+              to="/recruiter/candidates"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-sand-50 font-medium text-xs transition-colors shadow-2xs"
+            >
+              <Zap className="w-3.5 h-3.5 text-terracotta-400" />
+              Unlock Candidate with Public Card
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

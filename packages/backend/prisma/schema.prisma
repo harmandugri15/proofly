@@ -63,8 +63,9 @@ model Organization {
 
   recruiters  RecruiterProfile[]
   jobPostings JobPosting[]
-  shortlists  Shortlist[]
-  notes       RecruiterNote[]
+  shortlists      Shortlist[]
+  notes           RecruiterNote[]
+  candidateAccess CandidateAccess[]
 
   @@index([slug])
 }
@@ -118,6 +119,7 @@ model StudentProfile {
   posts                Post[]
   shortlistEntries     ShortlistCandidate[]
   recruiterNotes       RecruiterNote[]
+  candidateAccess      CandidateAccess[]
 
   @@index([username])
   @@index([visibility])
@@ -377,4 +379,19 @@ model AuditEvent {
 
   @@index([actorId])
   @@index([resourceType, resourceId])
+}
+
+model CandidateAccess {
+  id               String         @id @default(uuid())
+  organizationId   String
+  studentProfileId String
+  grantedAt        DateTime       @default(now())
+  source           String         @default("FAST_PASS") // FAST_PASS, DIRECT_CARD, APPLICATION
+
+  organization     Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  studentProfile   StudentProfile @relation(fields: [studentProfileId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, studentProfileId])
+  @@index([organizationId])
+  @@index([studentProfileId])
 }
