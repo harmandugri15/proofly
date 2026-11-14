@@ -47,6 +47,21 @@ export const VerifyResetOtpSchema = z.object({
 
 export type VerifyResetOtpInput = z.infer<typeof VerifyResetOtpSchema>;
 
+
+export const VerifyEmailSchema = z.object({
+  email: z.string().email('Please provide a valid email address'),
+  otp: z.string().length(6, 'Verification code must be exactly 6 digits').optional(),
+  token: z.string().optional(),
+});
+
+export type VerifyEmailInput = z.infer<typeof VerifyEmailSchema>;
+
+export const ResendVerificationSchema = z.object({
+  email: z.string().email('Please provide a valid email address'),
+});
+
+export type ResendVerificationInput = z.infer<typeof ResendVerificationSchema>;
+
 export const ResetPasswordSchema = z.object({
   email: z.string().email('Please provide a valid email address'),
   otp: z.string().length(6, 'Verification code must be exactly 6 digits').optional(),

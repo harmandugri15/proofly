@@ -5,8 +5,9 @@ import { app } from '../src/app.js';
 describe('Auth & Session Integration Tests', () => {
   const testStudentEmail = `test.student.${Date.now()}@example.com`;
   const testPassword = 'Password123!';
+  let verificationOtp: string;
 
-  it('should register a new student successfully and set HTTP-only cookie', async () => {
+  it('should register a new student successfully and dispatch email confirmation code', async () => {
     const res = await request(app)
       .post('/api/v1/auth/register')
       .send({
@@ -18,8 +19,39 @@ describe('Auth & Session Integration Tests', () => {
 
     expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
+    expect(res.body.data.requiresEmailVerification).toBe(true);
+    expect(res.body.data.email).toBe(testStudentEmail);
+    expect(res.body.data.role).toBe('STUDENT');
+    expect(res.body.data.devOtp).toBeDefined();
+
+    verificationOtp = res.body.data.devOtp;
+  });
+
+  it('should reject login attempt before email is confirmed', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: testStudentEmail,
+        password: testPassword,
+      });
+
+    expect(res.status).toBe(401);
+    expect(res.body.success).toBe(false);
+    expect(res.body.error.message).toContain('verify your email');
+  });
+
+  it('should confirm email with 6-digit OTP, create session in database, and set HTTP-only cookie', async () => {
+    const res = await request(app)
+      .post('/api/v1/auth/verify-email')
+      .send({
+        email: testStudentEmail,
+        otp: verificationOtp,
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
     expect(res.body.data.user.email).toBe(testStudentEmail);
-    expect(res.body.data.user.role).toBe('STUDENT');
+    expect(res.body.data.user.isEmailVerified).toBe(true);
     expect(res.body.data.token).toBeDefined();
 
     // Verify Set-Cookie header exists and contains proofly_session
@@ -166,6 +198,7 @@ describe('Auth & Session Integration Tests', () => {
     expect(newLoginRes.status).toBe(200);
     expect(newLoginRes.body.data.token).toBeDefined();
   });
+
   it('should track sessions in database, allow listing active sessions, and revoke session on logout', async () => {
     // 1. Log in student
     const loginRes = await request(app)

@@ -28,12 +28,26 @@ export interface AuthUser {
   } | null;
 }
 
+export interface RegisterResult {
+  requiresEmailVerification?: boolean;
+  email: string;
+  name?: string;
+  role?: UserRole;
+  message: string;
+  devOtp?: string;
+  verificationToken?: string;
+  user?: AuthUser;
+  token?: string;
+}
+
 interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string, rememberMe?: boolean) => Promise<AuthUser>;
-  register: (data: any) => Promise<AuthUser>;
+  register: (data: any) => Promise<RegisterResult>;
+  verifyEmail: (data: { email: string; otp?: string; token?: string }) => Promise<AuthUser>;
+  resendVerification: (email: string) => Promise<{ message: string; devOtp?: string }>;
   loginWithGoogle: (credential: string, role?: string) => Promise<AuthUser>;
   forgotPassword: (email: string) => Promise<{ message: string; devOtp?: string }>;
   verifyResetOtp: (email: string, otp: string) => Promise<{ valid: boolean; resetToken?: string }>;
@@ -82,13 +96,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return data.user;
   };
 
-  const register = async (input: any): Promise<AuthUser> => {
-    const data = await api.post<{ user: AuthUser; token: string }>('/auth/register', input);
+  const register = async (input: any): Promise<RegisterResult> => {
+    const data = await api.post<RegisterResult>('/auth/register', input);
+    if (data?.token && typeof window !== 'undefined') {
+      localStorage.setItem('proofly_token', data.token);
+    }
+    if (data?.user) {
+      setUser(data.user);
+    }
+    return data;
+  };
+
+  const verifyEmail = async (input: { email: string; otp?: string; token?: string }): Promise<AuthUser> => {
+    const data = await api.post<{ user: AuthUser; token: string }>('/auth/verify-email', input);
     if (data?.token && typeof window !== 'undefined') {
       localStorage.setItem('proofly_token', data.token);
     }
     setUser(data.user);
     return data.user;
+  };
+
+  const resendVerification = async (email: string): Promise<{ message: string; devOtp?: string }> => {
+    const data = await api.post<{ message: string; devOtp?: string }>('/auth/resend-verification', { email });
+    return data;
   };
 
   const loginWithGoogle = async (credential: string, role?: string): Promise<AuthUser> => {
@@ -152,6 +182,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isLoading,
         login,
         register,
+        verifyEmail,
+        resendVerification,
         loginWithGoogle,
         forgotPassword,
         verifyResetOtp,

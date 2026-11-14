@@ -19,6 +19,8 @@ model User {
   googleId               String?           @unique
   isEmailVerified        Boolean           @default(false)
   emailVerificationToken String?
+  emailVerificationOtp   String?
+  emailVerificationExpires DateTime?
   passwordResetToken     String?
   passwordResetOtp       String?
   passwordResetExpires   DateTime?

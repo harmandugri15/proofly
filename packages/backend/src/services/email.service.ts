@@ -2,6 +2,13 @@ import nodemailer, { type Transporter } from 'nodemailer';
 import { env } from '../config/env.js';
 import { logger } from '../lib/logger.js';
 
+export interface SendEmailVerificationOptions {
+  to: string;
+  name: string;
+  otp: string;
+  verificationToken?: string;
+}
+
 export interface SendResetOtpOptions {
   to: string;
   name: string;
@@ -52,6 +59,88 @@ export class EmailService {
   /**
    * Sends a 6-digit OTP code and optional one-click reset link to the user.
    */
+  /**
+   * Sends a 6-digit confirmation code and one-click verification link to verify account email.
+   */
+  static async sendEmailVerificationOtp({
+    to,
+    name,
+    otp,
+    verificationToken,
+  }: SendEmailVerificationOptions): Promise<{ delivered: boolean; devOtp?: string }> {
+    const transporter = this.getTransporter();
+    const verifyUrl = verificationToken
+      ? `${env.FRONTEND_URL}/verify-email?email=${encodeURIComponent(to)}&token=${encodeURIComponent(verificationToken)}&otp=${encodeURIComponent(otp)}`
+      : `${env.FRONTEND_URL}/verify-email?email=${encodeURIComponent(to)}`;
+
+    const subject = `[Proofly] ${otp} is your verification code`;
+
+    const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #FAF7F2; color: #1F2C23; margin: 0; padding: 40px 20px; }
+    .card { max-width: 520px; margin: 0 auto; background-color: #FAF7F2; border: 1px solid #EBE5D8; border-radius: 28px; padding: 40px 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); }
+    .logo { font-size: 24px; font-weight: 800; color: #1F2C23; margin-bottom: 24px; letter-spacing: -0.5px; }
+    .logo-accent { color: #D97043; }
+    .title { font-size: 22px; font-weight: 700; color: #1F2C23; margin-bottom: 8px; }
+    .desc { font-size: 14px; color: #586E5F; line-height: 1.6; margin-bottom: 28px; }
+    .otp-box { background-color: #F4EFE6; border: 2px dashed #D97043; border-radius: 20px; padding: 24px; text-align: center; margin-bottom: 28px; }
+    .otp-code { font-family: monospace; font-size: 38px; font-weight: 800; letter-spacing: 8px; color: #D97043; margin: 0; }
+    .otp-hint { font-size: 12px; color: #758C7D; margin-top: 8px; }
+    .btn { display: inline-block; background-color: #D97043; color: #ffffff; font-size: 14px; font-weight: 700; text-decoration: none; padding: 14px 28px; border-radius: 9999px; text-align: center; margin-bottom: 24px; }
+    .footer { font-size: 12px; color: #8F9D93; line-height: 1.5; border-top: 1px solid #EBE5D8; padding-top: 20px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">Proofly<span class="logo-accent">.</span></div>
+    <div class="title">Verify Your Email Address</div>
+    <div class="desc">Welcome to Proofly, <strong>${name || 'Builder'}</strong>! Use this single-use 6-digit verification code to confirm your email address and activate your portfolio workspace:</div>
+    <div class="otp-box">
+      <div class="otp-code">${otp}</div>
+      <div class="otp-hint">Expires in 15 minutes • Single-use verification code</div>
+    </div>
+    <div style="text-align: center;">
+      <a href="${verifyUrl}" class="btn" style="color: #ffffff;">Confirm Email & Activate Workspace</a>
+    </div>
+    <div class="footer">
+      If you did not sign up for Proofly, you can safely ignore this email. No account will be activated without this verification code.
+    </div>
+  </div>
+</body>
+</html>
+    `;
+
+    if (transporter) {
+      try {
+        await transporter.sendMail({
+          from: env.EMAIL_FROM,
+          to,
+          subject,
+          html,
+        });
+        logger.info(`📧 Email verification OTP sent to ${to}`);
+        return { delivered: true, devOtp: env.NODE_ENV !== 'production' ? otp : undefined };
+      } catch (err: any) {
+        logger.error(`❌ Failed to send verification email via SMTP to ${to}: ${err?.message}`);
+      }
+    }
+
+    // Dev Fallback Logging
+    console.log('\n======================================================');
+    console.log('✉️  [PROOFLY AUTH] SIGNUP EMAIL VERIFICATION CODE:');
+    console.log(`👤 Recipient: ${to} (${name})`);
+    console.log(`🔢 6-DIGIT OTP: >> ${otp} <<`);
+    console.log(`🔗 Direct Link: ${verifyUrl}`);
+    console.log('⏱️  Valid for:  15 minutes');
+    console.log('======================================================\n');
+
+    return { delivered: false, devOtp: env.NODE_ENV !== 'production' ? otp : undefined };
+  }
+
   static async sendPasswordResetOtp({ to, name, otp, resetToken }: SendResetOtpOptions): Promise<{ delivered: boolean; devOtp?: string }> {
     const transporter = this.getTransporter();
     const resetUrl = resetToken

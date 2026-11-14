@@ -8,6 +8,8 @@ import {
   VerifyResetOtpSchema,
   ResetPasswordSchema,
   GoogleAuthTokenSchema,
+  VerifyEmailSchema,
+  ResendVerificationSchema,
 } from '@proofly/shared';
 import { authRateLimiter } from '../middlewares/rateLimiter.js';
 import { authenticateToken } from '../middlewares/auth.js';
@@ -38,11 +40,52 @@ authRouter.post(
   async (req, res, next) => {
     try {
       const meta = extractRequestMeta(req);
-      const { user, token } = await AuthService.register(req.body, meta);
-      res.cookie('proofly_session', token, COOKIE_OPTIONS);
+      const result = await AuthService.register(req.body, meta);
+      // Registration creates the unverified account and sends 6-digit confirmation code.
+      // Session & JWT are minted upon email verification.
       return res.status(201).json({
         success: true,
-        data: { user, token },
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+authRouter.post(
+  '/verify-email',
+  authRateLimiter,
+  validateBody(VerifyEmailSchema),
+  async (req, res, next) => {
+    try {
+      const meta = extractRequestMeta(req);
+      const { user, token } = await AuthService.verifyEmail(req.body, meta);
+      res.cookie('proofly_session', token, COOKIE_OPTIONS);
+      return res.status(200).json({
+        success: true,
+        data: {
+          user,
+          token,
+          message: 'Email confirmed successfully! Your workspace session has been created.',
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+authRouter.post(
+  '/resend-verification',
+  authRateLimiter,
+  validateBody(ResendVerificationSchema),
+  async (req, res, next) => {
+    try {
+      const result = await AuthService.resendVerificationOtp(req.body.email);
+      return res.status(200).json({
+        success: true,
+        data: result,
       });
     } catch (error) {
       next(error);

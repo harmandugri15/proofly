@@ -10,6 +10,7 @@ export const Login: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [searchParams] = useSearchParams();
@@ -42,6 +43,7 @@ export const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    setUnverifiedEmail(null);
     setIsSubmitting(true);
 
     try {
@@ -53,7 +55,12 @@ export const Login: React.FC = () => {
         navigate(loggedInUser.role === 'RECRUITER' ? '/recruiter/dashboard' : '/student/dashboard', { replace: true });
       }
     } catch (err: any) {
-      setError(err?.message || 'Login failed. Please check your email and password.');
+      if (err?.details?.code === 'EMAIL_NOT_VERIFIED' || err?.message?.toLowerCase().includes('verify your email')) {
+        setUnverifiedEmail(email);
+        setError(err?.message || 'Please verify your email address before logging in. We have sent a 6-digit confirmation code to your inbox.');
+      } else {
+        setError(err?.message || 'Login failed. Please check your email and password.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -104,8 +111,26 @@ export const Login: React.FC = () => {
           <div className="flex-1 h-[1px] bg-[#EBE5D8]" />
         </div>
 
-        {/* Error Alert */}
-        {error && (
+        {/* Unverified Email Alert Banner */}
+        {unverifiedEmail ? (
+          <div className="p-4 rounded-2xl bg-[#FEF3C7] border border-[#FDE68A] text-[#92400E] space-y-2.5 text-xs animate-fadeIn">
+            <div className="flex items-center gap-2 font-semibold">
+              <AlertCircle className="w-4 h-4 text-[#D97706] shrink-0" />
+              <span>Email Verification Required</span>
+            </div>
+            <p className="text-[11px] leading-relaxed">
+              Your email address <strong className="text-[#78350F]">{unverifiedEmail}</strong> is not verified yet. We dispatched a fresh 6-digit confirmation code to your inbox.
+            </p>
+            <div className="pt-1">
+              <Link
+                to={`/verify-email?email=${encodeURIComponent(unverifiedEmail)}`}
+                className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-[#D97043] text-white font-semibold text-xs hover:bg-[#C55F34] transition-all shadow-xs"
+              >
+                Enter 6-Digit Code →
+              </Link>
+            </div>
+          </div>
+        ) : error && (
           <div className="p-3.5 rounded-2xl bg-[#FCE5DB] border border-[#F4CDBC] text-[#853C1E] text-xs flex items-center gap-2 animate-fadeIn">
             <AlertCircle className="w-4 h-4 shrink-0 text-[#C55F34]" />
             <span className="font-medium">{error}</span>
