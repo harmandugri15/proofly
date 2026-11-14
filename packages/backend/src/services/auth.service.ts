@@ -58,6 +58,7 @@ export class AuthService {
           data: {
             userId: user.id,
             username,
+            shareToken: `PRF-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
             headline: 'Aspiring Software Engineer',
             bio: '',
             visibility: 'PUBLIC',

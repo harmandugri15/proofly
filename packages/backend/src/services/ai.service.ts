@@ -429,6 +429,28 @@ export class AIService {
       confidence = 0.92;
       answer = `Based on verified evidence in ${candidate.user.name}'s profile, found ${citations.length} direct match(es):\n\n` +
         citations.map((c, i) => `[${i + 1}] **${c.title}** (${c.sourceType}): ${c.snippet}`).join('\n\n');
+
+      // If Gemini API is configured, synthesize an executive summary
+      if (env.GEMINI_API_KEY) {
+        const geminiPrompt = `You are the Proofly AI Recruiter Intelligence Assistant.
+Answer the following recruiter query about candidate "${candidate.user.name}" based ONLY on their verified evidence below.
+Be concise, factual, and cite the specific projects, repositories, or certificates where the evidence comes from.
+Do not hallucinate or extrapolate beyond the provided proof artifacts.
+
+Candidate Name: ${candidate.user.name}
+Headline: ${candidate.headline || 'Software Engineer'}
+Recruiter Query: "${query}"
+
+Verified Evidence Records:
+${citations.map((c, i) => `[${i + 1}] (${c.sourceType}) ${c.title}: ${c.snippet}`).join('\n')}
+
+Provide a structured, grounded evaluation:`;
+
+        const aiAnswer = await this.callGemini(geminiPrompt);
+        if (aiAnswer) {
+          answer = aiAnswer;
+        }
+      }
     } else {
       confidence = 0.7;
       answer = `No direct verified evidence found in ${candidate.user.name}'s profile regarding "${query}". The candidate has not linked projects, repositories, or certificates matching these criteria.`;
@@ -444,6 +466,46 @@ export class AIService {
         'External platforms not connected by the candidate cannot be inspected.',
       ],
     };
+  }
+
+  // --------------------------------------------------------------------------
+  // Helper: Call Google Gemini API
+  // --------------------------------------------------------------------------
+  private static async callGemini(prompt: string): Promise<string | null> {
+    if (!env.GEMINI_API_KEY) return null;
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4500);
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${encodeURIComponent(
+        env.GEMINI_API_KEY
+      )}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: 0.2,
+            maxOutputTokens: 800,
+          },
+        }),
+      });
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        logger.warn(`Gemini API returned status ${res.status}`);
+        return null;
+      }
+
+      const data = (await res.json()) as any;
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      return typeof text === 'string' && text.trim().length > 0 ? text.trim() : null;
+    } catch (err: any) {
+      clearTimeout(timeout);
+      logger.warn(`Gemini API call skipped or timed out, using deterministic grounded synthesis: ${err?.message}`);
+      return null;
+    }
   }
 
   // --------------------------------------------------------------------------

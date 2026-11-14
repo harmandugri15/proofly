@@ -165,10 +165,10 @@ export const RecruiterCandidatesPage: React.FC = () => {
             </div>
             <div>
               <h2 className="text-sm font-serif font-bold text-[#1F2C23]">
-                Unlock Candidate via Public Card or Fast-Pass
+                Unlock Candidate via Access Hash or Fast-Pass Link
               </h2>
               <p className="text-[11px] text-[#586E5F]">
-                Paste a student's public card link (e.g. <code className="bg-[#FAF7F2] px-1 py-0.5 rounded text-[10px] border border-[#DDD5C4]">proofly.app/u/username?pass=token</code>) or raw Fast-Pass code to add them to your Radar.
+                Paste a student's Access Hash (e.g. <code className="bg-[#FAF7F2] px-1 py-0.5 rounded text-[10px] font-mono font-bold text-[#1F2C23] border border-[#DDD5C4]">PRF-XXXXXXXX</code>) or their Public Card link to instantly unlock their dossier.
               </p>
             </div>
           </div>
@@ -179,8 +179,8 @@ export const RecruiterCandidatesPage: React.FC = () => {
             type="text"
             value={unlockInput}
             onChange={(e) => setUnlockInput(e.target.value)}
-            placeholder="Paste public card link (proofly.app/u/...) or fast-pass token..."
-            className="flex-1 px-4 py-2.5 rounded-full bg-[#FAF7F2] border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs focus:outline-none focus:border-[#74947F]"
+            placeholder="Enter student Access Hash (e.g. PRF-981D2F8E) or public card link..."
+            className="flex-1 px-4 py-2.5 rounded-full bg-[#FAF7F2] border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs font-mono focus:outline-none focus:border-[#74947F]"
           />
           <button
             type="submit"

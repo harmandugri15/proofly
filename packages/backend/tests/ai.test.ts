@@ -67,27 +67,31 @@ describe('AI Assistants & Grounding Tests', () => {
     expect(res.body.success).toBe(false);
   });
 
-  it('Agent 4: Recruiter Research Assistant should return answers with valid evidence citations after access granted', async () => {
-    await grantCandidateAccess(organizationId, candidateId);
+  it(
+    'Agent 4: Recruiter Research Assistant should return answers with valid evidence citations after access granted',
+    async () => {
+      await grantCandidateAccess(organizationId, candidateId);
 
-    const res = await request(app)
-      .post('/api/v1/ai/research-candidate')
-      .set('Authorization', `Bearer ${recruiterToken}`)
-      .send({
-        candidateId,
-        query: 'What projects has this candidate built with React and WebSockets?',
-      });
+      const res = await request(app)
+        .post('/api/v1/ai/research-candidate')
+        .set('Authorization', `Bearer ${recruiterToken}`)
+        .send({
+          candidateId,
+          query: 'What projects has this candidate built with React and WebSockets?',
+        });
 
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.data.answer).toBeDefined();
-    expect(res.body.data.citations.length).toBeGreaterThan(0);
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.data.answer).toBeDefined();
+      expect(res.body.data.citations.length).toBeGreaterThan(0);
 
-    const firstCitation = res.body.data.citations[0];
-    expect(firstCitation.sourceType).toBeDefined();
-    expect(firstCitation.title).toBeDefined();
-    expect(firstCitation.snippet).toBeDefined();
-  });
+      const firstCitation = res.body.data.citations[0];
+      expect(firstCitation.sourceType).toBeDefined();
+      expect(firstCitation.title).toBeDefined();
+      expect(firstCitation.snippet).toBeDefined();
+    },
+    15000
+  );
 
   it('Agent 5: Candidate Matching Assistant should provide explainable skill matching breakdown', async () => {
     const res = await request(app)

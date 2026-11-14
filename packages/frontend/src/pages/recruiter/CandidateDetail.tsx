@@ -196,15 +196,15 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
 
         <form onSubmit={handleInlineUnlock} className="space-y-3 pt-2 text-left">
           <label className="block text-[11px] font-semibold text-[#385241]">
-            Unlock with Public Card Link or Fast-Pass Code:
+            Unlock with Access Hash or Public Card Link:
           </label>
           <div className="flex gap-2">
             <input
               type="text"
               value={unlockInput}
               onChange={(e) => setUnlockInput(e.target.value)}
-              placeholder="Paste /u/username?pass=token or token..."
-              className="flex-1 px-4 py-2.5 rounded-full bg-white border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs focus:outline-none focus:border-[#74947F]"
+              placeholder="Enter Access Hash (e.g. PRF-XXXXXXXX) or card link..."
+              className="flex-1 px-4 py-2.5 rounded-full bg-white border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs font-mono focus:outline-none focus:border-[#74947F]"
             />
             <button
               type="submit"

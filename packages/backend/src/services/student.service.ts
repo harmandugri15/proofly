@@ -29,6 +29,16 @@ export class StudentService {
       throw new NotFoundError('Student profile not found');
     }
 
+    if (!profile.shareToken) {
+      const crypto = await import('crypto');
+      const token = `PRF-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+      await prisma.studentProfile.update({
+        where: { id: profile.id },
+        data: { shareToken: token },
+      });
+      profile.shareToken = token;
+    }
+
     return this.formatProfile(profile);
   }
 
@@ -261,7 +271,8 @@ export class StudentService {
     let token = profile.shareToken;
 
     if (!token) {
-      token = (await import('crypto')).randomBytes(16).toString('hex');
+      const crypto = await import('crypto');
+      token = `PRF-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
       await prisma.studentProfile.update({
         where: { id: profile.id },
         data: { shareToken: token },
@@ -272,6 +283,7 @@ export class StudentService {
     return {
       username: profile.username,
       shareToken: token,
+      fastPassHash: token,
       visibility: profile.visibility,
       shareUrl: `${baseUrl}/u/${profile.username}`,
       recruiterFastPassUrl: `${baseUrl}/u/${profile.username}?pass=${token}`,
@@ -324,6 +336,7 @@ export class StudentService {
   private static formatProfile(profile: any) {
     return {
       ...profile,
+      fastPassHash: profile.shareToken,
       preferredRoles: profile.preferredRoles ? JSON.parse(profile.preferredRoles) : [],
       githubStats: profile.githubStats ? JSON.parse(profile.githubStats) : null,
       projects: profile.projects?.map(this.formatProject) || [],

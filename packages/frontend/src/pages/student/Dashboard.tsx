@@ -24,6 +24,7 @@ export const StudentDashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [copiedFastPass, setCopiedFastPass] = useState(false);
+  const [copiedHash, setCopiedHash] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -122,30 +123,51 @@ export const StudentDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Recruiter Fast-Pass Link Banner */}
-      <div className="p-6 rounded-[32px] bg-[#E4ECE6] border border-[#C7D9CD] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
-        <div className="space-y-1 min-w-0">
+      {/* Recruiter Fast-Pass Access Hash & Link Banner */}
+      <div className="p-6 rounded-[32px] bg-[#E4ECE6] border border-[#C7D9CD] flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-sm">
+        <div className="space-y-1.5 min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="p-1.5 rounded-full bg-[#FAF7F2] text-[#385241] shrink-0 border border-[#C7D9CD]">
-              <Key className="w-4 h-4" />
+              <Key className="w-4 h-4 text-[#D97043]" />
             </span>
-            <h2 className="font-serif text-sm font-bold text-[#1F2C23]">Recruiter Fast-Pass Link</h2>
+            <h2 className="font-serif text-sm font-bold text-[#1F2C23]">Public Card Access Hash & Fast-Pass</h2>
             <span className="text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7F2] text-[#385241] border border-[#C7D9CD]">
-              Zero Login Wall
+              Recruiter Unlock Code
             </span>
           </div>
-          <p className="text-xs text-[#405446]">
-            Place this link on your resume. Hiring teams can directly view your verified portfolio, GitHub heatmap, and project code with one click.
+          <p className="text-xs text-[#405446] leading-relaxed max-w-2xl">
+            Give this <strong>Access Hash</strong> or link to recruiters so they can instantly unlock your verified dossier, GitHub heatmap, and project code in their portal with zero login barriers.
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto shrink-0">
-          <input
-            type="text"
-            readOnly
-            value={`${window.location.origin}/u/${profile?.username}?pass=${profile?.shareToken || ''}`}
-            className="px-4 py-2.5 rounded-full bg-white border border-[#C7D9CD] text-[#24362A] font-mono text-xs w-full sm:w-64 select-all focus:outline-none"
-          />
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+          {/* Hash Pill */}
+          <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-full border border-[#C7D9CD] shadow-2xs">
+            <span className="text-[11px] font-semibold text-[#586E5F] uppercase tracking-wider">Hash:</span>
+            <span className="font-mono text-xs font-bold text-[#1F2C23] select-all tracking-wider">
+              {profile?.shareToken || 'PRF-SYNCING'}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                if (profile?.shareToken) {
+                  navigator.clipboard.writeText(profile.shareToken);
+                  setCopiedHash(true);
+                  setTimeout(() => setCopiedHash(false), 2000);
+                }
+              }}
+              className="ml-1 p-1 rounded-full text-[#385241] hover:bg-[#E4ECE6] transition-colors"
+              title="Copy Access Hash"
+            >
+              {copiedHash ? (
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#385241]" />
+              ) : (
+                <Copy className="w-3.5 h-3.5" />
+              )}
+            </button>
+          </div>
+
+          {/* Copy Link Button */}
           <button
             onClick={() => {
               const url = `${window.location.origin}/u/${profile?.username}?pass=${profile?.shareToken || ''}`;
@@ -157,11 +179,11 @@ export const StudentDashboard: React.FC = () => {
           >
             {copiedFastPass ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5" /> Copied!
+                <CheckCircle2 className="w-3.5 h-3.5" /> Link Copied!
               </>
             ) : (
               <>
-                <Copy className="w-3.5 h-3.5" /> Copy Link
+                <Copy className="w-3.5 h-3.5" /> Copy Pass Link
               </>
             )}
           </button>

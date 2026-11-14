@@ -186,10 +186,10 @@ export class RecruiterService {
     };
   }
 
-  // Unlock candidate via student's Public Card link or Recruiter Fast-Pass code
+  // Unlock candidate via student's Public Card link or Recruiter Fast-Pass code/hash
   static async unlockCandidateViaCardInfo(organizationId: string, rawInput: string) {
     if (!rawInput || typeof rawInput !== 'string') {
-      throw new ValidationError('Please provide a valid Public Card link or Recruiter Fast-Pass code.');
+      throw new ValidationError('Please provide a valid Public Card Access Hash or Fast-Pass link.');
     }
 
     const trimmed = rawInput.trim();
@@ -201,42 +201,69 @@ export class RecruiterService {
       if (match) {
         username = match[1].toLowerCase();
       }
-      const passMatch = trimmed.match(/[?&]pass=([a-zA-Z0-9-._]+)/i);
+      const passMatch = trimmed.match(/[?&]pass=([a-zA-Z0-9-_]+)/i);
       if (passMatch) {
-        token = passMatch[1];
+        token = passMatch[1].trim();
       }
     } else if (trimmed.includes('pass=')) {
-      const passMatch = trimmed.match(/pass=([a-zA-Z0-9-._]+)/i);
-      if (passMatch) token = passMatch[1];
+      const passMatch = trimmed.match(/pass=([a-zA-Z0-9-_]+)/i);
+      if (passMatch) token = passMatch[1].trim();
+    } else if (trimmed.startsWith('@')) {
+      username = trimmed.slice(1).toLowerCase();
     } else {
       token = trimmed;
     }
 
     let student = null;
-    if (username && token) {
+
+    if (token) {
+      const cleanToken = token.trim();
+      const withPrefix = cleanToken.toUpperCase().startsWith('PRF-')
+        ? cleanToken.toUpperCase()
+        : `PRF-${cleanToken.toUpperCase()}`;
+
       student = await prisma.studentProfile.findFirst({
         where: {
-          username: { equals: username },
-          shareToken: token,
+          OR: [
+            { shareToken: cleanToken },
+            { shareToken: cleanToken.toUpperCase() },
+            { shareToken: cleanToken.toLowerCase() },
+            { shareToken: withPrefix },
+            ...(cleanToken.toUpperCase().startsWith('PRF-')
+              ? [{ shareToken: cleanToken.slice(4) }]
+              : []),
+          ],
         },
         include: {
           user: { select: { name: true, email: true } },
         },
       });
-    } else if (token) {
-      student = await prisma.studentProfile.findFirst({
-        where: {
-          shareToken: token,
-        },
-        include: {
-          user: { select: { name: true, email: true } },
-        },
+
+      if (!student && !cleanToken.includes('-') && !cleanToken.includes('.')) {
+        const potentialStudent = await prisma.studentProfile.findUnique({
+          where: { username: cleanToken.toLowerCase() },
+          include: { user: { select: { name: true, email: true } } },
+        });
+        if (potentialStudent && potentialStudent.visibility === 'PUBLIC') {
+          student = potentialStudent;
+        }
+      }
+    }
+
+    if (!student && username) {
+      const byUser = await prisma.studentProfile.findUnique({
+        where: { username },
+        include: { user: { select: { name: true, email: true } } },
       });
+
+      if (byUser && byUser.visibility === 'PUBLIC') {
+        student = byUser;
+      }
     }
 
     if (!student) {
       throw new ValidationError(
-        'Invalid Public Card credentials. No candidate found with the provided Fast-Pass pass code or authorization token.'
+        'Invalid Public Card credentials. No candidate found with the provided Fast-Pass access hash or card link.'
       );
     }
 

@@ -19,6 +19,7 @@ export async function createTestStudent(customUsername?: string) {
       studentProfile: {
         create: {
           username,
+          shareToken: `PRF-${crypto.randomBytes(4).toString('hex').toUpperCase()}`,
           githubUsername: 'torvalds',
           githubStats: JSON.stringify({
             contributions: [{ date: '2026-01-01', count: 5, level: 2 }],

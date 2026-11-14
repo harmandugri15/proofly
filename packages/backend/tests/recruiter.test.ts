@@ -67,6 +67,24 @@ describe('Recruiter Workspace & Permissions Tests', () => {
     expect(unlockRes.body.data.candidate.id).toBe(studentProfileId);
   });
 
+  it('should unlock candidate access directly using the raw Access Hash code', async () => {
+    const candidate2 = await createTestStudent();
+    cleanups.push(candidate2.cleanup);
+    const hash = candidate2.profile.shareToken!;
+
+    const unlockRes = await request(app)
+      .post('/api/v1/recruiter/candidates/unlock')
+      .set('Authorization', `Bearer ${recruiterToken}`)
+      .send({
+        cardUrlOrToken: hash,
+      });
+
+    expect(unlockRes.status).toBe(200);
+    expect(unlockRes.body.success).toBe(true);
+    expect(unlockRes.body.data.unlocked).toBe(true);
+    expect(unlockRes.body.data.candidate.id).toBe(candidate2.profile.id);
+  });
+
   it('should now allow recruiter to search the unlocked candidate and filter by skills', async () => {
     const res = await request(app)
       .get('/api/v1/recruiter/candidates?skills=TypeScript')
