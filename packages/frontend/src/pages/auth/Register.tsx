@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { AlertCircle, Eye, EyeOff, User, Briefcase, Mail, Lock } from 'lucide-react';
@@ -15,8 +15,15 @@ export const Register: React.FC = () => {
   const [title, setTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register } = useAuth();
+  const { register, user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      navigate(user.role === 'RECRUITER' ? '/recruiter/dashboard' : '/student/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const isPasswordValid =
     password.length >= 8 &&

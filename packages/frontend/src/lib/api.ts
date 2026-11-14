@@ -27,6 +27,14 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
     headers.set('Content-Type', 'application/json');
   }
 
+  // Automatic Bearer authorization header fallback from localStorage
+  if (typeof window !== 'undefined') {
+    const storedToken = localStorage.getItem('proofly_token');
+    if (storedToken && !headers.has('Authorization')) {
+      headers.set('Authorization', `Bearer ${storedToken}`);
+    }
+  }
+
   const response = await fetch(url, {
     ...options,
     headers,
@@ -36,6 +44,11 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    // If unauthorized on operational requests (not session probe), clear invalid local token
+    if (response.status === 401 && typeof window !== 'undefined' && endpoint !== '/auth/me') {
+      localStorage.removeItem('proofly_token');
+    }
+
     throw new ApiError(
       data?.error?.message || `Request failed with status ${response.status}`,
       response.status,

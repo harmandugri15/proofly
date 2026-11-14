@@ -166,5 +166,43 @@ describe('Auth & Session Integration Tests', () => {
     expect(newLoginRes.status).toBe(200);
     expect(newLoginRes.body.data.token).toBeDefined();
   });
-});
+  it('should track sessions in database, allow listing active sessions, and revoke session on logout', async () => {
+    // 1. Log in student
+    const loginRes = await request(app)
+      .post('/api/v1/auth/login')
+      .send({
+        email: testStudentEmail,
+        password: 'NewStrongPassword2026!',
+      });
 
+    expect(loginRes.status).toBe(200);
+    const token = loginRes.body.data.token;
+
+    // 2. Fetch active sessions via GET /api/v1/auth/sessions
+    const sessionsRes = await request(app)
+      .get('/api/v1/auth/sessions')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(sessionsRes.status).toBe(200);
+    expect(sessionsRes.body.success).toBe(true);
+    expect(Array.isArray(sessionsRes.body.data.sessions)).toBe(true);
+    expect(sessionsRes.body.data.sessions.length).toBeGreaterThanOrEqual(1);
+
+    const currentSession = sessionsRes.body.data.sessions.find((s: any) => s.isCurrent);
+    expect(currentSession).toBeDefined();
+
+    // 3. Log out via POST /api/v1/auth/logout with token
+    const logoutRes = await request(app)
+      .post('/api/v1/auth/logout')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(logoutRes.status).toBe(200);
+
+    // 4. Calling /api/v1/auth/me with that logged-out token must now be rejected (401)
+    const afterLogoutRes = await request(app)
+      .get('/api/v1/auth/me')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(afterLogoutRes.status).toBe(401);
+  });
+});

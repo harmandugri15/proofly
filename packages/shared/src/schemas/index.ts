@@ -29,6 +29,7 @@ export type RegisterInput = z.infer<typeof RegisterSchema>;
 export const LoginSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
+  rememberMe: z.boolean().optional(),
 });
 
 export type LoginInput = z.infer<typeof LoginSchema>;
@@ -249,3 +250,12 @@ export const CandidateMatchQuerySchema = z.object({
 });
 
 export type CandidateMatchQuery = z.infer<typeof CandidateMatchQuerySchema>;
+
+export interface UserSessionItem {
+  id: string;
+  ipAddress: string;
+  userAgent: string;
+  createdAt: string | Date;
+  expiresAt: string | Date;
+  isCurrent: boolean;
+}

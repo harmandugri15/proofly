@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { Settings, Shield, Eye, Lock, Download, CheckCircle2, AlertTriangle, Sparkles, UserCheck } from 'lucide-react';
-import { ProfileVisibility } from '@proofly/shared';
+import { Settings, Shield, Eye, Lock, Download, CheckCircle2, AlertTriangle, Sparkles, UserCheck, Laptop, Smartphone, Globe, Trash2, LogOut, RefreshCw, ShieldCheck } from 'lucide-react';
+import { ProfileVisibility, UserSessionItem } from '@proofly/shared';
+import { useAuth } from '../../context/AuthContext';
 import { DelicateStarOrnament } from '../../components/common/CreativeArt';
 
 export const StudentSettingsPage: React.FC = () => {
@@ -11,8 +12,54 @@ export const StudentSettingsPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
+  const { getSessions, revokeSession, revokeOtherSessions } = useAuth();
+  const [sessions, setSessions] = useState<UserSessionItem[]>([]);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  const [revokingId, setRevokingId] = useState<string | null>(null);
+  const [sessionMsg, setSessionMsg] = useState<string | null>(null);
+
+  const loadSessions = async () => {
+    setIsLoadingSessions(true);
+    try {
+      const data = await getSessions();
+      setSessions(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoadingSessions(false);
+    }
+  };
+
+  const handleRevokeSession = async (id: string) => {
+    setRevokingId(id);
+    setSessionMsg(null);
+    try {
+      await revokeSession(id);
+      setSessionMsg('Session revoked successfully.');
+      setTimeout(() => setSessionMsg(null), 3500);
+      await loadSessions();
+    } catch (e: any) {
+      setSessionMsg(e?.message || 'Failed to revoke session');
+    } finally {
+      setRevokingId(null);
+    }
+  };
+
+  const handleRevokeOthers = async () => {
+    setSessionMsg(null);
+    try {
+      await revokeOtherSessions();
+      setSessionMsg('All other devices have been logged out.');
+      setTimeout(() => setSessionMsg(null), 3500);
+      await loadSessions();
+    } catch (e: any) {
+      setSessionMsg(e?.message || 'Failed to revoke other sessions');
+    }
+  };
+
   useEffect(() => {
     loadProfile();
+    loadSessions();
   }, []);
 
   const loadProfile = async () => {
@@ -41,6 +88,16 @@ export const StudentSettingsPage: React.FC = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const parseAgent = (agent: string) => {
+    if (!agent) return 'Unknown Device';
+    if (/iphone|ipad|ipod/i.test(agent)) return 'Apple iOS Device';
+    if (/android/i.test(agent)) return 'Android Device';
+    if (/macintosh|mac os x/i.test(agent)) return 'macOS Workstation';
+    if (/windows/i.test(agent)) return 'Windows PC';
+    if (/linux/i.test(agent)) return 'Linux Machine';
+    return 'Desktop / Web Browser';
   };
 
   const handleExportData = () => {
@@ -196,6 +253,112 @@ export const StudentSettingsPage: React.FC = () => {
           </button>
         </div>
       </form>
+
+
+      {/* Active Sessions & Security Controls */}
+      <div className="p-6 sm:p-7 rounded-3xl bg-white/95 border border-sand-200/80 space-y-5 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 className="text-base font-serif font-normal text-forest-900 flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-sage-600" />
+              Active Sessions & Device Security
+            </h2>
+            <p className="text-xs text-forest-700/60 mt-0.5">
+              Cryptographically verified database sessions active on your account across devices.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={loadSessions}
+              disabled={isLoadingSessions}
+              className="p-2 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-800 transition-colors border border-sand-200"
+              title="Refresh active sessions"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingSessions ? 'animate-spin' : ''}`} />
+            </button>
+
+            {sessions.filter((s) => !s.isCurrent).length > 0 && (
+              <button
+                type="button"
+                onClick={handleRevokeOthers}
+                className="px-4 py-2 rounded-full bg-sand-100 hover:bg-terracotta-50 hover:text-terracotta-700 text-forest-800 text-xs font-mono font-medium border border-sand-200 transition-colors flex items-center gap-1.5"
+              >
+                <LogOut className="w-3.5 h-3.5" /> Log Out Other Devices
+              </button>
+            )}
+          </div>
+        </div>
+
+        {sessionMsg && (
+          <div className="p-3 rounded-2xl bg-sage-50 border border-sage-200 text-sage-800 text-xs font-mono flex items-center gap-2 animate-fadeIn">
+            <CheckCircle2 className="w-4 h-4 text-sage-600 shrink-0" />
+            <span>{sessionMsg}</span>
+          </div>
+        )}
+
+        <div className="space-y-3">
+          {sessions.map((session) => (
+            <div
+              key={session.id}
+              className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors ${
+                session.isCurrent
+                  ? 'bg-sage-50/70 border-sage-300'
+                  : 'bg-sand-50/50 border-sand-200 hover:border-sand-300'
+              }`}
+            >
+              <div className="flex items-start sm:items-center gap-3.5 min-w-0">
+                <div className={`p-2.5 rounded-xl border shrink-0 ${
+                  session.isCurrent ? 'bg-sage-100 border-sage-200 text-sage-800' : 'bg-white border-sand-200 text-forest-700'
+                }`}>
+                  {/mobile|iphone|android/i.test(session.userAgent) ? (
+                    <Smartphone className="w-4 h-4" />
+                  ) : (
+                    <Laptop className="w-4 h-4" />
+                  )}
+                </div>
+
+                <div className="space-y-0.5 min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-medium text-forest-900 font-sans">
+                      {parseAgent(session.userAgent)}
+                    </span>
+                    {session.isCurrent ? (
+                      <span className="px-2.5 py-0.5 rounded-full bg-sage-200 text-sage-900 text-[10px] font-mono font-bold flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sage-600 animate-pulse" />
+                        This Device (Active)
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full bg-sand-200 text-forest-700 text-[10px] font-mono">
+                        Remote Session
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3 text-[11px] font-mono text-forest-700/60">
+                    <span className="flex items-center gap-1">
+                      <Globe className="w-3 h-3" /> {session.ipAddress || '127.0.0.1'}
+                    </span>
+                    <span>•</span>
+                    <span>Signed in: {new Date(session.createdAt).toLocaleDateString()}</span>
+                  </div>
+                </div>
+              </div>
+
+              {!session.isCurrent && (
+                <button
+                  type="button"
+                  onClick={() => handleRevokeSession(session.id)}
+                  disabled={revokingId === session.id}
+                  className="px-3.5 py-1.5 rounded-full bg-white hover:bg-terracotta-50 hover:text-terracotta-700 text-forest-700 text-xs font-mono font-medium border border-sand-200 transition-colors shrink-0 self-end sm:self-auto flex items-center gap-1.5"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>{revokingId === session.id ? 'Revoking...' : 'Revoke'}</span>
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Data Export / Portability */}
       <div className="p-6 sm:p-7 rounded-3xl bg-white/95 border border-sand-200/80 space-y-4 shadow-sm">

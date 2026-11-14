@@ -13,7 +13,7 @@ import {
 } from '@proofly/shared';
 
 export class AuthService {
-  static async register(input: RegisterInput) {
+  static async register(input: RegisterInput, metadata?: { ipAddress?: string | null; userAgent?: string | null }) {
     const existing = await prisma.user.findUnique({
       where: { email: input.email.toLowerCase() },
     });
@@ -98,10 +98,28 @@ export class AuthService {
     });
 
     const token = this.generateToken(result.id, result.role, result.email);
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await prisma.session.upsert({
+      where: { token },
+      create: {
+        userId: result.id,
+        token,
+        expiresAt,
+        ipAddress: metadata?.ipAddress || null,
+        userAgent: metadata?.userAgent || null,
+      },
+      update: {
+        expiresAt,
+        ipAddress: metadata?.ipAddress || null,
+        userAgent: metadata?.userAgent || null,
+      },
+    });
+
     return { user: this.sanitizeUser(result), token };
   }
 
-  static async login(input: LoginInput) {
+  static async login(input: LoginInput, metadata?: { ipAddress?: string | null; userAgent?: string | null }) {
     const user = await prisma.user.findUnique({
       where: { email: input.email.toLowerCase() },
       include: {
@@ -126,6 +144,24 @@ export class AuthService {
     }
 
     const token = this.generateToken(user.id, user.role, user.email);
+    const days = (input as any).rememberMe ? 30 : 7;
+    const expiresAt = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+
+    await prisma.session.upsert({
+      where: { token },
+      create: {
+        userId: user.id,
+        token,
+        expiresAt,
+        ipAddress: metadata?.ipAddress || null,
+        userAgent: metadata?.userAgent || null,
+      },
+      update: {
+        expiresAt,
+        ipAddress: metadata?.ipAddress || null,
+        userAgent: metadata?.userAgent || null,
+      },
+    });
 
     await prisma.auditEvent.create({
       data: {
@@ -330,7 +366,7 @@ export class AuthService {
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
   }
 
-  static async handleGoogleOAuthCallback(code: string, stateStr?: string) {
+  static async handleGoogleOAuthCallback(code: string, stateStr?: string, metadata?: { ipAddress?: string | null; userAgent?: string | null }) {
     if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
       throw new BadRequestError('Google OAuth is not configured on the server.');
     }
@@ -390,10 +426,11 @@ export class AuthService {
       name: userinfo.name || userinfo.email.split('@')[0],
       avatarUrl: userinfo.picture,
       role,
+      metadata,
     });
   }
 
-  static async handleGoogleToken(credential: string, role: string = 'STUDENT') {
+  static async handleGoogleToken(credential: string, role: string = 'STUDENT', metadata?: { ipAddress?: string | null; userAgent?: string | null }) {
     // Verify Google ID token via Google's tokeninfo endpoint
     const response = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`);
     if (!response.ok) {
@@ -411,6 +448,7 @@ export class AuthService {
       name: payload.name || payload.email.split('@')[0],
       avatarUrl: payload.picture,
       role,
+      metadata,
     });
   }
 
@@ -420,12 +458,14 @@ export class AuthService {
     name,
     avatarUrl,
     role = 'STUDENT',
+    metadata,
   }: {
     googleId: string;
     email: string;
     name: string;
     avatarUrl?: string;
     role?: string;
+    metadata?: { ipAddress?: string | null; userAgent?: string | null };
   }) {
     const targetEmail = email.toLowerCase().trim();
 
@@ -552,11 +592,92 @@ export class AuthService {
     });
 
     const token = this.generateToken(user.id, user.role, user.email);
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    await prisma.session.upsert({
+      where: { token },
+      create: {
+        userId: user.id,
+        token,
+        expiresAt,
+        ipAddress: metadata?.ipAddress || null,
+        userAgent: metadata?.userAgent || null,
+      },
+      update: {
+        expiresAt,
+        ipAddress: metadata?.ipAddress || null,
+        userAgent: metadata?.userAgent || null,
+      },
+    });
+
     return { user: this.sanitizeUser(user), token };
   }
 
+
+  // ============================================================================
+  // Session Management Methods
+  // ============================================================================
+
+  static async logout(token?: string) {
+    if (!token) return;
+    await prisma.session.deleteMany({
+      where: { token },
+    });
+  }
+
+  static async getUserSessions(userId: string, currentToken?: string) {
+    const sessions = await prisma.session.findMany({
+      where: {
+        userId,
+        expiresAt: { gt: new Date() },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return sessions.map((s) => ({
+      id: s.id,
+      ipAddress: s.ipAddress || 'Unknown IP',
+      userAgent: s.userAgent || 'Unknown Device',
+      createdAt: s.createdAt,
+      expiresAt: s.expiresAt,
+      isCurrent: currentToken ? s.token === currentToken : false,
+    }));
+  }
+
+  static async revokeSession(userId: string, sessionId: string) {
+    const session = await prisma.session.findFirst({
+      where: { id: sessionId, userId },
+    });
+
+    if (!session) {
+      throw new NotFoundError('Session not found or already revoked');
+    }
+
+    await prisma.session.delete({
+      where: { id: sessionId },
+    });
+
+    return { message: 'Session revoked successfully' };
+  }
+
+  static async revokeOtherSessions(userId: string, currentToken?: string) {
+    if (!currentToken) return { message: 'No other sessions revoked' };
+    const deleted = await prisma.session.deleteMany({
+      where: {
+        userId,
+        token: { not: currentToken },
+      },
+    });
+
+    return { message: `Revoked ${deleted.count} other active session(s)` };
+  }
+
   private static generateToken(userId: string, role: string, email: string): string {
-    return jwt.sign({ userId, role, email }, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN as any });
+    return jwt.sign(
+      { userId, role, email, jti: crypto.randomUUID() },
+      env.JWT_SECRET,
+      { expiresIn: env.JWT_EXPIRES_IN as any }
+    );
   }
 
   private static sanitizeUser(user: any) {

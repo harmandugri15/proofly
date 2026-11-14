@@ -15,6 +15,14 @@ import { env } from '../config/env.js';
 
 export const authRouter = Router();
 
+function extractRequestMeta(req: any) {
+  const ipAddress =
+    (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.ip || null;
+  const userAgent = (req.headers['user-agent'] as string) || null;
+  return { ipAddress, userAgent };
+}
+
+
 // Configure cookie options
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -29,7 +37,8 @@ authRouter.post(
   validateBody(RegisterSchema),
   async (req, res, next) => {
     try {
-      const { user, token } = await AuthService.register(req.body);
+      const meta = extractRequestMeta(req);
+      const { user, token } = await AuthService.register(req.body, meta);
       res.cookie('proofly_session', token, COOKIE_OPTIONS);
       return res.status(201).json({
         success: true,
@@ -47,8 +56,13 @@ authRouter.post(
   validateBody(LoginSchema),
   async (req, res, next) => {
     try {
-      const { user, token } = await AuthService.login(req.body);
-      res.cookie('proofly_session', token, COOKIE_OPTIONS);
+      const meta = extractRequestMeta(req);
+      const { user, token } = await AuthService.login(req.body, meta);
+      const cookieOptions = {
+        ...COOKIE_OPTIONS,
+        maxAge: req.body.rememberMe ? 30 * 24 * 60 * 60 * 1000 : 7 * 24 * 60 * 60 * 1000,
+      };
+      res.cookie('proofly_session', token, cookieOptions);
       return res.status(200).json({
         success: true,
         data: { user, token },
@@ -59,16 +73,27 @@ authRouter.post(
   }
 );
 
-authRouter.post('/logout', (req, res) => {
-  res.clearCookie('proofly_session', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-  });
-  return res.status(200).json({
-    success: true,
-    data: { message: 'Logged out successfully' },
-  });
+authRouter.post('/logout', async (req, res, next) => {
+  try {
+    let token = req.cookies?.proofly_session;
+    if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+      token = req.headers.authorization.substring(7);
+    }
+    if (token) {
+      await AuthService.logout(token);
+    }
+    res.clearCookie('proofly_session', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+    });
+    return res.status(200).json({
+      success: true,
+      data: { message: 'Logged out successfully' },
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 authRouter.get('/me', authenticateToken, async (req, res, next) => {
@@ -77,6 +102,47 @@ authRouter.get('/me', authenticateToken, async (req, res, next) => {
     return res.status(200).json({
       success: true,
       data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+// ============================================================================
+// Active Sessions Management Routes
+// ============================================================================
+
+authRouter.get('/sessions', authenticateToken, async (req, res, next) => {
+  try {
+    const sessions = await AuthService.getUserSessions(req.user!.id, req.token);
+    return res.status(200).json({
+      success: true,
+      data: { sessions },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+authRouter.delete('/sessions/:id', authenticateToken, async (req, res, next) => {
+  try {
+    const result = await AuthService.revokeSession(req.user!.id, req.params.id);
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+authRouter.post('/sessions/revoke-others', authenticateToken, async (req, res, next) => {
+  try {
+    const result = await AuthService.revokeOtherSessions(req.user!.id, req.token);
+    return res.status(200).json({
+      success: true,
+      data: result,
     });
   } catch (error) {
     next(error);
@@ -182,9 +248,11 @@ authRouter.get('/google/callback', async (req, res) => {
       return res.redirect(`${frontendBase}/login?error=missing_google_code`);
     }
 
+    const meta = extractRequestMeta(req);
     const { user, token } = await AuthService.handleGoogleOAuthCallback(
       code,
-      typeof state === 'string' ? state : undefined
+      typeof state === 'string' ? state : undefined,
+      meta
     );
 
     res.cookie('proofly_session', token, COOKIE_OPTIONS);
@@ -203,7 +271,8 @@ authRouter.post(
   validateBody(GoogleAuthTokenSchema),
   async (req, res, next) => {
     try {
-      const { user, token } = await AuthService.handleGoogleToken(req.body.credential, req.body.role);
+      const meta = extractRequestMeta(req);
+      const { user, token } = await AuthService.handleGoogleToken(req.body.credential, req.body.role, meta);
       res.cookie('proofly_session', token, COOKIE_OPTIONS);
       return res.status(200).json({
         success: true,

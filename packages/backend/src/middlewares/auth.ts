@@ -10,6 +10,7 @@ export interface AuthUser {
   email: string;
   role: UserRole;
   name: string;
+  sessionId?: string;
   organizationId?: string | null;
   studentProfileId?: string | null;
   recruiterProfileId?: string | null;
@@ -20,6 +21,7 @@ declare global {
   namespace Express {
     interface Request {
       user?: AuthUser;
+      token?: string;
     }
   }
 }
@@ -44,20 +46,32 @@ export async function authenticateToken(
       return next(new UnauthorizedError('Authentication token missing'));
     }
 
-    const decoded = jwt.verify(token, env.JWT_SECRET) as {
-      userId: string;
-      role: UserRole;
-      email: string;
-    };
+    // Cryptographic token verification
+    jwt.verify(token, env.JWT_SECRET);
 
-    const user = await prisma.user.findUnique({
-      where: { id: decoded.userId },
+    // Database active session verification
+    const dbSession = await prisma.session.findUnique({
+      where: { token },
       include: {
-        studentProfile: { select: { id: true } },
-        recruiterProfile: { select: { id: true, organizationId: true } },
+        user: {
+          include: {
+            studentProfile: { select: { id: true } },
+            recruiterProfile: { select: { id: true, organizationId: true } },
+          },
+        },
       },
     });
 
+    if (!dbSession) {
+      return next(new UnauthorizedError('Session has ended or was revoked. Please log in again.'));
+    }
+
+    if (dbSession.expiresAt < new Date()) {
+      await prisma.session.delete({ where: { id: dbSession.id } }).catch(() => {});
+      return next(new UnauthorizedError('Session has expired. Please log in again.'));
+    }
+
+    const user = dbSession.user;
     if (!user) {
       return next(new UnauthorizedError('User account not found'));
     }
@@ -67,10 +81,12 @@ export async function authenticateToken(
       email: user.email,
       role: user.role as UserRole,
       name: user.name,
+      sessionId: dbSession.id,
       studentProfileId: user.studentProfile?.id || null,
       recruiterProfileId: user.recruiterProfile?.id || null,
       organizationId: user.recruiterProfile?.organizationId || null,
     };
+    req.token = token;
 
     next();
   } catch (error) {
