@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
 import { MobileDock } from './components/layout/MobileDock';
+import { ScrollToTopButton } from './components/common/ScrollToTopButton';
 
 // Pages
 import { Home } from './pages/Home';
@@ -46,7 +47,7 @@ const ProtectedStudentRoute: React.FC<{ children: React.ReactNode }> = ({ childr
   return (
     <div className="flex w-full max-w-full min-w-0 items-start">
       <Sidebar />
-      <main className="flex-1 w-full max-w-full min-w-0 pb-24 md:pb-8">{children}</main>
+      <main className="flex-1 w-full max-w-full min-w-0 md:pl-64 pb-24 md:pb-8">{children}</main>
     </div>
   );
 };
@@ -60,7 +61,7 @@ const ProtectedRecruiterRoute: React.FC<{ children: React.ReactNode }> = ({ chil
   return (
     <div className="flex w-full max-w-full min-w-0 items-start">
       <Sidebar />
-      <main className="flex-1 w-full max-w-full min-w-0 pb-24 md:pb-8">{children}</main>
+      <main className="flex-1 w-full max-w-full min-w-0 md:pl-64 pb-24 md:pb-8">{children}</main>
     </div>
   );
 };
@@ -70,7 +71,7 @@ export const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
-          <div className="min-h-screen w-full max-w-full overflow-x-hidden bg-[#FAF7F2] text-[#1F2C23] flex flex-col font-sans relative selection:bg-terracotta-500/20 selection:text-terracotta-700">
+          <div className="min-h-screen w-full max-w-full overflow-x-clip bg-[#FAF7F2] text-[#1F2C23] flex flex-col font-sans relative selection:bg-terracotta-500/20 selection:text-terracotta-700">
             <Navbar />
             <div className="flex-1 w-full max-w-full min-w-0">
               <Routes>
@@ -191,6 +192,7 @@ export const App: React.FC = () => {
               </Routes>
             </div>
             <MobileDock />
+            <ScrollToTopButton />
           </div>
         </BrowserRouter>
       </AuthProvider>

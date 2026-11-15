@@ -13,6 +13,7 @@ import {
   BookmarkCheck,
   ExternalLink,
   Code2,
+  ArrowUp,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -65,7 +66,7 @@ export const Sidebar: React.FC = () => {
   const sections = isStudent ? studentSections : recruiterSections;
 
   return (
-    <aside className="w-64 border-r border-[#EBE5D8] bg-[#FAF7F2] p-4 shrink-0 hidden md:flex flex-col justify-between sticky top-20 h-[calc(100vh-5rem)] overflow-y-auto z-30">
+    <aside className="w-64 border-r border-[#EBE5D8] bg-[#FAF7F2] p-4 shrink-0 hidden md:flex flex-col justify-between fixed left-0 top-20 bottom-0 overflow-y-auto z-30 select-none">
       <div className="space-y-6">
         {sections.map((sec, sIdx) => (
           <div key={sIdx} className="space-y-1.5">
@@ -104,29 +105,39 @@ export const Sidebar: React.FC = () => {
         ))}
       </div>
 
-      {/* Bottom Profile Quick Link */}
-      {isStudent && user?.studentProfile && (
-        <div className="pt-4 border-t border-[#EBE5D8]">
+      {/* Bottom Actions: Scroll to Top & Profile Quick Link */}
+      <div className="pt-4 border-t border-[#EBE5D8] space-y-2.5">
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="w-full py-2 px-3 rounded-full bg-[#E4ECE6]/70 hover:bg-[#E4ECE6] text-[#24362A] text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors border border-[#C7D9CD]/80 shadow-2xs"
+          title="Scroll page to top"
+        >
+          <ArrowUp className="w-3.5 h-3.5 text-[#385241]" />
+          <span>Scroll to Top</span>
+        </button>
+
+        {isStudent && user?.studentProfile && (
           <Link
             to={`/u/${user.studentProfile.username}`}
             target="_blank"
-            className="p-3.5 rounded-2xl bg-[#F4EFE6] border border-[#DDD5C4] hover:border-[#D97043] flex items-center justify-between gap-2 group transition-all shadow-xs"
+            className="p-3 rounded-2xl bg-[#F4EFE6] border border-[#DDD5C4] hover:border-[#D97043] flex items-center justify-between gap-2 group transition-all shadow-xs"
           >
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#FCE5DB] text-[#D97043] flex items-center justify-center border border-[#F4CDBC]">
-                <Code2 className="w-4 h-4" />
+              <div className="w-7 h-7 rounded-lg bg-[#FCE5DB] text-[#D97043] flex items-center justify-center border border-[#F4CDBC] shrink-0">
+                <Code2 className="w-3.5 h-3.5" />
               </div>
-              <div className="text-left">
-                <p className="text-xs font-bold text-[#1F2C23] leading-tight group-hover:text-[#D97043] transition-colors">
+              <div className="text-left min-w-0">
+                <p className="text-xs font-bold text-[#1F2C23] leading-tight group-hover:text-[#D97043] transition-colors truncate">
                   Live Public Card
                 </p>
-                <p className="text-[10px] text-[#758C7D] font-mono">@{user.studentProfile.username}</p>
+                <p className="text-[10px] text-[#758C7D] font-mono truncate">@{user.studentProfile.username}</p>
               </div>
             </div>
-            <ExternalLink className="w-3.5 h-3.5 text-[#758C7D] group-hover:text-[#D97043] transition-colors" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#758C7D] group-hover:text-[#D97043] transition-colors shrink-0" />
           </Link>
-        </div>
-      )}
+        )}
+      </div>
     </aside>
   );
 };
