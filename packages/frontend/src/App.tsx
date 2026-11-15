@@ -6,6 +6,7 @@ import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
 import { MobileDock } from './components/layout/MobileDock';
 import { ScrollToTopButton } from './components/common/ScrollToTopButton';
+import { GlobalBackground } from './components/layout/GlobalBackground';
 
 // Pages
 import { Home } from './pages/Home';
@@ -71,7 +72,8 @@ export const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
-          <div className="min-h-screen w-full max-w-full overflow-x-clip bg-[#FAF7F2] text-[#1F2C23] flex flex-col font-sans relative selection:bg-terracotta-500/20 selection:text-terracotta-700">
+          <div className="min-h-screen w-full max-w-full overflow-x-clip bg-transparent text-[#1F2C23] flex flex-col font-sans relative selection:bg-terracotta-500/20 selection:text-terracotta-700">
+            <GlobalBackground />
             <Navbar />
             <div className="flex-1 w-full max-w-full min-w-0 pt-20">
               <Routes>

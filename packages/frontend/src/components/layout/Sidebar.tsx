@@ -66,7 +66,7 @@ export const Sidebar: React.FC = () => {
   const sections = isStudent ? studentSections : recruiterSections;
 
   return (
-    <aside className="w-64 border-r-2 border-[#1F2C23] bg-[#FAF7F2] p-4 shrink-0 hidden md:flex flex-col justify-between fixed left-0 top-20 bottom-0 overflow-y-auto z-30 select-none">
+    <aside className="w-64 border-r-2 border-[#1F2C23] bg-[#FAF7F2]/90 backdrop-blur-md p-4 shrink-0 hidden md:flex flex-col justify-between fixed left-0 top-20 bottom-0 overflow-y-auto z-30 select-none">
       <div className="space-y-6">
         {sections.map((sec, sIdx) => (
           <div key={sIdx} className="space-y-1.5">
