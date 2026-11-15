@@ -50,18 +50,18 @@ export const RecruiterDashboard: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
       {/* Banner */}
-      <div className="relative rounded-3xl bg-[#7D9B86] text-white p-6 sm:p-8 overflow-hidden shadow-lg border border-sage-700/30 flex flex-col md:flex-row md:items-center justify-between gap-6">
+      <div className="relative rounded-[28px] bg-[#385241] text-white p-6 sm:p-8 overflow-hidden shadow-[4px_4px_0px_#1F2C23] border-2 border-[#1F2C23] flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="relative z-10 space-y-2">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/25">
+            <span className="text-xs font-mono font-black uppercase px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/40 shadow-[1px_1px_0px_rgba(0,0,0,0.3)]">
               {orgName}
             </span>
-            <span className="text-xs font-mono text-white/80">Scout Operations</span>
+            <span className="text-xs font-mono text-white/90 font-bold">Scout Operations</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-normal font-serif tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-black font-serif tracking-tight text-white">
             Technical Talent Discovery
           </h1>
-          <p className="text-xs sm:text-sm text-white/80 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-white/90 max-w-xl leading-relaxed font-medium">
             Evaluate engineering candidates by inspectable code commits, live demos, and verified certifications.
           </p>
         </div>
@@ -69,16 +69,16 @@ export const RecruiterDashboard: React.FC = () => {
         <div className="relative z-10 flex flex-wrap items-center gap-3">
           <Link
             to="/recruiter/candidates"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
           >
             <Search className="w-4 h-4" />
             Discover Candidates
           </Link>
           <Link
             to="/recruiter/jobs"
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono font-medium text-xs border border-white/20 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-[#1F2C23] font-mono font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
           >
-            <Briefcase className="w-4 h-4 text-terracotta-300" />
+            <Briefcase className="w-4 h-4 text-[#D97043]" />
             Post Job Spec
           </Link>
         </div>
@@ -86,34 +86,34 @@ export const RecruiterDashboard: React.FC = () => {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-3xl bg-white/90 border border-sand-200/80 flex items-center justify-between shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-center justify-between">
           <div>
-            <span className="text-xs font-mono text-forest-700/60 font-semibold block">ACTIVE JOB SPECS</span>
-            <span className="text-2xl font-serif font-normal text-forest-900 mt-1 block">{jobs.length}</span>
+            <span className="text-xs font-mono text-[#586E5F] font-bold block">ACTIVE JOB SPECS</span>
+            <span className="text-2xl font-serif font-black text-[#1F2C23] mt-1 block">{jobs.length}</span>
           </div>
-          <div className="w-11 h-11 rounded-2xl bg-sage-50 border border-sage-200/60 flex items-center justify-center text-sage-700">
+          <div className="w-11 h-11 rounded-xl bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center text-[#1F2C23]">
             <Briefcase className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white/90 border border-sand-200/80 flex items-center justify-between shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-center justify-between">
           <div>
-            <span className="text-xs font-mono text-forest-700/60 font-semibold block">SAVED TALENT POOLS</span>
-            <span className="text-2xl font-serif font-normal text-forest-900 mt-1 block">{shortlists.length}</span>
+            <span className="text-xs font-mono text-[#586E5F] font-bold block">SAVED TALENT POOLS</span>
+            <span className="text-2xl font-serif font-black text-[#1F2C23] mt-1 block">{shortlists.length}</span>
           </div>
-          <div className="w-11 h-11 rounded-2xl bg-terracotta-50 border border-terracotta-200/60 flex items-center justify-center text-terracotta-600">
+          <div className="w-11 h-11 rounded-xl bg-[#FCE5DB] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center text-[#D97043]">
             <BookmarkCheck className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="p-5 rounded-3xl bg-white/90 border border-sand-200/80 flex items-center justify-between shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-center justify-between">
           <div>
-            <span className="text-xs font-mono text-forest-700/60 font-semibold block">GROUNDED AI ENGINE</span>
-            <span className="text-xs font-mono text-sage-800 font-bold mt-1.5 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-terracotta-500" /> Cited Evidence Active
+            <span className="text-xs font-mono text-[#586E5F] font-bold block">GROUNDED AI ENGINE</span>
+            <span className="text-xs font-mono text-[#1F2C23] font-bold mt-1.5 flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#D97043]" /> Cited Evidence Active
             </span>
           </div>
-          <div className="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-amber-600">
+          <div className="w-11 h-11 rounded-xl bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center text-[#CA8A04]">
             <Zap className="w-5 h-5" />
           </div>
         </div>

@@ -132,16 +132,16 @@ export const RecruiterCandidatesPage: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 bg-[#FAF7F2] text-[#1F2C23]">
       {/* Header Banner */}
-      <div className="relative rounded-[36px] bg-[#FAF7F2] p-6 sm:p-8 border border-[#EBE5D8] shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div className="relative rounded-[28px] bg-white p-6 sm:p-8 border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="space-y-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E4ECE6] border border-[#C7D9CD] text-[#24362A] text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#E4ECE6] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] text-[#1F2C23] text-xs font-mono font-bold">
             <Sparkles className="w-3.5 h-3.5 text-[#385241]" />
             <span>SCOUT INTELLIGENCE DIRECTORY</span>
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#1F2C23]">
+          <h1 className="font-serif text-2xl sm:text-3xl font-black text-[#1F2C23]">
             Verified Talent Radar
           </h1>
-          <p className="text-xs sm:text-sm text-[#586E5F] max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#586E5F] max-w-xl leading-relaxed font-medium">
             Discover student software engineers who have granted access to your organization via their Public Card or Fast-Pass link. Independently verified code evidence and zero resume padding.
           </p>
         </div>
@@ -149,7 +149,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
         {selectedForCompare.length > 0 && (
           <button
             onClick={runComparison}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#D97043] hover:bg-[#C55F34] text-white font-semibold text-xs transition-all shadow-sm shrink-0"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
           >
             <Columns className="w-4 h-4" /> Compare Selected ({selectedForCompare.length})
           </button>
@@ -157,18 +157,18 @@ export const RecruiterCandidatesPage: React.FC = () => {
       </div>
 
       {/* Unlock Candidate with Public Card / Fast-Pass Form */}
-      <div className="p-6 rounded-[32px] bg-white border border-[#DDD5C4] shadow-xs space-y-3">
+      <div className="p-6 rounded-[24px] bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-[#E4ECE6] flex items-center justify-center text-[#24362A] shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-white border-2 border-[#1F2C23] flex items-center justify-center text-[#1F2C23] shrink-0 shadow-[1px_1px_0px_#1F2C23]">
               <Key className="w-4 h-4 text-[#D97043]" />
             </div>
             <div>
-              <h2 className="text-sm font-serif font-bold text-[#1F2C23]">
+              <h2 className="text-base font-serif font-black text-[#1F2C23]">
                 Unlock Candidate via Access Hash or Fast-Pass Link
               </h2>
-              <p className="text-[11px] text-[#586E5F]">
-                Paste a student's Access Hash (e.g. <code className="bg-[#FAF7F2] px-1 py-0.5 rounded text-[10px] font-mono font-bold text-[#1F2C23] border border-[#DDD5C4]">PRF-XXXXXXXX</code>) or their Public Card link to instantly unlock their dossier.
+              <p className="text-[11px] text-[#24362A] font-medium">
+                Paste a student's Access Hash (e.g. <code className="bg-white px-1.5 py-0.5 rounded text-[10px] font-mono font-black text-[#1F2C23] border border-[#1F2C23]">PRF-XXXXXXXX</code>) or their Public Card link to instantly unlock their dossier.
               </p>
             </div>
           </div>
@@ -180,12 +180,12 @@ export const RecruiterCandidatesPage: React.FC = () => {
             value={unlockInput}
             onChange={(e) => setUnlockInput(e.target.value)}
             placeholder="Enter student Access Hash (e.g. PRF-981D2F8E) or public card link..."
-            className="flex-1 px-4 py-2.5 rounded-full bg-[#FAF7F2] border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs font-mono focus:outline-none focus:border-[#74947F]"
+            className="flex-1 px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder-[#758C7D] text-xs font-mono font-bold focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] transition-all"
           />
           <button
             type="submit"
             disabled={isUnlocking || !unlockInput.trim()}
-            className="px-6 py-2.5 rounded-full bg-[#385241] hover:bg-[#24362A] disabled:opacity-50 text-white text-xs font-semibold transition-all shrink-0 shadow-2xs"
+            className="px-6 py-2.5 rounded-xl bg-[#385241] hover:bg-[#24362A] disabled:opacity-50 text-white text-xs font-bold border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
           >
             {isUnlocking ? 'Unlocking...' : 'Unlock Candidate'}
           </button>
@@ -193,16 +193,16 @@ export const RecruiterCandidatesPage: React.FC = () => {
 
         {unlockMessage && (
           <div
-            className={`p-3 rounded-2xl flex items-center gap-2 text-xs font-medium ${
+            className={`p-3 rounded-xl flex items-center gap-2 text-xs font-bold border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] ${
               unlockMessage.type === 'success'
-                ? 'bg-[#E4ECE6] text-[#24362A] border border-[#C7D9CD]'
-                : 'bg-red-50 text-red-800 border border-red-200'
+                ? 'bg-[#E4ECE6] text-[#1F2C23]'
+                : 'bg-[#FEE2E2] text-[#991B1B]'
             }`}
           >
             {unlockMessage.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 text-[#385241] shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-[#2E7D32] shrink-0" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-[#DC2626] shrink-0" />
             )}
             <span>{unlockMessage.text}</span>
           </div>
@@ -210,7 +210,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
       </div>
 
       {/* Filter Bar */}
-      <div className="p-6 rounded-[32px] bg-[#FAF7F2] border border-[#EBE5D8] space-y-4 shadow-sm">
+      <div className="p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] space-y-4 shadow-[4px_4px_0px_#1F2C23]">
         <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-[#758C7D] absolute left-4 top-3.5 pointer-events-none" />
@@ -219,12 +219,12 @@ export const RecruiterCandidatesPage: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search unlocked candidates by name, headline, bio, or tech keywords..."
-              className="w-full pl-11 pr-4 py-2.5 rounded-full bg-white border border-[#DDD5C4] text-[#1F2C23] placeholder-[#A3BFAC] text-xs sm:text-sm focus:outline-none focus:border-[#74947F] shadow-2xs"
+              className="w-full pl-11 pr-4 py-2.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder-[#758C7D] text-xs sm:text-sm focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-medium transition-all"
             />
           </div>
           <button
             type="submit"
-            className="px-6 py-2.5 rounded-full bg-[#385241] hover:bg-[#24362A] text-white text-xs font-semibold transition-all shrink-0 shadow-sm"
+            className="px-6 py-2.5 rounded-xl bg-[#385241] hover:bg-[#24362A] text-white text-xs font-bold border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
           >
             Search
           </button>
@@ -303,8 +303,8 @@ export const RecruiterCandidatesPage: React.FC = () => {
               return (
                 <div
                   key={candidate.id}
-                  className={`p-6 rounded-[32px] bg-[#FAF7F2] border transition-all flex flex-col justify-between space-y-4 shadow-sm group hover:-translate-y-0.5 ${
-                    isSelected ? 'border-[#385241] bg-[#E4ECE6]/40' : 'border-[#EBE5D8] hover:border-[#74947F]'
+                  className={`p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] transition-all flex flex-col justify-between space-y-4 shadow-[4px_4px_0px_#1F2C23] group hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#1F2C23] ${
+                    isSelected ? 'bg-[#E4ECE6]' : ''
                   }`}
                 >
                   <div className="space-y-3">
@@ -313,36 +313,36 @@ export const RecruiterCandidatesPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => toggleCompare(candidate.id)}
-                          className="text-[#758C7D] hover:text-[#24362A] transition-colors pt-0.5"
+                          className="text-[#1F2C23] hover:text-[#D97043] transition-colors pt-0.5"
                           title="Select for comparison"
                         >
                           {isSelected ? (
                             <CheckSquare className="w-5 h-5 text-[#385241]" />
                           ) : (
-                            <Square className="w-5 h-5 text-[#A3BFAC]" />
+                            <Square className="w-5 h-5 text-[#758C7D]" />
                           )}
                         </button>
 
-                        <div className="w-10 h-10 rounded-full bg-[#E4ECE6] border border-[#C7D9CD] flex items-center justify-center font-serif text-sm font-bold text-[#24362A] shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center font-serif text-sm font-black text-[#1F2C23] shrink-0">
                           {candidate.user?.name ? candidate.user.name[0] : 'U'}
                         </div>
 
                         <div>
-                          <h3 className="font-serif text-base font-bold text-[#1F2C23] group-hover:text-[#385241] transition-colors leading-snug">
+                          <h3 className="font-serif text-base font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors leading-snug">
                             {candidate.user?.name}
                           </h3>
-                          <p className="text-xs text-[#586E5F] font-mono">
+                          <p className="text-xs text-[#586E5F] font-mono font-bold">
                             @{candidate.username} {candidate.targetGraduationYear ? `• Class of '${candidate.targetGraduationYear.toString().slice(-2)}` : ''}
                           </p>
                         </div>
                       </div>
 
-                      <span className="text-xs font-mono font-bold text-[#24362A] bg-[#E4ECE6] px-3 py-1 rounded-full border border-[#C7D9CD] shrink-0">
+                      <span className="text-xs font-mono font-black text-[#1F2C23] bg-[#E4ECE6] px-3 py-1 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0">
                         {candidate.completenessScore}% Proof
                       </span>
                     </div>
 
-                    <p className="text-xs text-[#405446] font-medium line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#24362A] font-medium line-clamp-2 leading-relaxed">
                       {candidate.headline || 'Software Engineer'}
                     </p>
 
@@ -350,7 +350,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
                       {candidate.skills?.slice(0, 5).map((s: any) => (
                         <span
                           key={s.id}
-                          className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#F4EFE6] text-[#24362A] border border-[#DDD5C4]"
+                          className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-[#FAF7F2] text-[#1F2C23] border border-[#1F2C23]"
                         >
                           {s.name}
                         </span>
@@ -358,8 +358,8 @@ export const RecruiterCandidatesPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t border-[#EBE5D8] flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-3 text-[#586E5F] font-mono text-[11px]">
+                  <div className="pt-3 border-t-2 border-[#FAF7F2] flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3 text-[#586E5F] font-mono text-[11px] font-bold">
                       <span>{candidate.projects?.length || 0} projects</span>
                       <span>•</span>
                       <span>{candidate.certificates?.length || 0} credentials</span>
@@ -367,7 +367,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
 
                     <Link
                       to={`/recruiter/candidates/${candidate.id}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#D97043] hover:text-[#C55F34] transition-colors"
+                      className="inline-flex items-center gap-1.5 text-xs font-black text-[#D97043] hover:text-[#C55F34] transition-colors"
                     >
                       <span>Inspect Evidence</span>
                       <ArrowRight className="w-3.5 h-3.5" />

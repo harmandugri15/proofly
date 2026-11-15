@@ -138,21 +138,21 @@ export const PublicProfilePage: React.FC = () => {
       )}
 
       {/* Artisanal Dossier Header */}
-      <div className="relative rounded-3xl bg-white/95 border border-sand-200/80 p-6 sm:p-8 overflow-hidden shadow-sm">
+      <div className="relative rounded-[28px] bg-white border-2 border-[#1F2C23] p-6 sm:p-8 overflow-hidden shadow-[4px_4px_0px_#1F2C23]">
         <div className="relative z-10 flex flex-col md:flex-row md:items-start justify-between gap-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 min-w-0">
             {/* Story-Ring Profile Avatar */}
             <div className="relative group shrink-0">
-              <div className="p-1 rounded-full bg-gradient-to-tr from-sage-500 via-sand-300 to-terracotta-500 shadow-sm">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#FAF7F2] border-2 border-white flex items-center justify-center text-2xl sm:text-3xl font-serif font-normal text-forest-900 overflow-hidden">
+              <div className="p-1 rounded-2xl bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-white border border-[#1F2C23] flex items-center justify-center text-2xl sm:text-3xl font-serif font-black text-[#1F2C23] overflow-hidden">
                   {profile.user?.name ? (
                     profile.user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
                   ) : (
-                    <Sparkles className="w-8 h-8 text-terracotta-500" />
+                    <Sparkles className="w-8 h-8 text-[#D97043]" />
                   )}
                 </div>
               </div>
-              <div className="absolute -bottom-1 -right-1 bg-sage-600 text-white p-1.5 rounded-full border-2 border-white shadow-sm" title="Verified Proofly Builder">
+              <div className="absolute -bottom-1 -right-1 bg-[#2E7D32] text-white p-1.5 rounded-full border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]" title="Verified Proofly Builder">
                 <ShieldCheck className="w-3.5 h-3.5 stroke-[2.5]" />
               </div>
             </div>
@@ -160,38 +160,38 @@ export const PublicProfilePage: React.FC = () => {
             {/* Candidate Identity */}
             <div className="space-y-2 min-w-0">
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="text-2xl sm:text-3xl font-serif font-normal text-forest-900 tracking-tight flex items-center gap-2 break-words">
+                <h1 className="text-2xl sm:text-3xl font-serif font-black text-[#1F2C23] tracking-tight flex items-center gap-2 break-words">
                   <span>{profile.user?.name}</span>
-                  <DelicateStarOrnament className="w-4 h-4 text-terracotta-500" />
+                  <DelicateStarOrnament className="w-4 h-4 text-[#D97043]" />
                 </h1>
-                <span className="text-xs font-mono font-medium text-forest-700/60 bg-sand-100 px-2.5 py-1 rounded-full border border-sand-200">
+                <span className="text-xs font-mono font-bold text-[#1F2C23] bg-[#FAF7F2] px-2.5 py-1 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
                   @{username}
                 </span>
-                <span className="text-xs font-mono font-bold text-sage-800 bg-sage-50 px-3 py-1 rounded-full border border-sage-200">
+                <span className="text-xs font-mono font-black text-[#1F2C23] bg-[#E4ECE6] px-3 py-1 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
                   {profile.completenessScore || 92}% PROOF SCORE
                 </span>
               </div>
 
-              <p className="text-sm font-medium text-forest-800 max-w-2xl leading-relaxed break-words">
+              <p className="text-sm font-bold text-[#1F2C23] max-w-2xl leading-relaxed break-words">
                 {profile.headline || 'Software Engineer & Builder'}
               </p>
 
               {profile.bio && (
-                <p className="text-xs text-forest-700/70 max-w-2xl leading-relaxed whitespace-pre-line line-clamp-3 break-words">
+                <p className="text-xs text-[#586E5F] max-w-2xl leading-relaxed whitespace-pre-line line-clamp-3 break-words font-medium">
                   {profile.bio}
                 </p>
               )}
 
               {/* Badges / Links bar */}
-              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-mono">
+              <div className="flex flex-wrap items-center gap-2 pt-1 text-xs font-mono font-bold">
                 {profile.location && (
-                  <span className="inline-flex items-center gap-1.5 bg-sand-50 text-forest-700/75 px-3 py-1 rounded-full border border-sand-200">
-                    <MapPin className="w-3.5 h-3.5 text-sage-600" /> {profile.location}
+                  <span className="inline-flex items-center gap-1.5 bg-[#FAF7F2] text-[#1F2C23] px-3 py-1 rounded-md border border-[#1F2C23]">
+                    <MapPin className="w-3.5 h-3.5 text-[#385241]" /> {profile.location}
                   </span>
                 )}
                 {profile.targetGraduationYear && (
-                  <span className="inline-flex items-center gap-1.5 bg-sand-50 text-forest-700/75 px-3 py-1 rounded-full border border-sand-200">
-                    <GraduationCap className="w-3.5 h-3.5 text-terracotta-500" /> Class of {profile.targetGraduationYear}
+                  <span className="inline-flex items-center gap-1.5 bg-[#FAF7F2] text-[#1F2C23] px-3 py-1 rounded-md border border-[#1F2C23]">
+                    <GraduationCap className="w-3.5 h-3.5 text-[#D97043]" /> Class of {profile.targetGraduationYear}
                   </span>
                 )}
 
@@ -200,11 +200,11 @@ export const PublicProfilePage: React.FC = () => {
                     href={`https://github.com/${profile.githubUsername}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-900 border border-sand-200 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#FAF7F2] hover:bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] transition-all"
                   >
-                    <Github className="w-3.5 h-3.5 text-forest-900" />
+                    <Github className="w-3.5 h-3.5 text-[#1F2C23]" />
                     <span>github/{profile.githubUsername}</span>
-                    <ArrowUpRight className="w-3 h-3 text-forest-700/50" />
+                    <ArrowUpRight className="w-3 h-3 text-[#1F2C23]" />
                   </a>
                 )}
 
@@ -213,12 +213,12 @@ export const PublicProfilePage: React.FC = () => {
                     href={profile.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0077b5]/10 hover:bg-[#0077b5]/15 text-[#0077b5] border border-[#0077b5]/20 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-[#FAF7F2] hover:bg-white text-[#0077b5] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] transition-all"
                   >
                     <Linkedin className="w-3.5 h-3.5 text-[#0a66c2]" />
                     <span>LinkedIn</span>
                     {profile.linkedinVerified && (
-                      <CheckCircle2 className="w-3 h-3 text-sage-600" />
+                      <CheckCircle2 className="w-3 h-3 text-[#2E7D32]" />
                     )}
                   </a>
                 )}
@@ -230,7 +230,7 @@ export const PublicProfilePage: React.FC = () => {
           <div className="flex items-center gap-2 self-start shrink-0">
             <button
               onClick={() => setShowShareModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs font-medium transition-transform hover:scale-105 shadow-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white text-xs font-bold border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
             >
               <Share2 className="w-4 h-4" />
               <span>Share Proof Pass</span>
@@ -239,36 +239,36 @@ export const PublicProfilePage: React.FC = () => {
         </div>
 
         {/* Quick Social Proof Stats Bar */}
-        <div className="mt-6 pt-5 border-t border-sand-200/80 grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3.5 rounded-2xl bg-sand-50/80 border border-sand-200/80 text-center hover:border-sage-400/50 transition-colors">
-            <div className="text-2xl font-serif font-normal text-forest-900">
+        <div className="mt-6 pt-5 border-t-2 border-[#FAF7F2] grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
+            <div className="text-2xl font-serif font-black text-[#1F2C23]">
               {profile.projects?.length || 0}
             </div>
-            <div className="text-[10px] font-mono text-forest-700/60 uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
               Verified Projects
             </div>
           </div>
-          <div className="p-3.5 rounded-2xl bg-sand-50/80 border border-sand-200/80 text-center hover:border-sage-400/50 transition-colors">
-            <div className="text-2xl font-serif font-normal text-sage-700">
+          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
+            <div className="text-2xl font-serif font-black text-[#385241]">
               {profile.gitHubRepos?.length || (profile.githubStats?.totalStars ? `${profile.githubStats.totalStars}★` : 'Active')}
             </div>
-            <div className="text-[10px] font-mono text-forest-700/60 uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
               Public Repositories
             </div>
           </div>
-          <div className="p-3.5 rounded-2xl bg-sand-50/80 border border-sand-200/80 text-center hover:border-sage-400/50 transition-colors">
-            <div className="text-2xl font-serif font-normal text-terracotta-600">
+          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
+            <div className="text-2xl font-serif font-black text-[#D97043]">
               {profile.codingProfiles?.reduce((acc: number, cp: any) => acc + (cp.solvedCount || 0), 0) || 0}
             </div>
-            <div className="text-[10px] font-mono text-forest-700/60 uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
               Problems Solved
             </div>
           </div>
-          <div className="p-3.5 rounded-2xl bg-sand-50/80 border border-sand-200/80 text-center hover:border-sage-400/50 transition-colors">
-            <div className="text-2xl font-serif font-normal text-forest-900">
+          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
+            <div className="text-2xl font-serif font-black text-[#1F2C23]">
               {profile.certificates?.length || 0}
             </div>
-            <div className="text-[10px] font-mono text-forest-700/60 uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
               Credentials
             </div>
           </div>

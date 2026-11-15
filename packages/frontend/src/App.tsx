@@ -73,7 +73,7 @@ export const App: React.FC = () => {
         <BrowserRouter>
           <div className="min-h-screen w-full max-w-full overflow-x-clip bg-[#FAF7F2] text-[#1F2C23] flex flex-col font-sans relative selection:bg-terracotta-500/20 selection:text-terracotta-700">
             <Navbar />
-            <div className="flex-1 w-full max-w-full min-w-0">
+            <div className="flex-1 w-full max-w-full min-w-0 pt-20">
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Home />} />

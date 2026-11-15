@@ -164,16 +164,16 @@ export const StudentIntegrationsPage: React.FC = () => {
   return (
     <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-10 overflow-hidden animate-fadeIn">
       {/* Header Banner */}
-      <div className="relative rounded-3xl bg-[#7D9B86] text-white p-6 sm:p-8 overflow-hidden shadow-lg border border-sage-700/30 w-full max-w-full">
+      <div className="relative rounded-[28px] bg-[#385241] text-white p-6 sm:p-8 overflow-hidden shadow-[4px_4px_0px_#1F2C23] border-2 border-[#1F2C23] w-full max-w-full">
         <div className="relative z-10 space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/25 text-xs font-mono font-bold">
-            <Zap className="w-3.5 h-3.5 text-terracotta-300" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/40 shadow-[1px_1px_0px_rgba(0,0,0,0.3)] text-xs font-mono font-bold">
+            <Zap className="w-3.5 h-3.5 text-[#FCE5DB]" />
             <span>REAL-TIME PLATFORM ORCHESTRATION</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-white">
             External Integrations & Verified Signals
           </h1>
-          <p className="text-xs sm:text-sm text-white/80 max-w-3xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-white/90 max-w-3xl leading-relaxed font-medium">
             Connect GitHub and algorithmic platforms. Proofly crawls and aggregates deep evidence (contribution heatmaps, difficulty breakdown, streaks, acceptance rates) directly in-app so scouts never have to tab out.
           </p>
         </div>
@@ -183,12 +183,12 @@ export const StudentIntegrationsPage: React.FC = () => {
       <div className="space-y-6 w-full max-w-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-sand-100 border border-sand-200 flex items-center justify-center text-forest-900">
-              <Github className="w-5 h-5 text-forest-900" />
+            <div className="w-10 h-10 rounded-xl bg-white border-2 border-[#1F2C23] flex items-center justify-center text-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+              <Github className="w-5 h-5 text-[#1F2C23]" />
             </div>
             <div>
-              <h2 className="text-lg font-serif font-normal text-forest-900">GitHub Activity & 52-Week Heatmap</h2>
-              <p className="text-xs text-forest-700/60">
+              <h2 className="text-lg font-serif font-black text-[#1F2C23]">GitHub Activity & 52-Week Heatmap</h2>
+              <p className="text-xs text-[#586E5F]">
                 Live contribution graph, repositories, language metrics, and verified commit history.
               </p>
             </div>
@@ -196,10 +196,10 @@ export const StudentIntegrationsPage: React.FC = () => {
         </div>
 
         {/* Sync Controls Form */}
-        <form onSubmit={handleSyncGithub} className="space-y-3 bg-white/95 p-5 sm:p-6 rounded-3xl border border-sand-200/80 w-full max-w-full shadow-sm">
+        <form onSubmit={handleSyncGithub} className="space-y-3 bg-white p-5 sm:p-6 rounded-[24px] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] w-full max-w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                 GitHub Username / Handle
               </label>
               <input
@@ -207,11 +207,11 @@ export const StudentIntegrationsPage: React.FC = () => {
                 value={githubHandle}
                 onChange={(e) => setGithubHandle(e.target.value)}
                 placeholder="e.g. harmandugri15"
-                className="w-full px-4 py-2.5 rounded-xl bg-sand-50/70 border border-sand-300 text-forest-900 placeholder:text-forest-700/40 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono transition-all"
               />
             </div>
             <div>
-              <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                 Personal Access Token (Optional for Private Repos / Rate Limits)
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -219,16 +219,16 @@ export const StudentIntegrationsPage: React.FC = () => {
                   type="password"
                   value={githubToken}
                   onChange={(e) => setGithubToken(e.target.value)}
-                  placeholder="ghp_... or github_pat_... (for private repositories / rate limit bypass)"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-sand-50/70 border border-sand-300 text-forest-900 placeholder:text-forest-700/40 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                  placeholder="ghp_... or github_pat_..."
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono transition-all"
                 />
                 <button
                   type="submit"
                   disabled={isSyncingGithub}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 disabled:opacity-50 text-white font-medium text-xs transition-transform hover:scale-105 shrink-0 shadow-sm"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#1F2C23] hover:bg-[#385241] disabled:opacity-50 text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 text-white ${isSyncingGithub ? 'animate-spin' : ''}`} />
-                  <span className="text-white font-medium">{isSyncingGithub ? 'Syncing...' : 'Sync GitHub'}</span>
+                  <span className="text-white font-bold">{isSyncingGithub ? 'Syncing...' : 'Sync GitHub'}</span>
                 </button>
               </div>
             </div>

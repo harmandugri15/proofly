@@ -134,7 +134,7 @@ export const Register: React.FC = () => {
 
   return (
     <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-[#FAF7F2] text-[#1F2C23]">
-      <div className="w-full max-w-lg bg-[#FAF7F2] border border-[#EBE5D8] rounded-[36px] p-7 sm:p-9 shadow-sm relative space-y-6">
+      <div className="w-full max-w-lg bg-white border-2 border-[#1F2C23] rounded-[28px] p-7 sm:p-9 shadow-[6px_6px_0px_#1F2C23] relative space-y-6">
         {step === 'REGISTER' ? (
           <>
             {/* Header */}
@@ -142,22 +142,22 @@ export const Register: React.FC = () => {
               <div className="flex justify-center pb-1">
                 <OrganicLeafLogo size={46} />
               </div>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-[#1F2C23]">
+              <h2 className="font-serif text-2xl sm:text-3xl font-black tracking-tight text-[#1F2C23]">
                 Create Your Proofly Account
               </h2>
-              <p className="text-xs sm:text-sm text-[#586E5F]">
+              <p className="text-xs sm:text-sm text-[#586E5F] font-medium">
                 Join the verified platform for real student builder evidence.
               </p>
             </div>
 
             {/* Role Selector Pill */}
-            <div className="grid grid-cols-2 p-1.5 bg-[#F4EFE6] border border-[#DDD5C4] rounded-full">
+            <div className="grid grid-cols-2 p-1.5 bg-[#FAF7F2] border-2 border-[#1F2C23] rounded-xl shadow-[2px_2px_0px_#1F2C23]">
               <button
                 type="button"
                 onClick={() => setRole('STUDENT')}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                   role === 'STUDENT'
-                    ? 'bg-[#385241] text-white shadow-xs'
+                    ? 'bg-[#385241] text-white shadow-[2px_2px_0px_#1F2C23] border border-[#1F2C23]'
                     : 'text-[#405446] hover:text-[#1F2C23]'
                 }`}
               >
@@ -167,9 +167,9 @@ export const Register: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setRole('RECRUITER')}
-                className={`flex items-center justify-center gap-2 py-2.5 rounded-full text-xs font-semibold transition-all ${
+                className={`flex items-center justify-center gap-2 py-2.5 rounded-lg text-xs font-bold transition-all ${
                   role === 'RECRUITER'
-                    ? 'bg-[#385241] text-white shadow-xs'
+                    ? 'bg-[#385241] text-white shadow-[2px_2px_0px_#1F2C23] border border-[#1F2C23]'
                     : 'text-[#405446] hover:text-[#1F2C23]'
                 }`}
               >
@@ -183,7 +183,7 @@ export const Register: React.FC = () => {
               <button
                 type="button"
                 onClick={handleGoogleSignup}
-                className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-full bg-white hover:bg-[#F8F5EE] border border-[#DDD5C4] text-[#1F2C23] font-semibold text-xs sm:text-sm transition-all shadow-xs"
+                className="w-full flex items-center justify-center gap-3 py-3 px-4 rounded-xl bg-white hover:bg-[#FAF7F2] border-2 border-[#1F2C23] text-[#1F2C23] font-bold text-xs sm:text-sm transition-all shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
               >
                 <GoogleIcon size={18} />
                 <span>Sign Up with Google ({role === 'STUDENT' ? 'Student' : 'Recruiter'})</span>
@@ -192,15 +192,15 @@ export const Register: React.FC = () => {
 
             {/* Divider */}
             <div className="flex items-center gap-3">
-              <div className="flex-1 h-[1px] bg-[#EBE5D8]" />
-              <span className="text-[11px] font-mono text-[#758C7D] uppercase">or with email</span>
-              <div className="flex-1 h-[1px] bg-[#EBE5D8]" />
+              <div className="flex-1 h-[2px] bg-[#1F2C23]/20" />
+              <span className="text-[11px] font-mono font-bold text-[#1F2C23] uppercase">or with email</span>
+              <div className="flex-1 h-[2px] bg-[#1F2C23]/20" />
             </div>
 
             {/* Error Alert */}
             {error && (
-              <div className="p-3.5 rounded-2xl bg-[#FCE5DB] border border-[#F4CDBC] text-[#853C1E] text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-[#C55F34]" />
+              <div className="p-3.5 rounded-xl bg-[#FEE2E2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#991B1B] text-xs flex items-center gap-2 font-bold">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
                 <span className="font-medium">{error}</span>
               </div>
             )}
@@ -208,7 +208,7 @@ export const Register: React.FC = () => {
             {/* Registration Form */}
             <form onSubmit={handleRegisterSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-[#2D3E32]">
+                <label className="block text-xs font-black text-[#1F2C23]">
                   Full Name
                 </label>
                 <input
@@ -217,12 +217,12 @@ export const Register: React.FC = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Your full name"
-                  className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
+                  className="w-full px-4 py-3 bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] rounded-xl text-xs text-[#1F2C23] placeholder-[#758C7D] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-medium transition-all"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-[#2D3E32]">
+                <label className="block text-xs font-black text-[#1F2C23]">
                   Email Address
                 </label>
                 <input
@@ -231,14 +231,14 @@ export const Register: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={role === 'STUDENT' ? 'student@university.edu' : 'recruiter@company.com'}
-                  className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
+                  className="w-full px-4 py-3 bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] rounded-xl text-xs text-[#1F2C23] placeholder-[#758C7D] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-medium transition-all"
                 />
               </div>
 
               {role === 'RECRUITER' && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-[#2D3E32]">
+                    <label className="block text-xs font-black text-[#1F2C23]">
                       Organization Name
                     </label>
                     <input
@@ -247,11 +247,11 @@ export const Register: React.FC = () => {
                       value={orgName}
                       onChange={(e) => setOrgName(e.target.value)}
                       placeholder="Company or Studio Name"
-                      className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F]"
+                      className="w-full px-4 py-3 bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] rounded-xl text-xs text-[#1F2C23] placeholder-[#758C7D] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-medium transition-all"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="block text-xs font-semibold text-[#2D3E32]">
+                    <label className="block text-xs font-black text-[#1F2C23]">
                       Your Job Title
                     </label>
                     <input
@@ -259,15 +259,15 @@ export const Register: React.FC = () => {
                       required
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Technical Recruiter / Talent Lead"
-                      className="w-full px-4 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F]"
+                      placeholder="Technical Talent Lead / CTO"
+                      className="w-full px-4 py-3 bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] rounded-xl text-xs text-[#1F2C23] placeholder-[#758C7D] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-medium transition-all"
                     />
                   </div>
                 </div>
               )}
 
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-[#2D3E32]">
+                <label className="block text-xs font-black text-[#1F2C23]">
                   Strong Password
                 </label>
                 <div className="relative">
@@ -277,12 +277,12 @@ export const Register: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Must include uppercase, number, symbol"
-                    className="w-full pl-4 pr-11 py-3 bg-white border border-[#DDD5C4] rounded-full text-xs text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
+                    className="w-full pl-4 pr-11 py-3 bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] rounded-xl text-xs text-[#1F2C23] placeholder-[#758C7D] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-medium transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#758C7D] hover:text-[#24362A]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#758C7D] hover:text-[#1F2C23]"
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -293,7 +293,7 @@ export const Register: React.FC = () => {
               <button
                 type="submit"
                 disabled={isSubmitting || (password.length > 0 && !isPasswordValid)}
-                className="w-full py-3.5 px-4 rounded-full bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-60 text-white font-semibold text-xs sm:text-sm transition-all shadow-sm"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-60 text-white font-black text-xs sm:text-sm transition-all border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
               >
                 {isSubmitting ? 'Creating Account...' : 'Continue to Verification'}
               </button>
@@ -302,7 +302,7 @@ export const Register: React.FC = () => {
             {/* Footer */}
             <div className="text-center text-xs text-[#586E5F]">
               Already have an account?{' '}
-              <Link to="/login" className="text-[#D97043] font-bold hover:underline">
+              <Link to="/login" className="text-[#D97043] font-black hover:underline">
                 Sign In
               </Link>
             </div>
@@ -311,39 +311,39 @@ export const Register: React.FC = () => {
           /* STEP 2: VERIFY EMAIL OTP */
           <div className="space-y-5">
             <div className="text-center space-y-2">
-              <div className="inline-flex p-3 rounded-full bg-[#EAF5EE] text-[#2E7D46] mb-1">
+              <div className="inline-flex p-3 rounded-2xl bg-[#E4ECE6] border-2 border-[#1F2C23] text-[#1F2C23] mb-1 shadow-[2px_2px_0px_#1F2C23]">
                 <Mail className="w-8 h-8" />
               </div>
-              <div className="inline-block px-3 py-1 rounded-full bg-[#EBF0EC] text-[#385241] text-[11px] font-mono font-semibold uppercase tracking-wider">
+              <div className="inline-block px-3 py-1 rounded-full bg-[#FAF7F2] text-[#1F2C23] border border-[#1F2C23] text-[11px] font-mono font-black uppercase tracking-wider shadow-[1px_1px_0px_#1F2C23]">
                 Step 2 of 2: Confirm Email
               </div>
-              <h2 className="font-serif text-2xl font-bold tracking-tight text-[#1F2C23]">
+              <h2 className="font-serif text-2xl font-black tracking-tight text-[#1F2C23]">
                 Check Your Inbox
               </h2>
-              <p className="text-xs text-[#586E5F] max-w-sm mx-auto">
+              <p className="text-xs text-[#586E5F] max-w-sm mx-auto font-medium">
                 We've sent a 6-digit confirmation code to{' '}
-                <strong className="text-[#1F2C23] font-semibold">{email}</strong>. Please enter it below to confirm your account.
+                <strong className="text-[#1F2C23] font-black">{email}</strong>. Please enter it below to confirm your account.
               </p>
             </div>
 
             {/* Feedback Alerts */}
             {error && (
-              <div className="p-3.5 rounded-2xl bg-[#FCE5DB] border border-[#F4CDBC] text-[#853C1E] text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-[#C55F34]" />
+              <div className="p-3.5 rounded-xl bg-[#FEE2E2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#991B1B] text-xs flex items-center gap-2 font-bold">
+                <AlertCircle className="w-4 h-4 shrink-0 text-[#DC2626]" />
                 <span className="font-medium">{error}</span>
               </div>
             )}
 
             {resendStatus && (
-              <div className="p-3.5 rounded-2xl bg-[#EAF5EE] border border-[#BDE0C8] text-[#1B4D2B] text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 shrink-0 text-[#2E7D46]" />
+              <div className="p-3.5 rounded-xl bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] text-xs flex items-center gap-2 font-bold">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-[#2E7D32]" />
                 <span className="font-medium">{resendStatus}</span>
               </div>
             )}
 
             <form onSubmit={handleOtpSubmit} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="block text-xs font-semibold text-[#2D3E32] text-center">
+                <label className="block text-xs font-black text-[#1F2C23] text-center">
                   6-Digit Confirmation Code
                 </label>
                 <input
@@ -354,14 +354,14 @@ export const Register: React.FC = () => {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
                   placeholder="• • • • • •"
-                  className="w-full px-4 py-3.5 bg-white border border-[#DDD5C4] rounded-full text-center text-xl font-mono tracking-[0.4em] text-[#1F2C23] placeholder-[#A3BFAC] focus:outline-none focus:border-[#74947F] shadow-2xs"
+                  className="w-full px-4 py-3.5 bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] rounded-xl text-center text-xl font-mono tracking-[0.4em] text-[#1F2C23] placeholder-[#758C7D] focus:outline-none focus:shadow-[4px_4px_0px_#1F2C23] font-bold"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isSubmitting || otp.length !== 6}
-                className="w-full py-3.5 px-4 rounded-full bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-60 text-white font-semibold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2"
+                className="w-full py-3.5 px-4 rounded-xl bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-60 text-white font-black text-xs sm:text-sm transition-all border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>

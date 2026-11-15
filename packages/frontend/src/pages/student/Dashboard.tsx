@@ -68,24 +68,24 @@ export const StudentDashboard: React.FC = () => {
   return (
     <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 bg-[#FAF7F2] text-[#1F2C23]">
       {/* Top Profile Banner (Editorial warm cream card) */}
-      <div className="relative overflow-hidden rounded-[36px] bg-[#FAF7F2] border border-[#EBE5D8] p-6 sm:p-8 shadow-sm">
+      <div className="relative overflow-hidden rounded-[28px] bg-white border-2 border-[#1F2C23] p-6 sm:p-8 shadow-[4px_4px_0px_#1F2C23]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative">
           <div className="flex items-start sm:items-center gap-4 sm:gap-5 min-w-0">
             {/* Organic Avatar */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#E4ECE6] border-2 border-[#C7D9CD] flex items-center justify-center text-xl sm:text-2xl font-serif font-bold text-[#24362A] shrink-0 shadow-xs">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#E4ECE6] border-2 border-[#1F2C23] flex items-center justify-center text-xl sm:text-2xl font-serif font-black text-[#1F2C23] shrink-0 shadow-[2px_2px_0px_#1F2C23]">
               {user?.name?.slice(0, 2).toUpperCase() || 'PR'}
             </div>
 
             <div className="space-y-1.5 min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2.5">
-                <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#1F2C23] truncate">
+                <h1 className="font-serif text-2xl sm:text-3xl font-black text-[#1F2C23] truncate">
                   {user?.name}
                 </h1>
-                <span className="text-xs font-mono font-medium text-[#586E5F] bg-[#F4EFE6] px-2.5 py-0.5 rounded-full border border-[#DDD5C4]">
+                <span className="text-xs font-mono font-bold text-[#1F2C23] bg-[#F4EFE6] px-2.5 py-0.5 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
                   @{profile?.username}
                 </span>
-                <span className="text-[11px] font-sans font-semibold px-3 py-0.5 rounded-full bg-[#E4ECE6] text-[#24362A] border border-[#C7D9CD] flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#385241]" /> Verified Builder
+                <span className="text-[11px] font-sans font-bold px-3 py-0.5 rounded-full bg-[#E4ECE6] text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#2E7D32]" /> Verified Builder
                 </span>
               </div>
 
@@ -93,12 +93,12 @@ export const StudentDashboard: React.FC = () => {
                 {profile?.headline || 'Add a punchy headline to showcase your engineering expertise to top recruiters.'}
               </p>
 
-              <div className="flex flex-wrap items-center gap-4 text-xs text-[#586E5F] pt-1 font-mono">
+              <div className="flex flex-wrap items-center gap-4 text-xs text-[#586E5F] pt-1 font-mono font-bold">
                 <span>{profile?.location || 'Remote'}</span>
                 {profile?.targetGraduationYear && (
                   <span>Class of {profile.targetGraduationYear}</span>
                 )}
-                <span className="text-[#385241] font-bold">{score}% Proof Completeness</span>
+                <span className="text-[#1F2C23] font-black bg-[#E4ECE6] px-2 py-0.5 rounded-md border border-[#1F2C23]">{score}% Proof Score</span>
               </div>
             </div>
           </div>
@@ -107,14 +107,14 @@ export const StudentDashboard: React.FC = () => {
             <Link
               to={`/u/${profile?.username}`}
               target="_blank"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white hover:bg-[#F8F5EE] text-[#1F2C23] text-xs font-semibold border border-[#DDD5C4] transition-all shadow-xs"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] text-xs font-bold border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
             >
               <span>Public Card</span>
-              <ExternalLink className="w-3.5 h-3.5 text-[#586E5F]" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#1F2C23]" />
             </Link>
             <Link
               to="/student/projects"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#D97043] hover:bg-[#C55F34] text-white text-xs font-semibold transition-all shadow-sm"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white text-xs font-bold border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
             >
               <span>Add Project</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -124,27 +124,27 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* Recruiter Fast-Pass Access Hash & Link Banner */}
-      <div className="p-6 rounded-[32px] bg-[#E4ECE6] border border-[#C7D9CD] flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-sm">
+      <div className="p-6 rounded-[28px] bg-[#E4ECE6] border-2 border-[#1F2C23] flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-[4px_4px_0px_#1F2C23]">
         <div className="space-y-1.5 min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="p-1.5 rounded-full bg-[#FAF7F2] text-[#385241] shrink-0 border border-[#C7D9CD]">
+            <span className="p-1.5 rounded-xl bg-white text-[#1F2C23] shrink-0 border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
               <Key className="w-4 h-4 text-[#D97043]" />
             </span>
-            <h2 className="font-serif text-sm font-bold text-[#1F2C23]">Public Card Access Hash & Fast-Pass</h2>
-            <span className="text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full bg-[#FAF7F2] text-[#385241] border border-[#C7D9CD]">
+            <h2 className="font-serif text-base font-black text-[#1F2C23]">Public Card Access Hash & Fast-Pass</h2>
+            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
               Recruiter Unlock Code
             </span>
           </div>
-          <p className="text-xs text-[#405446] leading-relaxed max-w-2xl">
+          <p className="text-xs text-[#24362A] leading-relaxed max-w-2xl font-medium">
             Give this <strong>Access Hash</strong> or link to recruiters so they can instantly unlock your verified dossier, GitHub heatmap, and project code in their portal with zero login barriers.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
           {/* Hash Pill */}
-          <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-full border border-[#C7D9CD] shadow-2xs">
-            <span className="text-[11px] font-semibold text-[#586E5F] uppercase tracking-wider">Hash:</span>
-            <span className="font-mono text-xs font-bold text-[#1F2C23] select-all tracking-wider">
+          <div className="flex items-center gap-2 bg-white px-3.5 py-2 rounded-xl border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+            <span className="text-[11px] font-black text-[#1F2C23] uppercase tracking-wider">Hash:</span>
+            <span className="font-mono text-xs font-black text-[#D97043] select-all tracking-wider">
               {profile?.shareToken || 'PRF-SYNCING'}
             </span>
             <button
@@ -156,11 +156,11 @@ export const StudentDashboard: React.FC = () => {
                   setTimeout(() => setCopiedHash(false), 2000);
                 }
               }}
-              className="ml-1 p-1 rounded-full text-[#385241] hover:bg-[#E4ECE6] transition-colors"
+              className="ml-1 p-1 rounded-md text-[#1F2C23] hover:bg-[#E4ECE6] transition-colors"
               title="Copy Access Hash"
             >
               {copiedHash ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-[#385241]" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#2E7D32]" />
               ) : (
                 <Copy className="w-3.5 h-3.5" />
               )}
@@ -175,7 +175,7 @@ export const StudentDashboard: React.FC = () => {
               setCopiedFastPass(true);
               setTimeout(() => setCopiedFastPass(false), 2000);
             }}
-            className="px-5 py-2.5 rounded-full bg-[#385241] hover:bg-[#24362A] text-white font-semibold text-xs transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-sm"
+            className="px-5 py-2.5 rounded-xl bg-[#385241] hover:bg-[#24362A] text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0 flex items-center justify-center gap-1.5"
           >
             {copiedFastPass ? (
               <>
@@ -190,62 +190,62 @@ export const StudentDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Metrics Row (5 Soft Cream Tiles) */}
+      {/* Metrics Row (5 Neo-Brutalist White Tiles) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-        <div className="p-5 rounded-[28px] bg-[#FAF7F2] border border-[#EBE5D8] hover:border-[#74947F] transition-all shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
           <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-semibold">Proof Score</span>
+            <span className="text-xs font-bold text-[#1F2C23]">Proof Score</span>
             <TrendingUp className="w-4 h-4 text-[#385241]" />
           </div>
-          <div className="font-serif text-2xl font-bold text-[#1F2C23]">{score}%</div>
-          <div className="w-full bg-[#EBE5D8] h-1.5 rounded-full mt-2 overflow-hidden">
+          <div className="font-serif text-2xl font-black text-[#1F2C23]">{score}%</div>
+          <div className="w-full bg-[#EBE5D8] h-2 rounded-full mt-2 overflow-hidden border border-[#1F2C23]">
             <div className="bg-[#74947F] h-full rounded-full transition-all" style={{ width: `${score}%` }} />
           </div>
         </div>
 
-        <div className="p-5 rounded-[28px] bg-[#FAF7F2] border border-[#EBE5D8] hover:border-[#74947F] transition-all shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
           <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-semibold">Projects</span>
+            <span className="text-xs font-bold text-[#1F2C23]">Projects</span>
             <FolderGit2 className="w-4 h-4 text-[#74947F]" />
           </div>
-          <div className="font-serif text-2xl font-bold text-[#1F2C23]">{profile?.projects?.length || 0}</div>
-          <p className="text-[11px] text-[#586E5F] mt-1 font-mono">
+          <div className="font-serif text-2xl font-black text-[#1F2C23]">{profile?.projects?.length || 0}</div>
+          <p className="text-[11px] text-[#586E5F] mt-1 font-mono font-semibold">
             {profile?.projects?.filter((p: any) => p.verificationStatus !== 'UNVERIFIED').length || 0} code-verified
           </p>
         </div>
 
-        <div className="p-5 rounded-[28px] bg-[#FAF7F2] border border-[#EBE5D8] hover:border-[#74947F] transition-all shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
           <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-semibold">Certifications</span>
+            <span className="text-xs font-bold text-[#1F2C23]">Certifications</span>
             <ShieldCheck className="w-4 h-4 text-[#74947F]" />
           </div>
-          <div className="font-serif text-2xl font-bold text-[#1F2C23]">{profile?.certificates?.length || 0}</div>
-          <p className="text-[11px] text-[#586E5F] mt-1 font-mono">
+          <div className="font-serif text-2xl font-black text-[#1F2C23]">{profile?.certificates?.length || 0}</div>
+          <p className="text-[11px] text-[#586E5F] mt-1 font-mono font-semibold">
             {profile?.certificates?.filter((c: any) => c.verificationStatus === 'ISSUER_VERIFIED').length || 0} issuer-checked
           </p>
         </div>
 
-        <div className="p-5 rounded-[28px] bg-[#FAF7F2] border border-[#EBE5D8] hover:border-[#74947F] transition-all shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
           <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-semibold">GitHub Repos</span>
+            <span className="text-xs font-bold text-[#1F2C23]">GitHub Repos</span>
             <GitBranch className="w-4 h-4 text-[#74947F]" />
           </div>
-          <div className="font-serif text-2xl font-bold text-[#1F2C23]">{profile?.gitHubRepos?.length || 0}</div>
-          <p className="text-[11px] text-[#586E5F] mt-1 font-mono">Live Synchronized</p>
+          <div className="font-serif text-2xl font-black text-[#1F2C23]">{profile?.gitHubRepos?.length || 0}</div>
+          <p className="text-[11px] text-[#586E5F] mt-1 font-mono font-semibold">Live Synchronized</p>
         </div>
 
-        <div className="p-5 rounded-[28px] bg-[#FAF7F2] border border-[#EBE5D8] hover:border-[#74947F] transition-all shadow-sm">
+        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
           <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-semibold">LinkedIn</span>
+            <span className="text-xs font-bold text-[#1F2C23]">LinkedIn</span>
             <Linkedin className="w-4 h-4 text-[#0077b5]" />
           </div>
           <div className="text-sm font-bold text-[#1F2C23] flex items-center gap-1.5 mt-1">
             {profile?.linkedinVerified ? (
-              <span className="text-[#385241] text-xs flex items-center gap-1 font-mono font-bold">
+              <span className="text-[#2E7D32] text-xs flex items-center gap-1 font-mono font-bold">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Verified
               </span>
             ) : profile?.linkedinUrl ? (
-              <span className="text-[#586E5F] text-xs font-mono font-semibold">Linked</span>
+              <span className="text-[#1F2C23] text-xs font-mono font-bold">Linked</span>
             ) : (
               <span className="text-[#758C7D] text-xs font-mono">Not Linked</span>
             )}
@@ -259,21 +259,21 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* AI Assistant Checklist */}
-      <div className="p-6 sm:p-8 rounded-[36px] bg-[#FAF7F2] border border-[#EBE5D8] space-y-4 shadow-sm">
+      <div className="p-6 sm:p-8 rounded-[28px] bg-white border-2 border-[#1F2C23] space-y-4 shadow-[4px_4px_0px_#1F2C23]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#E4ECE6] border border-[#C7D9CD] text-[#385241] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#E4ECE6] border-2 border-[#1F2C23] text-[#1F2C23] flex items-center justify-center shadow-[2px_2px_0px_#1F2C23]">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="font-serif text-lg font-bold text-[#1F2C23]">AI Profile Completeness Assistant</h2>
+              <h2 className="font-serif text-lg font-black text-[#1F2C23]">AI Profile Completeness Assistant</h2>
               <p className="text-xs text-[#586E5F]">Actionable, evidence-grounded suggestions to maximize recruiter views</p>
             </div>
           </div>
           <button
             onClick={runAiAssistant}
             disabled={isAiLoading}
-            className="text-xs font-semibold px-5 py-2.5 rounded-full bg-white hover:bg-[#F8F5EE] text-[#1F2C23] border border-[#DDD5C4] transition-all shrink-0 self-start sm:self-auto shadow-2xs"
+            className="text-xs font-bold px-5 py-2.5 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0 self-start sm:self-auto"
           >
             {isAiLoading ? 'Analyzing...' : 'Re-analyze Profile'}
           </button>
@@ -281,7 +281,7 @@ export const StudentDashboard: React.FC = () => {
 
         {aiAnalysis ? (
           <div className="space-y-4 pt-2">
-            <p className="text-xs text-[#24362A] bg-[#F4EFE6] p-4 rounded-2xl border border-[#E0D9CD] leading-relaxed font-medium">
+            <p className="text-xs text-[#1F2C23] bg-[#FAF7F2] p-4 rounded-xl border-2 border-[#1F2C23] leading-relaxed font-medium">
               {aiAnalysis.summary}
             </p>
 
@@ -289,28 +289,28 @@ export const StudentDashboard: React.FC = () => {
               {aiAnalysis.checklist.map((item) => (
                 <div
                   key={item.id}
-                  className="p-4 rounded-2xl bg-white border border-[#EBE5D8] flex items-start justify-between gap-3 hover:border-[#74947F] transition-all shadow-2xs"
+                  className="p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] flex items-start justify-between gap-3 shadow-[2px_2px_0px_#1F2C23] hover:shadow-[3px_3px_0px_#1F2C23] transition-all"
                 >
                   <div className="space-y-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
+                        className={`text-[9px] font-mono font-black uppercase px-2 py-0.5 rounded-md border border-[#1F2C23] ${
                           item.priority === 'HIGH'
-                            ? 'bg-[#FCE5DB] text-[#853C1E] border border-[#F4CDBC]'
+                            ? 'bg-[#FCE5DB] text-[#853C1E]'
                             : item.priority === 'MEDIUM'
-                            ? 'bg-[#FAF2DF] text-[#785918] border border-[#EADBB7]'
+                            ? 'bg-[#FAF2DF] text-[#785918]'
                             : 'bg-[#E4ECE6] text-[#24362A]'
                         }`}
                       >
                         {item.priority}
                       </span>
-                      <h4 className="font-serif text-xs font-bold text-[#1F2C23] truncate">{item.title}</h4>
+                      <h4 className="font-serif text-xs font-black text-[#1F2C23] truncate">{item.title}</h4>
                     </div>
                     <p className="text-xs text-[#586E5F] leading-relaxed">{item.description}</p>
                   </div>
                   <Link
                     to={item.actionUrl}
-                    className="p-2 rounded-full bg-[#E4ECE6] hover:bg-[#C7D9CD] text-[#24362A] border border-[#C7D9CD] shrink-0 transition-colors"
+                    className="p-2 rounded-xl bg-[#E4ECE6] hover:bg-[#C7D9CD] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0 transition-transform hover:scale-105 active:scale-95"
                   >
                     <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -326,25 +326,25 @@ export const StudentDashboard: React.FC = () => {
       {/* Featured Projects Preview */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-serif text-xl font-bold text-[#1F2C23]">Featured Project Evidence</h3>
-          <Link to="/student/projects" className="text-xs font-semibold text-[#D97043] hover:underline">
+          <h3 className="font-serif text-xl font-black text-[#1F2C23]">Featured Project Evidence</h3>
+          <Link to="/student/projects" className="text-xs font-bold text-[#D97043] hover:underline font-mono">
             Manage All Projects &rarr;
           </Link>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {profile?.projects?.slice(0, 2).map((project: any) => (
-            <div key={project.id} className="p-6 rounded-[32px] bg-[#FAF7F2] border border-[#EBE5D8] space-y-3 hover:border-[#74947F] transition-all shadow-xs">
+            <div key={project.id} className="p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] space-y-3 shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
               <div className="flex items-start justify-between gap-2 min-w-0">
-                <h4 className="font-serif text-base font-bold text-[#1F2C23] leading-snug truncate">{project.title}</h4>
-                <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#E4ECE6] text-[#24362A] border border-[#C7D9CD] font-bold shrink-0">
+                <h4 className="font-serif text-base font-black text-[#1F2C23] leading-snug truncate">{project.title}</h4>
+                <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#E4ECE6] text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] font-bold shrink-0">
                   {project.verificationStatus}
                 </span>
               </div>
               <p className="text-xs text-[#586E5F] line-clamp-2 leading-relaxed">{project.tagline}</p>
-              <div className="flex flex-wrap gap-1.5 pt-2 border-t border-[#EBE5D8]">
+              <div className="flex flex-wrap gap-1.5 pt-2 border-t-2 border-[#FAF7F2]">
                 {project.skills?.map((s: string) => (
-                  <span key={s} className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#F4EFE6] text-[#24362A] border border-[#DDD5C4]">
+                  <span key={s} className="text-[10px] font-mono px-2.5 py-0.5 rounded-md bg-[#FAF7F2] text-[#1F2C23] border border-[#1F2C23] font-bold">
                     #{s}
                   </span>
                 ))}

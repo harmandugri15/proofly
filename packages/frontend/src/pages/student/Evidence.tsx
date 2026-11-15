@@ -96,38 +96,38 @@ export const StudentEvidencePage: React.FC = () => {
   return (
     <div className="w-full max-w-5xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden">
       {/* Header Banner */}
-      <div className="relative rounded-3xl bg-[#7D9B86] text-white p-6 sm:p-8 overflow-hidden shadow-lg border border-sage-700/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div className="relative rounded-[28px] bg-[#385241] text-white p-6 sm:p-8 overflow-hidden shadow-[4px_4px_0px_#1F2C23] border-2 border-[#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="relative z-10 space-y-2 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/25">
+            <span className="text-xs font-mono font-black uppercase px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/40 shadow-[1px_1px_0px_rgba(0,0,0,0.3)]">
               VERIFICATION VAULT
             </span>
-            <DelicateStarOrnament className="w-4 h-4 text-terracotta-300" />
+            <DelicateStarOrnament className="w-4 h-4 text-[#FCE5DB]" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-white">
             Certificates & Credential Proof
           </h1>
-          <p className="text-xs sm:text-sm text-white/80 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-white/90 max-w-xl leading-relaxed font-medium">
             Attach official certifications from AWS, Coursera, freeCodeCamp, CNCF, or universities. Proofly verifies certificate URL accessibility and cryptographic issuer hashes.
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="relative z-10 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm shrink-0"
+          className="relative z-10 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
         >
           <Plus className="w-4 h-4" /> Add Credential
         </button>
       </div>
 
       {/* Information Notice */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-sand-50/80 border border-sand-200/80 flex items-start gap-3.5 text-xs text-forest-800">
-        <div className="w-8 h-8 rounded-xl bg-sage-100 border border-sage-200 flex items-center justify-center shrink-0 text-sage-800 mt-0.5">
-          <Info className="w-4 h-4" />
+      <div className="p-4 sm:p-5 rounded-[20px] bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-start gap-3.5 text-xs text-[#1F2C23]">
+        <div className="w-8 h-8 rounded-xl bg-white border-2 border-[#1F2C23] flex items-center justify-center shrink-0 text-[#1F2C23] mt-0.5 shadow-[1px_1px_0px_#1F2C23]">
+          <Info className="w-4 h-4 text-[#385241]" />
         </div>
         <div className="space-y-1">
-          <span className="font-serif font-normal text-forest-900 text-sm">Evidence Integrity Protocol: </span>
-          <p className="text-forest-700/70 leading-relaxed">
+          <span className="font-serif font-bold text-[#1F2C23] text-sm">Evidence Integrity Protocol: </span>
+          <p className="text-[#24362A] leading-relaxed font-medium">
             Proofly evaluates verification URLs, reachable web endpoints, official issuer APIs, and expiration timetables. We never generate superficial or fake verification badges.
           </p>
         </div>
@@ -156,34 +156,34 @@ export const StudentEvidencePage: React.FC = () => {
           {certificates.map((cert) => (
             <div
               key={cert.id}
-              className="p-5 sm:p-6 rounded-3xl bg-white/95 border border-sand-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-sage-400/60 transition-all shadow-sm hover:shadow-md group"
+              className="p-5 sm:p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group"
             >
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
-                  <h3 className="text-sm sm:text-base font-serif font-normal text-forest-900 group-hover:text-terracotta-600 transition-colors">
+                  <h3 className="text-sm sm:text-base font-serif font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors">
                     {cert.title}
                   </h3>
                   <EvidenceBadge status={cert.verificationStatus} type="certificate" />
                 </div>
 
-                <p className="text-xs text-forest-700/80 font-medium">
+                <p className="text-xs text-[#1F2C23] font-bold">
                   <span>{cert.issuer}</span>
                   {cert.credentialId && (
-                    <span className="text-forest-700/60 font-mono ml-2 bg-sand-100 px-2 py-0.5 rounded-full border border-sand-200">
+                    <span className="text-[#1F2C23] font-mono ml-2 bg-[#FAF7F2] px-2 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
                       ID: {cert.credentialId}
                     </span>
                   )}
                 </p>
 
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-forest-700/60 font-mono">
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#586E5F] font-mono font-semibold">
                   <span>Issued: {new Date(cert.issueDate).toLocaleDateString()}</span>
                   {cert.doesNotExpire ? (
-                    <span className="text-sage-700 font-bold">No Expiry</span>
+                    <span className="text-[#2E7D32] font-black">No Expiry</span>
                   ) : cert.expiryDate ? (
                     <span>Expires: {new Date(cert.expiryDate).toLocaleDateString()}</span>
                   ) : null}
                   {cert.lastVerifiedAt && (
-                    <span className="text-forest-700/50">
+                    <span className="text-[#758C7D]">
                       Verified: {new Date(cert.lastVerifiedAt).toLocaleDateString()}
                     </span>
                   )}
@@ -195,7 +195,7 @@ export const StudentEvidencePage: React.FC = () => {
                       href={cert.credentialUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-terracotta-600 hover:text-terracotta-700 transition-colors"
+                      className="inline-flex items-center gap-1.5 text-xs font-mono font-black text-[#D97043] hover:text-[#C55F34] transition-colors"
                     >
                       <span>Inspect Credential Evidence</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -208,14 +208,14 @@ export const StudentEvidencePage: React.FC = () => {
                 <button
                   onClick={() => handleVerify(cert.id)}
                   disabled={verifyingId === cert.id}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-900 text-xs font-mono font-medium border border-sand-200 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E4ECE6] hover:bg-[#C7D9CD] text-[#1F2C23] text-xs font-mono font-bold border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 text-sage-600 ${verifyingId === cert.id ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 text-[#385241] ${verifyingId === cert.id ? 'animate-spin' : ''}`} />
                   {verifyingId === cert.id ? 'Checking...' : 'Re-verify'}
                 </button>
                 <button
                   onClick={() => handleDelete(cert.id)}
-                  className="p-2 rounded-full text-forest-700/40 hover:text-terracotta-600 hover:bg-terracotta-50 transition-colors"
+                  className="p-2 rounded-xl text-[#758C7D] hover:text-[#D97043] hover:bg-[#FCE5DB] border-2 border-transparent hover:border-[#1F2C23] transition-all"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
