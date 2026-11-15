@@ -82,19 +82,19 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
   const newMonthIndices = new Set(monthLabels.map((m) => m.index));
 
   return (
-    <div className={`w-full max-w-full min-w-0 overflow-hidden p-5 sm:p-6 rounded-3xl bg-sand-50/70 border border-sand-200/80 space-y-4 ${className}`}>
+    <div className={`w-full max-w-full min-w-0 overflow-hidden p-5 sm:p-6 rounded-[24px] bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-4 ${className}`}>
       {/* Header with Stats */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-sage-100 text-sage-800 border border-sage-200">
-            <GitCommit className="w-4 h-4" />
+          <div className="p-2 rounded-xl bg-[#86EFAC] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+            <GitCommit className="w-4 h-4 text-[#1F2C23] stroke-[3]" />
           </div>
           <div>
-            <h3 className="text-xs font-serif font-normal uppercase tracking-wider text-forest-900 flex items-center gap-1.5">
+            <h3 className="text-xs font-serif font-black uppercase tracking-wider text-[#1F2C23] flex items-center gap-1.5">
               <span>GitHub Contribution Heatmap</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-sage-600 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-ping" />
             </h3>
-            <p className="text-[11px] text-forest-700/60 font-mono">
+            <p className="text-[11px] text-[#586E5F] font-mono font-bold">
               {username ? `@${username}'s` : 'Candidate'} verified commit and pull-request activity
             </p>
           </div>
@@ -102,28 +102,28 @@ export const ContributionHeatmap: React.FC<ContributionHeatmapProps> = ({
 
         {/* Streak Metrics Pills */}
         <div className="grid grid-cols-3 sm:flex sm:items-center gap-2 text-xs">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-sand-200 text-forest-800 shadow-2xs">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23]">
             <div className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-sage-600" />
-              <span className="text-[10px] text-forest-700/50">Year:</span>
+              <Calendar className="w-3.5 h-3.5 text-[#385241]" />
+              <span className="text-[10px] text-[#586E5F] font-mono font-bold">Year:</span>
             </div>
-            <strong className="text-forest-900 font-mono text-xs">{totalCommitsLastYear.toLocaleString()}</strong>
+            <strong className="text-[#1F2C23] font-mono font-black text-xs">{totalCommitsLastYear.toLocaleString()}</strong>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-sand-200 text-forest-800 shadow-2xs">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23]">
             <div className="flex items-center gap-1">
-              <Flame className="w-3.5 h-3.5 text-terracotta-600" />
-              <span className="text-[10px] text-forest-700/50">Streak:</span>
+              <Flame className="w-3.5 h-3.5 text-[#D97043]" />
+              <span className="text-[10px] text-[#586E5F] font-mono font-bold">Streak:</span>
             </div>
-            <strong className="text-terracotta-600 font-mono text-xs">{currentStreak}d</strong>
+            <strong className="text-[#D97043] font-mono font-black text-xs">{currentStreak}d</strong>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border border-sand-200 text-forest-800 shadow-2xs">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1 px-3 py-1.5 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23]">
             <div className="flex items-center gap-1">
-              <Trophy className="w-3.5 h-3.5 text-amber-500" />
-              <span className="text-[10px] text-forest-700/50">Best:</span>
+              <Trophy className="w-3.5 h-3.5 text-[#EAB308]" />
+              <span className="text-[10px] text-[#586E5F] font-mono font-bold">Best:</span>
             </div>
-            <strong className="text-forest-900 font-mono text-xs">{longestStreak}d</strong>
+            <strong className="text-[#1F2C23] font-mono font-black text-xs">{longestStreak}d</strong>
           </div>
         </div>
       </div>

@@ -24,10 +24,10 @@ export const GitHubProfileCard: React.FC<GitHubProfileCardProps> = ({
 
   if (!effectiveUsername && !githubStats) {
     return (
-      <div className="w-full max-w-full min-w-0 p-8 rounded-3xl bg-white/95 border border-sand-200/80 text-center space-y-3 shadow-sm">
-        <Github className="w-10 h-10 text-forest-700/40 mx-auto" />
-        <h3 className="text-sm font-serif font-normal text-forest-900">No GitHub Profile Connected</h3>
-        <p className="text-xs text-forest-700/70 max-w-md mx-auto">
+      <div className="w-full max-w-full min-w-0 p-8 rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] text-center space-y-3">
+        <Github className="w-12 h-12 text-[#1F2C23] mx-auto" />
+        <h3 className="text-base font-serif font-black text-[#1F2C23]">No GitHub Profile Connected</h3>
+        <p className="text-xs text-[#586E5F] max-w-md mx-auto font-medium leading-relaxed">
           Connect your GitHub account or enter your public handle to import repositories, language distributions, and the 52-week contribution heatmap.
         </p>
       </div>
@@ -35,7 +35,7 @@ export const GitHubProfileCard: React.FC<GitHubProfileCardProps> = ({
   }
 
   return (
-    <div className="w-full max-w-full min-w-0 rounded-3xl bg-white/95 border border-sand-200/80 overflow-hidden shadow-sm space-y-6 p-5 sm:p-7">
+    <div className="w-full max-w-full min-w-0 rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-6 p-6 sm:p-8">
       {/* Top Banner / User Meta */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-4 min-w-0">
@@ -43,44 +43,44 @@ export const GitHubProfileCard: React.FC<GitHubProfileCardProps> = ({
             <img
               src={githubStats.avatarUrl}
               alt={effectiveUsername || 'GitHub User'}
-              className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 border-sage-300 object-cover shadow-sm shrink-0"
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] object-cover shrink-0"
             />
           ) : (
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-sand-100 border-2 border-sand-200 flex items-center justify-center text-forest-900 shrink-0">
-              <Github className="w-7 h-7 text-forest-900" />
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FFDE59] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-center justify-center text-[#1F2C23] shrink-0">
+              <Github className="w-8 h-8 text-[#1F2C23]" />
             </div>
           )}
 
           <div className="space-y-1 min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-base sm:text-lg font-serif font-normal text-forest-900 truncate">
+              <h3 className="text-lg sm:text-xl font-serif font-black text-[#1F2C23] truncate">
                 {githubStats?.username || effectiveUsername}
               </h3>
-              <span className="inline-flex items-center gap-1 px-3 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sage-50 text-sage-800 border border-sage-200">
-                <CheckCircle2 className="w-3 h-3 text-sage-600" /> Verified GitHub
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-[10px] font-mono font-black bg-[#86EFAC] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#1F2C23] stroke-[3]" /> VERIFIED GITHUB
               </span>
             </div>
 
             {githubStats?.bio && (
-              <p className="text-xs text-forest-700/80 max-w-xl line-clamp-2 leading-relaxed">{githubStats.bio}</p>
+              <p className="text-xs text-[#24362A] max-w-xl font-medium line-clamp-2 leading-relaxed">{githubStats.bio}</p>
             )}
 
-            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-forest-700/60 pt-1 font-mono">
-              <span className="flex items-center gap-1">
-                <BookOpen className="w-3.5 h-3.5 text-forest-700/50" />
-                <strong className="text-forest-900 font-bold">{githubStats?.publicRepos ?? repos.length}</strong> repos
+            <div className="flex flex-wrap items-center gap-2.5 pt-1.5 font-mono">
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-xs font-black text-[#1F2C23]">
+                <BookOpen className="w-3.5 h-3.5 text-[#1F2C23]" />
+                <span>{githubStats?.publicRepos ?? repos.length} Repos</span>
               </span>
-              <span className="flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 text-amber-500" />
-                <strong className="text-forest-900 font-bold">{githubStats?.totalStars ?? 0}</strong> stars earned
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#FFEDD5] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-xs font-black text-[#1F2C23]">
+                <Star className="w-3.5 h-3.5 text-[#D97043]" />
+                <span>{githubStats?.totalStars ?? 0} Stars</span>
               </span>
-              <span className="flex items-center gap-1">
-                <Users className="w-3.5 h-3.5 text-sage-600" />
-                <strong className="text-forest-900 font-bold">{githubStats?.followers ?? 0}</strong> followers
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#E0F2FE] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-xs font-black text-[#1F2C23]">
+                <Users className="w-3.5 h-3.5 text-[#0284C7]" />
+                <span>{githubStats?.followers ?? 0} Followers</span>
               </span>
-              <span className="flex items-center gap-1">
-                <GitFork className="w-3.5 h-3.5 text-forest-700/50" />
-                <strong className="text-forest-900 font-bold">{githubStats?.totalForks ?? 0}</strong> forks
+              <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#DCFCE7] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-xs font-black text-[#1F2C23]">
+                <GitFork className="w-3.5 h-3.5 text-[#16A34A]" />
+                <span>{githubStats?.totalForks ?? 0} Forks</span>
               </span>
             </div>
           </div>
@@ -91,7 +91,7 @@ export const GitHubProfileCard: React.FC<GitHubProfileCardProps> = ({
             <button
               onClick={onSync}
               disabled={isSyncing}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-sand-100 hover:bg-sand-200 disabled:opacity-50 text-forest-900 text-xs font-mono font-medium border border-sand-200 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white hover:bg-[#FAF7F2] disabled:opacity-50 text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
               {isSyncing ? 'Syncing...' : 'Refresh Activity'}
@@ -102,33 +102,33 @@ export const GitHubProfileCard: React.FC<GitHubProfileCardProps> = ({
             href={`https://github.com/${effectiveUsername}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-forest-900 hover:bg-forest-800 text-white text-xs font-mono font-medium transition-colors shadow-sm"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#1F2C23] hover:bg-[#385241] text-white text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
           >
-            <Github className="w-3.5 h-3.5 text-sand-200" />
+            <Github className="w-3.5 h-3.5 text-white" />
             <span className="text-white">Open GitHub</span>
-            <ExternalLink className="w-3 h-3 text-sand-200" />
+            <ExternalLink className="w-3 h-3 text-white" />
           </a>
         </div>
       </div>
 
       {/* Language Distribution Bar */}
       {githubStats?.topLanguages && githubStats.topLanguages.length > 0 && (
-        <div className="space-y-2 bg-sand-50/80 p-4 rounded-2xl border border-sand-200/80 w-full max-w-full overflow-hidden">
+        <div className="space-y-3 bg-[#FAF7F2] p-5 rounded-2xl border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] w-full max-w-full overflow-hidden">
           <div className="flex items-center justify-between text-xs">
-            <span className="font-serif font-normal text-forest-900">Top Languages</span>
-            <span className="text-[11px] text-forest-700/60 font-mono">By Byte Volume Across Repositories</span>
+            <span className="font-serif font-black text-sm text-[#1F2C23]">Language Distribution</span>
+            <span className="text-[11px] text-[#586E5F] font-mono font-bold">By Byte Volume Across Repositories</span>
           </div>
 
           {/* Progress bar segments */}
-          <div className="h-2.5 w-full rounded-full bg-sand-200 overflow-hidden flex">
+          <div className="h-4 w-full rounded-xl bg-white border-2 border-[#1F2C23] overflow-hidden flex">
             {githubStats.topLanguages.map((lang, idx) => (
               <div
                 key={idx}
                 style={{
                   width: `${lang.percentage}%`,
-                  backgroundColor: lang.color || '#7D9B86',
+                  backgroundColor: lang.color || '#86EFAC',
                 }}
-                className="h-full transition-all"
+                className="h-full transition-all border-r border-[#1F2C23] last:border-r-0"
                 title={`${lang.language}: ${lang.percentage}%`}
               />
             ))}
@@ -137,13 +137,13 @@ export const GitHubProfileCard: React.FC<GitHubProfileCardProps> = ({
           {/* Legend items */}
           <div className="flex flex-wrap gap-3 pt-1">
             {githubStats.topLanguages.map((lang, idx) => (
-              <div key={idx} className="flex items-center gap-1.5 text-xs">
+              <div key={idx} className="flex items-center gap-1.5 text-xs font-mono font-bold">
                 <span
-                  className="w-2.5 h-2.5 rounded-full inline-block shrink-0"
-                  style={{ backgroundColor: lang.color || '#7D9B86' }}
+                  className="w-3 h-3 rounded-md border border-[#1F2C23] inline-block shrink-0 shadow-[1px_1px_0px_#1F2C23]"
+                  style={{ backgroundColor: lang.color || '#86EFAC' }}
                 />
-                <span className="text-forest-900 font-medium">{lang.language}</span>
-                <span className="text-forest-700/60 font-mono text-[11px]">{lang.percentage}%</span>
+                <span className="text-[#1F2C23] font-black">{lang.language}</span>
+                <span className="text-[#586E5F]">{lang.percentage}%</span>
               </div>
             ))}
           </div>

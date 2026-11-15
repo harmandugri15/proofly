@@ -254,51 +254,59 @@ export const StudentIntegrationsPage: React.FC = () => {
         {/* Selected Repositories List */}
         {profile?.gitHubRepos?.length > 0 && (
           <div className="space-y-3 pt-2 w-full max-w-full">
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-forest-700/60">
+            <h3 className="text-xs font-mono font-black uppercase tracking-wider text-[#1F2C23]">
               Synchronized Public Repositories ({profile.gitHubRepos.length})
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {profile.gitHubRepos.map((repo: any) => (
-                <div
-                  key={repo.id}
-                  className="p-5 rounded-2xl bg-white/95 border border-sand-200/80 flex items-start justify-between gap-3 text-xs shadow-sm hover:border-sage-400/60 transition-colors"
-                >
-                  <div className="space-y-1.5 min-w-0">
-                    <a
-                      href={repo.htmlUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-serif font-normal text-forest-900 hover:text-terracotta-600 transition-colors text-sm truncate block"
-                    >
-                      {repo.name}
-                    </a>
-                    <p className="text-forest-700/75 line-clamp-1">{repo.description || 'No description provided'}</p>
-                    <div className="flex flex-wrap items-center gap-3 text-[11px] text-forest-700/60 font-mono pt-1">
-                      <span className="text-amber-600 font-bold">★ {repo.starsCount}</span>
-                      <span className="bg-sand-100 px-2 py-0.5 rounded-full text-forest-800 border border-sand-200">{repo.primaryLanguage || 'Code'}</span>
-                      <span>{repo.recentCommitCount} commits</span>
+              {profile.gitHubRepos.map((repo: any, idx: number) => {
+                const cardTints = ['bg-white', 'bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]'];
+                const cardTint = cardTints[idx % cardTints.length];
+                return (
+                  <div
+                    key={repo.id}
+                    className={`p-5 rounded-[22px] ${cardTint} border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-start justify-between gap-3 text-xs transition-transform hover:-translate-y-0.5`}
+                  >
+                    <div className="space-y-1.5 min-w-0">
+                      <a
+                        href={repo.htmlUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-black text-[#1F2C23] hover:underline text-sm truncate block"
+                      >
+                        {repo.name}
+                      </a>
+                      <p className="text-[#385241] line-clamp-1 font-medium">{repo.description || 'No description provided'}</p>
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono pt-1">
+                        <span className="bg-[#FFDE59] px-2 py-0.5 rounded-lg border-2 border-[#1F2C23] font-black text-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+                          ★ {repo.starsCount}
+                        </span>
+                        <span className="bg-white px-2 py-0.5 rounded-lg text-[#1F2C23] border-2 border-[#1F2C23] font-black shadow-[1px_1px_0px_#1F2C23]">
+                          {repo.primaryLanguage || 'Code'}
+                        </span>
+                        <span className="font-bold text-[#1F2C23]">{repo.recentCommitCount} commits</span>
+                      </div>
                     </div>
+                    <span className="text-[10px] text-[#1F2C23] font-mono bg-[#86EFAC] px-2.5 py-0.5 rounded-lg border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0 font-black uppercase">
+                      Live
+                    </span>
                   </div>
-                  <span className="text-[10px] text-sage-800 font-mono bg-sage-50 px-2.5 py-0.5 rounded-full border border-sage-200 shrink-0 font-bold">
-                    Live
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
       </div>
 
       {/* 2. Coding Platforms Section (LeetCode, HackerRank, Codeforces) */}
-      <div className="space-y-6 pt-6 border-t border-sand-200">
+      <div className="space-y-6 pt-6 border-t-2 border-[#1F2C23]">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-sand-100 border border-sand-200 flex items-center justify-center text-amber-600">
-              <Code2 className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-[#FEF9C3] border-2 border-[#1F2C23] flex items-center justify-center text-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+              <Code2 className="w-5 h-5 text-[#1F2C23]" />
             </div>
             <div>
-              <h2 className="text-lg font-serif font-normal text-forest-900">Algorithmic Problem Solving Profiles</h2>
-              <p className="text-xs text-forest-700/60">
+              <h2 className="text-lg font-serif font-black text-[#1F2C23]">Algorithmic Problem Solving Profiles</h2>
+              <p className="text-xs text-[#586E5F]">
                 Connect LeetCode, HackerRank, and Codeforces handles. Renders verified problem breakdowns, difficulty distributions, and streaks.
               </p>
             </div>
@@ -306,16 +314,16 @@ export const StudentIntegrationsPage: React.FC = () => {
         </div>
 
         {/* Link Handle Form */}
-        <form onSubmit={handleAddCodingProfile} className="bg-white/95 p-5 sm:p-6 rounded-3xl border border-sand-200/80 space-y-3 w-full max-w-full shadow-sm">
+        <form onSubmit={handleAddCodingProfile} className="bg-white p-5 sm:p-6 rounded-[24px] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-3 w-full max-w-full">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                 Platform
               </label>
               <select
                 value={platform}
                 onChange={(e) => setPlatform(e.target.value as any)}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-sand-50/70 border border-sand-300 text-forest-900 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] text-xs focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono font-bold"
               >
                 <option value="LEETCODE">LeetCode</option>
                 <option value="HACKERRANK">HackerRank</option>
@@ -324,7 +332,7 @@ export const StudentIntegrationsPage: React.FC = () => {
             </div>
 
             <div className="sm:col-span-2">
-              <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                 Profile Username / Handle
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -334,15 +342,15 @@ export const StudentIntegrationsPage: React.FC = () => {
                   value={codingUsername}
                   onChange={(e) => setCodingUsername(e.target.value)}
                   placeholder="e.g. harmandugri15 or dev_solver"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-sand-50/70 border border-sand-300 text-forest-900 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
                 <button
                   type="submit"
                   disabled={isAddingCoding}
-                  className="px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 disabled:opacity-50 text-white font-medium text-xs transition-transform hover:scale-105 shrink-0 flex items-center justify-center gap-1.5 shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-[#FFDE59] hover:bg-[#FACC15] disabled:opacity-50 text-[#1F2C23] font-black text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0 flex items-center justify-center gap-1.5"
                 >
-                  <Plus className="w-4 h-4" />
-                  {isAddingCoding ? 'Linking...' : 'Link Handle'}
+                  <Plus className="w-4 h-4 text-[#1F2C23]" />
+                  <span>{isAddingCoding ? 'Linking...' : 'Link Handle'}</span>
                 </button>
               </div>
             </div>
@@ -363,9 +371,9 @@ export const StudentIntegrationsPage: React.FC = () => {
               />
             ))
           ) : (
-            <div className="p-8 rounded-3xl bg-white/80 border border-sand-200 text-center space-y-2">
-              <Code2 className="w-8 h-8 text-forest-700/40 mx-auto" />
-              <p className="text-xs text-forest-700/70">
+            <div className="p-8 rounded-[24px] bg-[#FEF9C3]/40 border-2 border-dashed border-[#1F2C23] text-center space-y-2">
+              <Code2 className="w-8 h-8 text-[#1F2C23] mx-auto" />
+              <p className="text-xs text-[#1F2C23] font-bold">
                 No coding profiles linked yet. Add your LeetCode, HackerRank, or Codeforces handle above to display verified algorithmic problem counts and acceptance rates.
               </p>
             </div>
@@ -374,15 +382,15 @@ export const StudentIntegrationsPage: React.FC = () => {
       </div>
 
       {/* 3. LinkedIn Integration Section */}
-      <div className="space-y-6 pt-6 border-t border-sand-200 w-full max-w-full">
+      <div className="space-y-6 pt-6 border-t-2 border-[#1F2C23] w-full max-w-full">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#0077b5]/10 border border-[#0077b5]/20 flex items-center justify-center text-[#0077b5]">
-              <Linkedin className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-[#70D6FF] border-2 border-[#1F2C23] flex items-center justify-center text-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+              <Linkedin className="w-5 h-5 text-[#1F2C23]" />
             </div>
             <div>
-              <h2 className="text-lg font-serif font-normal text-forest-900">LinkedIn Profile & Verification</h2>
-              <p className="text-xs text-forest-700/60">
+              <h2 className="text-lg font-serif font-black text-[#1F2C23]">LinkedIn Profile & Verification</h2>
+              <p className="text-xs text-[#586E5F]">
                 Connect your LinkedIn profile to display a verified badge on your public portfolio and recruiter candidate view.
               </p>
             </div>
@@ -390,10 +398,10 @@ export const StudentIntegrationsPage: React.FC = () => {
         </div>
 
         {profile?.linkedinUrl ? (
-          <div className="p-5 rounded-2xl bg-white/95 border border-sand-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm w-full max-w-full">
+          <div className="p-5 rounded-[24px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full max-w-full">
             <div className="flex items-center gap-3.5 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-[#0077b5]/10 flex items-center justify-center text-[#0077b5] shrink-0">
-                <Linkedin className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-xl bg-[#70D6FF] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center text-[#1F2C23] shrink-0">
+                <Linkedin className="w-5 h-5 text-[#1F2C23]" />
               </div>
               <div className="space-y-0.5 min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-2">
@@ -401,18 +409,18 @@ export const StudentIntegrationsPage: React.FC = () => {
                     href={profile.linkedinUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm font-medium text-forest-900 hover:text-[#0077b5] transition-colors flex items-center gap-1.5 truncate"
+                    className="text-sm font-black text-[#1F2C23] hover:underline flex items-center gap-1.5 truncate"
                   >
                     <span className="truncate">{profile.linkedinUrl}</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-forest-700/40 shrink-0" />
+                    <ExternalLink className="w-3.5 h-3.5 text-[#1F2C23] shrink-0" />
                   </a>
                   {profile.linkedinVerified && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-sage-50 border border-sage-200 text-sage-800 text-[10px] font-bold shrink-0">
-                      <CheckCircle2 className="w-3 h-3 text-sage-600" /> Verified
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-lg bg-[#86EFAC] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] text-[#1F2C23] text-[10px] font-mono font-black shrink-0 uppercase">
+                      <CheckCircle2 className="w-3 h-3 text-[#1F2C23]" /> Verified
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-forest-700/60">
+                <p className="text-xs text-[#586E5F] font-medium">
                   Visible to verified recruiters and linked on your public candidate portfolio.
                 </p>
               </div>
@@ -420,15 +428,15 @@ export const StudentIntegrationsPage: React.FC = () => {
 
             <button
               onClick={handleDisconnectLinkedin}
-              className="px-4 py-2 rounded-full bg-sand-100 hover:bg-terracotta-50 hover:text-terracotta-600 text-forest-800 text-xs font-mono font-medium border border-sand-200 transition-colors shrink-0 self-start sm:self-auto"
+              className="px-4 py-2 rounded-xl bg-[#FAF7F2] hover:bg-[#FEE2E2] text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0 self-start sm:self-auto"
             >
               Disconnect
             </button>
           </div>
         ) : (
-          <form onSubmit={handleConnectLinkedin} className="bg-white/95 p-5 sm:p-6 rounded-3xl border border-sand-200/80 space-y-3 w-full max-w-full shadow-sm">
+          <form onSubmit={handleConnectLinkedin} className="bg-white p-5 sm:p-6 rounded-[24px] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-3 w-full max-w-full">
             <div>
-              <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                 LinkedIn Profile URL
               </label>
               <div className="flex flex-col sm:flex-row gap-2">
@@ -438,28 +446,28 @@ export const StudentIntegrationsPage: React.FC = () => {
                   value={linkedinInput}
                   onChange={(e) => setLinkedinInput(e.target.value)}
                   placeholder="https://www.linkedin.com/in/your-handle"
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-sand-50/70 border border-sand-300 text-forest-900 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
                 <button
                   type="submit"
                   disabled={isConnectingLinkedin || !linkedinInput.trim()}
-                  className="px-5 py-2.5 rounded-full bg-[#0077b5] hover:bg-[#006097] disabled:opacity-50 text-white font-medium text-xs transition-transform hover:scale-105 shrink-0 flex items-center justify-center gap-1.5 shadow-sm"
+                  className="px-5 py-2.5 rounded-xl bg-[#70D6FF] hover:bg-[#38BDF8] disabled:opacity-50 text-[#1F2C23] font-black text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0 flex items-center justify-center gap-1.5"
                 >
-                  <Linkedin className="w-4 h-4" />
-                  {isConnectingLinkedin ? 'Connecting...' : 'Connect & Verify'}
+                  <Linkedin className="w-4 h-4 text-[#1F2C23]" />
+                  <span>{isConnectingLinkedin ? 'Connecting...' : 'Connect & Verify'}</span>
                 </button>
               </div>
             </div>
 
             {linkedinMsg && (
-              <p className="text-xs text-sage-800 flex items-center gap-1.5 pt-1">
-                <CheckCircle2 className="w-4 h-4 text-sage-600" /> {linkedinMsg}
+              <p className="text-xs font-mono font-bold text-[#1F2C23] flex items-center gap-1.5 pt-1">
+                <CheckCircle2 className="w-4 h-4 text-[#16A34A]" /> {linkedinMsg}
               </p>
             )}
 
             {linkedinError && (
-              <p className="text-xs text-terracotta-600 flex items-center gap-1.5 pt-1">
-                <AlertCircle className="w-4 h-4" /> {linkedinError}
+              <p className="text-xs font-mono font-bold text-[#DC2626] flex items-center gap-1.5 pt-1">
+                <AlertCircle className="w-4 h-4 text-[#DC2626]" /> {linkedinError}
               </p>
             )}
           </form>

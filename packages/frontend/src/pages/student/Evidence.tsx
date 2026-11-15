@@ -134,18 +134,18 @@ export const StudentEvidencePage: React.FC = () => {
       </div>
 
       {certificates.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-white/80 border border-sand-200 text-forest-700/60 space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-sand-100 border border-sand-200 mx-auto flex items-center justify-center text-forest-700/40">
-            <Award className="w-7 h-7" />
+        <div className="p-12 text-center rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] text-[#1F2C23] space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] mx-auto flex items-center justify-center text-[#1F2C23]">
+            <Award className="w-7 h-7 text-[#1F2C23]" />
           </div>
-          <h3 className="text-base font-serif font-normal text-forest-900">No certifications recorded yet</h3>
-          <p className="text-xs text-forest-700/70 max-w-sm mx-auto leading-relaxed">
+          <h3 className="text-base font-serif font-black text-[#1F2C23]">No certifications recorded yet</h3>
+          <p className="text-xs text-[#586E5F] max-w-sm mx-auto leading-relaxed font-medium">
             Add recognized certifications with verification URLs to enhance your verified completeness score.
           </p>
           <div className="pt-2">
             <button
               onClick={() => setShowModal(true)}
-              className="px-4 py-2 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-900 text-xs font-mono font-medium border border-sand-200 transition-colors"
+              className="px-5 py-2.5 rounded-xl bg-[#FFDE59] hover:bg-[#FACC15] text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
             >
               Add First Credential
             </button>
@@ -233,12 +233,12 @@ export const StudentEvidencePage: React.FC = () => {
 
       {/* Add Certificate Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-forest-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#FAF7F2] border border-sand-300 rounded-3xl p-6 sm:p-7 w-full max-w-md shadow-2xl space-y-4">
-            <h3 className="text-base font-serif font-normal text-forest-900">Add Verified Credential</h3>
+        <div className="fixed inset-0 bg-[#1F2C23]/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#FAF7F2] border-2 border-[#1F2C23] rounded-[28px] p-6 sm:p-7 w-full max-w-md shadow-[8px_8px_0px_#1F2C23] space-y-4">
+            <h3 className="text-lg font-serif font-black text-[#1F2C23]">Add Verified Credential</h3>
             <form onSubmit={handleAddCertificate} className="space-y-3.5">
               <div>
-                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                   Certificate Title
                 </label>
                 <input
@@ -247,12 +247,12 @@ export const StudentEvidencePage: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. AWS Certified Solutions Architect"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs sm:text-sm shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                   Issuer Name
                 </label>
                 <input
@@ -261,12 +261,12 @@ export const StudentEvidencePage: React.FC = () => {
                   value={issuer}
                   onChange={(e) => setIssuer(e.target.value)}
                   placeholder="e.g. Amazon Web Services, Coursera, Meta"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs sm:text-sm shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                   Verification URL / Credly Link
                 </label>
                 <input
@@ -274,12 +274,12 @@ export const StudentEvidencePage: React.FC = () => {
                   value={credentialUrl}
                   onChange={(e) => setCredentialUrl(e.target.value)}
                   placeholder="https://www.credly.com/badges/..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500 font-mono"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs sm:text-sm shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                   Credential ID (Optional)
                 </label>
                 <input
@@ -287,13 +287,13 @@ export const StudentEvidencePage: React.FC = () => {
                   value={credentialId}
                   onChange={(e) => setCredentialId(e.target.value)}
                   placeholder="e.g. AWS-SAA-839201"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500 font-mono"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs sm:text-sm shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                     Issue Date
                   </label>
                   <input
@@ -301,11 +301,11 @@ export const StudentEvidencePage: React.FC = () => {
                     required
                     value={issueDate}
                     onChange={(e) => setIssueDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                     Expiry Date
                   </label>
                   <input
@@ -313,7 +313,7 @@ export const StudentEvidencePage: React.FC = () => {
                     disabled={doesNotExpire}
                     value={expiryDate}
                     onChange={(e) => setExpiryDate(e.target.value)}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs disabled:opacity-30 focus:outline-none focus:border-sage-500 font-mono"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs disabled:opacity-30 shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                   />
                 </div>
               </div>
@@ -324,24 +324,24 @@ export const StudentEvidencePage: React.FC = () => {
                   id="doesNotExpire"
                   checked={doesNotExpire}
                   onChange={(e) => setDoesNotExpire(e.target.checked)}
-                  className="rounded border-sand-300 text-sage-600 focus:ring-0"
+                  className="w-4 h-4 rounded border-2 border-[#1F2C23] text-[#385241] focus:ring-0"
                 />
-                <label htmlFor="doesNotExpire" className="text-xs text-forest-700/80 font-mono">
+                <label htmlFor="doesNotExpire" className="text-xs text-[#1F2C23] font-mono font-bold cursor-pointer">
                   This credential does not expire
                 </label>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-sand-200">
+              <div className="flex justify-end gap-2 pt-3 border-t-2 border-[#1F2C23]">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-full bg-sand-200 text-forest-800 text-xs font-mono font-medium hover:bg-sand-300"
+                  className="px-4 py-2 rounded-xl bg-white text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs font-medium shadow-sm transition-transform hover:scale-105"
+                  className="px-5 py-2 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                 >
                   Add Credential
                 </button>

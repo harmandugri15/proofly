@@ -81,43 +81,43 @@ export const StudentPostsPage: React.FC = () => {
   return (
     <div className="w-full max-w-5xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden">
       {/* Header Banner */}
-      <div className="relative rounded-3xl bg-[#7D9B86] text-white p-6 sm:p-8 overflow-hidden shadow-lg border border-sage-700/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+      <div className="relative rounded-[28px] bg-[#385241] text-white p-6 sm:p-8 overflow-hidden shadow-[4px_4px_0px_#1F2C23] border-2 border-[#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-6">
         <div className="relative z-10 space-y-2 min-w-0">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-mono font-bold uppercase px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/25">
+            <span className="text-xs font-mono font-black uppercase px-3 py-1 rounded-full bg-white/20 text-white backdrop-blur-sm border border-white/40 shadow-[1px_1px_0px_rgba(0,0,0,0.3)]">
               ENGINEERING LOGS
             </span>
-            <DelicateStarOrnament className="w-4 h-4 text-terracotta-300" />
+            <DelicateStarOrnament className="w-4 h-4 text-[#FCE5DB]" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-serif font-normal tracking-tight text-white">
+          <h1 className="text-2xl sm:text-3xl font-serif font-black tracking-tight text-white">
             Technical Case Studies & Notes
           </h1>
-          <p className="text-xs sm:text-sm text-white/80 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-white/90 max-w-xl leading-relaxed font-medium">
             Publish engineering reflections, architectural decisions, and project postmortems. Real technical writing demonstrates your architectural clarity to scouts.
           </p>
         </div>
 
         <button
           onClick={() => setShowModal(true)}
-          className="relative z-10 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white font-medium text-xs transition-transform hover:scale-105 shadow-sm shrink-0"
+          className="relative z-10 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
         >
           <Plus className="w-4 h-4" /> Write Case Study
         </button>
       </div>
 
       {posts.length === 0 ? (
-        <div className="p-12 text-center rounded-3xl bg-white/80 border border-sand-200 text-forest-700/60 space-y-3">
-          <div className="w-14 h-14 rounded-2xl bg-sand-100 border border-sand-200 mx-auto flex items-center justify-center text-forest-700/40">
-            <FileText className="w-7 h-7" />
+        <div className="p-12 text-center rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] text-[#1F2C23] space-y-3">
+          <div className="w-14 h-14 rounded-2xl bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] mx-auto flex items-center justify-center text-[#1F2C23]">
+            <FileText className="w-7 h-7 text-[#1F2C23]" />
           </div>
-          <h3 className="text-base font-serif font-normal text-forest-900">No technical articles published yet</h3>
-          <p className="text-xs text-forest-700/70 max-w-sm mx-auto leading-relaxed">
+          <h3 className="text-base font-serif font-black text-[#1F2C23]">No technical articles published yet</h3>
+          <p className="text-xs text-[#586E5F] max-w-sm mx-auto leading-relaxed font-medium">
             Technical writing highlights communication clarity and architectural depth for hiring leads.
           </p>
           <div className="pt-2">
             <button
               onClick={() => setShowModal(true)}
-              className="px-4 py-2 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-900 text-xs font-mono font-medium border border-sand-200 transition-colors"
+              className="px-5 py-2.5 rounded-xl bg-[#FFDE59] hover:bg-[#FACC15] text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
             >
               Write First Article
             </button>
@@ -125,72 +125,81 @@ export const StudentPostsPage: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {posts.map((post) => (
-            <div
-              key={post.id}
-              className="p-5 sm:p-6 rounded-3xl bg-white/95 border border-sand-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-sage-400/60 transition-all shadow-sm hover:shadow-md group"
-            >
-              <div className="space-y-2 max-w-2xl">
-                <div className="flex items-center gap-2.5">
-                  <span
-                    className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
-                      post.status === 'PUBLISHED'
-                        ? 'bg-sage-50 text-sage-800 border border-sage-200'
-                        : 'bg-amber-50 text-amber-800 border border-amber-200'
-                    }`}
-                  >
-                    {post.status}
-                  </span>
-                  <span className="text-xs text-forest-700/60 flex items-center gap-1 font-mono">
-                    <Clock className="w-3.5 h-3.5 text-forest-700/50" /> {post.readTimeMinutes || 4} min read
-                  </span>
-                </div>
+          {posts.map((post, idx) => {
+            const cardBgs = ['bg-white', 'bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]'];
+            const cardBg = cardBgs[idx % cardBgs.length];
 
-                <Link
-                  to={`/posts/${post.slug}`}
-                  className="text-base sm:text-lg font-serif font-normal text-forest-900 hover:text-terracotta-600 transition-colors block"
-                >
-                  {post.title}
-                </Link>
-
-                <p className="text-xs text-forest-700/70 line-clamp-2 leading-relaxed">{post.summary}</p>
-
-                <div className="flex flex-wrap gap-1.5 pt-1">
-                  {post.tags?.map((tag: string) => (
-                    <span key={tag} className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-sand-100 text-forest-800 border border-sand-200">
-                      #{tag}
+            return (
+              <div
+                key={post.id}
+                className={`p-5 sm:p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group`}
+              >
+                <div className="space-y-2 max-w-2xl">
+                  <div className="flex items-center gap-2.5">
+                    <span
+                      className={`text-[10px] font-mono font-black px-2.5 py-0.5 rounded-lg border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] uppercase ${
+                        post.status === 'PUBLISHED'
+                          ? 'bg-[#86EFAC] text-[#1F2C23]'
+                          : 'bg-[#FFDE59] text-[#1F2C23]'
+                      }`}
+                    >
+                      {post.status}
                     </span>
-                  ))}
+                    <span className="text-xs text-[#1F2C23] flex items-center gap-1 font-mono font-bold">
+                      <Clock className="w-3.5 h-3.5 text-[#385241]" /> {post.readTimeMinutes || 4} min read
+                    </span>
+                  </div>
+
+                  <Link
+                    to={`/posts/${post.slug}`}
+                    className="text-base sm:text-lg font-serif font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors block"
+                  >
+                    {post.title}
+                  </Link>
+
+                  <p className="text-xs text-[#385241] line-clamp-2 leading-relaxed font-medium">{post.summary}</p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-1">
+                    {post.tags?.map((tag: string) => (
+                      <span
+                        key={tag}
+                        className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-lg bg-white text-[#1F2C23] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <Link
+                    to={`/posts/${post.slug}`}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+                  >
+                    <Eye className="w-3.5 h-3.5 text-[#385241]" /> View
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(post.id)}
+                    className="p-2 rounded-xl bg-white text-[#1F2C23] hover:text-[#DC2626] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+                    title="Delete article"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                <Link
-                  to={`/posts/${post.slug}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-sand-100 hover:bg-sand-200 text-forest-900 text-xs font-mono font-medium border border-sand-200 transition-colors"
-                >
-                  <Eye className="w-3.5 h-3.5 text-sage-600" /> View
-                </Link>
-                <button
-                  onClick={() => handleDelete(post.id)}
-                  className="p-2 rounded-full text-forest-700/40 hover:text-terracotta-600 hover:bg-terracotta-50 transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
       {/* Write Post Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-forest-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
-          <div className="bg-[#FAF7F2] border border-sand-300 rounded-3xl p-6 sm:p-7 w-full max-w-2xl shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-base font-serif font-normal text-forest-900">Draft Technical Case Study</h3>
+        <div className="fixed inset-0 bg-[#1F2C23]/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#FAF7F2] border-2 border-[#1F2C23] rounded-[28px] p-6 sm:p-7 w-full max-w-2xl shadow-[8px_8px_0px_#1F2C23] space-y-4 max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-serif font-black text-[#1F2C23]">Draft Technical Case Study</h3>
             <form onSubmit={handleCreatePost} className="space-y-4">
               <div>
-                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                   Article Title
                 </label>
                 <input
@@ -199,12 +208,12 @@ export const StudentPostsPage: React.FC = () => {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Scaling WebSockets to 50k Concurrent Sessions: Architecture & Benchmarks"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs sm:text-sm shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                   Executive Summary
                 </label>
                 <input
@@ -213,12 +222,12 @@ export const StudentPostsPage: React.FC = () => {
                   value={summary}
                   onChange={(e) => setSummary(e.target.value)}
                   placeholder="A concise synopsis of the engineering problem and outcome"
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs sm:text-sm shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                   Content (Markdown supported)
                 </label>
                 <textarea
@@ -227,13 +236,13 @@ export const StudentPostsPage: React.FC = () => {
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Document your architecture, code choices, performance trade-offs, and lessons learned..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs sm:text-sm focus:outline-none focus:border-sage-500 font-mono leading-relaxed"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs sm:text-sm shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono leading-relaxed"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                     Tags (Comma-separated)
                   </label>
                   <input
@@ -241,17 +250,17 @@ export const StudentPostsPage: React.FC = () => {
                     value={tagsStr}
                     onChange={(e) => setTagsStr(e.target.value)}
                     placeholder="architecture, distributed, rust"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-mono font-bold text-forest-800 uppercase tracking-wider mb-1.5">
+                  <label className="block text-[11px] font-mono font-black text-[#1F2C23] uppercase tracking-wider mb-1.5">
                     Publication Status
                   </label>
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as any)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-sand-300 text-forest-900 text-xs focus:outline-none focus:border-sage-500 font-mono"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] text-[#1F2C23] text-xs shadow-[2px_2px_0px_#1F2C23] focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono font-bold"
                   >
                     <option value="PUBLISHED">Published (Public)</option>
                     <option value="DRAFT">Draft</option>
@@ -259,17 +268,17 @@ export const StudentPostsPage: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-3 border-t border-sand-200">
+              <div className="flex justify-end gap-2 pt-3 border-t-2 border-[#1F2C23]">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 rounded-full bg-sand-200 text-forest-800 text-xs font-mono font-medium hover:bg-sand-300"
+                  className="px-4 py-2 rounded-xl bg-white text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-full bg-terracotta-500 hover:bg-terracotta-600 text-white text-xs font-medium shadow-sm transition-transform hover:scale-105"
+                  className="px-5 py-2 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                 >
                   Publish Article
                 </button>
