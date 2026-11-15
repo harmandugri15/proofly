@@ -107,7 +107,12 @@ export const PublicProfilePage: React.FC = () => {
     })) || [];
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden">
+    <div className="w-full max-w-6xl mx-auto p-3 sm:p-6 lg:p-8 space-y-8 animate-fadeIn min-w-0 overflow-x-hidden relative">
+      {/* High-Energy Ambient Glow Spots */}
+      <div className="absolute top-10 right-10 w-[500px] h-[500px] bg-[#FFDE59]/30 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div className="absolute top-[600px] left-0 w-[550px] h-[550px] bg-[#70D6FF]/30 rounded-full blur-[110px] pointer-events-none -z-10" />
+      <div className="absolute top-[1200px] right-5 w-[500px] h-[500px] bg-[#86EFAC]/30 rounded-full blur-[100px] pointer-events-none -z-10" />
+
       {/* Top Fast-Pass Recruiter Banner (if active) */}
       {searchParams.get('pass') && (
         <div className="p-4 sm:p-5 rounded-3xl bg-[#7D9B86] text-white border border-sage-700/30 flex flex-wrap items-center justify-between gap-4 shadow-sm">
@@ -454,74 +459,79 @@ export const PublicProfilePage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {profile.projects?.map((proj: any, idx: number) => (
-            <div
-              key={proj.id}
-              className="p-6 rounded-3xl bg-white/95 border border-sand-200/80 flex flex-col justify-between space-y-4 hover:border-sage-400/60 transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md group min-w-0"
-            >
-              <div className="space-y-3 min-w-0">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className="text-[11px] font-mono text-terracotta-700 font-bold bg-terracotta-50 px-2.5 py-0.5 rounded-full border border-terracotta-200 shrink-0">
-                      #{idx + 1}
-                    </span>
-                    <h3 className="text-base font-serif font-normal text-forest-900 group-hover:text-terracotta-600 transition-colors truncate">
-                      {proj.title}
-                    </h3>
-                  </div>
-                  <EvidenceBadge status={proj.verificationStatus} type="project" />
-                </div>
+          {profile.projects?.map((proj: any, idx: number) => {
+            const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
+            const cardBg = cardBgs[idx % cardBgs.length];
 
-                {proj.tagline && (
-                  <p className="text-xs text-forest-800 font-medium line-clamp-1 break-words">{proj.tagline}</p>
-                )}
-
-                <p className="text-xs text-forest-700/70 leading-relaxed line-clamp-3 break-words">{proj.description}</p>
-
-                {proj.skills && proj.skills.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {proj.skills.map((s: string) => (
-                      <span
-                        key={s}
-                        className="text-[10px] font-mono font-medium px-2.5 py-0.5 rounded-full bg-sand-100 text-forest-800 border border-sand-200"
-                      >
-                        {s}
+            return (
+              <div
+                key={proj.id}
+                className={`p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group min-w-0`}
+              >
+                <div className="space-y-3 min-w-0">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-[11px] font-mono text-[#1F2C23] font-black bg-white px-2.5 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0">
+                        #{idx + 1}
                       </span>
-                    ))}
+                      <h3 className="text-base font-serif font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors truncate">
+                        {proj.title}
+                      </h3>
+                    </div>
+                    <EvidenceBadge status={proj.verificationStatus} type="project" />
                   </div>
-                )}
-              </div>
 
-              <div className="pt-3 border-t border-sand-100 flex items-center justify-between text-xs flex-wrap gap-2">
-                <div className="flex items-center gap-3">
-                  {proj.repositoryUrl && (
-                    <a
-                      href={proj.repositoryUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-forest-700/75 hover:text-forest-900 flex items-center gap-1.5 font-mono font-medium transition-colors"
-                    >
-                      <Github className="w-3.5 h-3.5 text-forest-700/60" /> Source
-                    </a>
+                  {proj.tagline && (
+                    <p className="text-xs text-[#1F2C23] font-black line-clamp-1 break-words">{proj.tagline}</p>
                   )}
-                  {proj.demoUrl && (
-                    <a
-                      href={proj.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-terracotta-600 hover:text-terracotta-700 flex items-center gap-1.5 font-mono font-bold transition-colors"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" /> Live Demo
-                    </a>
+
+                  <p className="text-xs text-[#24362A] font-medium leading-relaxed line-clamp-3 break-words">{proj.description}</p>
+
+                  {proj.skills && proj.skills.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {proj.skills.map((s: string) => (
+                        <span
+                          key={s}
+                          className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
+                        >
+                          {s}
+                        </span>
+                      ))}
+                    </div>
                   )}
                 </div>
 
-                <div className="text-[10px] font-mono text-forest-700/60 font-bold">
-                  {proj.verifiedCommitCount ? `${proj.verifiedCommitCount} commits` : 'Verified'}
+                <div className="pt-3 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs flex-wrap gap-2">
+                  <div className="flex items-center gap-3">
+                    {proj.repositoryUrl && (
+                      <a
+                        href={proj.repositoryUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1.5 font-mono font-black transition-colors"
+                      >
+                        <Github className="w-3.5 h-3.5 text-[#1F2C23]" /> Source
+                      </a>
+                    )}
+                    {proj.demoUrl && (
+                      <a
+                        href={proj.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1.5 font-mono font-black transition-colors"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                      </a>
+                    )}
+                  </div>
+
+                  <div className="text-[10px] font-mono text-[#24362A] font-black">
+                    {proj.verifiedCommitCount ? `${proj.verifiedCommitCount} commits` : 'Verified'}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 

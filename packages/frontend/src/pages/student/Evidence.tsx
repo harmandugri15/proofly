@@ -153,75 +153,81 @@ export const StudentEvidencePage: React.FC = () => {
         </div>
       ) : (
         <div className="space-y-4">
-          {certificates.map((cert) => (
-            <div
-              key={cert.id}
-              className="p-5 sm:p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group"
-            >
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-sm sm:text-base font-serif font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors">
-                    {cert.title}
-                  </h3>
-                  <EvidenceBadge status={cert.verificationStatus} type="certificate" />
-                </div>
+          {certificates.map((cert, idx) => {
+            const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
+            const cardBg = cardBgs[idx % cardBgs.length];
 
-                <p className="text-xs text-[#1F2C23] font-bold">
-                  <span>{cert.issuer}</span>
-                  {cert.credentialId && (
-                    <span className="text-[#1F2C23] font-mono ml-2 bg-[#FAF7F2] px-2 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
-                      ID: {cert.credentialId}
-                    </span>
-                  )}
-                </p>
-
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#586E5F] font-mono font-semibold">
-                  <span>Issued: {new Date(cert.issueDate).toLocaleDateString()}</span>
-                  {cert.doesNotExpire ? (
-                    <span className="text-[#2E7D32] font-black">No Expiry</span>
-                  ) : cert.expiryDate ? (
-                    <span>Expires: {new Date(cert.expiryDate).toLocaleDateString()}</span>
-                  ) : null}
-                  {cert.lastVerifiedAt && (
-                    <span className="text-[#758C7D]">
-                      Verified: {new Date(cert.lastVerifiedAt).toLocaleDateString()}
-                    </span>
-                  )}
-                </div>
-
-                {cert.credentialUrl && (
-                  <div className="pt-1">
-                    <a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-xs font-mono font-black text-[#D97043] hover:text-[#C55F34] transition-colors"
-                    >
-                      <span>Inspect Credential Evidence</span>
-                      <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
+            return (
+              <div
+                key={cert.id}
+                className={`p-5 sm:p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group`}
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm sm:text-base font-serif font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors">
+                      {cert.title}
+                    </h3>
+                    <EvidenceBadge status={cert.verificationStatus} type="certificate" />
                   </div>
-                )}
-              </div>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => handleVerify(cert.id)}
-                  disabled={verifyingId === cert.id}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#E4ECE6] hover:bg-[#C7D9CD] text-[#1F2C23] text-xs font-mono font-bold border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
-                >
-                  <RefreshCw className={`w-3.5 h-3.5 text-[#385241] ${verifyingId === cert.id ? 'animate-spin' : ''}`} />
-                  {verifyingId === cert.id ? 'Checking...' : 'Re-verify'}
-                </button>
-                <button
-                  onClick={() => handleDelete(cert.id)}
-                  className="p-2 rounded-xl text-[#758C7D] hover:text-[#D97043] hover:bg-[#FCE5DB] border-2 border-transparent hover:border-[#1F2C23] transition-all"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                  <p className="text-xs text-[#1F2C23] font-bold">
+                    <span>{cert.issuer}</span>
+                    {cert.credentialId && (
+                      <span className="text-[#1F2C23] font-mono ml-2 bg-white px-2 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] font-black">
+                        ID: {cert.credentialId}
+                      </span>
+                    )}
+                  </p>
+
+                  <div className="flex flex-wrap items-center gap-3 text-[11px] text-[#24362A] font-mono font-bold">
+                    <span>Issued: {new Date(cert.issueDate).toLocaleDateString()}</span>
+                    {cert.doesNotExpire ? (
+                      <span className="text-[#16A34A] font-black">No Expiry</span>
+                    ) : cert.expiryDate ? (
+                      <span>Expires: {new Date(cert.expiryDate).toLocaleDateString()}</span>
+                    ) : null}
+                    {cert.lastVerifiedAt && (
+                      <span className="text-[#586E5F]">
+                        Verified: {new Date(cert.lastVerifiedAt).toLocaleDateString()}
+                      </span>
+                    )}
+                  </div>
+
+                  {cert.credentialUrl && (
+                    <div className="pt-1">
+                      <a
+                        href={cert.credentialUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-xs font-mono font-black text-[#D97043] hover:text-[#C55F34] transition-colors"
+                      >
+                        <span>Inspect Credential Evidence</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => handleVerify(cert.id)}
+                    disabled={verifyingId === cert.id}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 text-[#385241] ${verifyingId === cert.id ? 'animate-spin' : ''}`} />
+                    {verifyingId === cert.id ? 'Checking...' : 'Re-verify'}
+                  </button>
+                  <button
+                    onClick={() => handleDelete(cert.id)}
+                    className="p-2 rounded-xl text-[#1F2C23] hover:text-[#DC2626] hover:bg-white border-2 border-transparent hover:border-[#1F2C23] transition-all"
+                    title="Delete credential"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

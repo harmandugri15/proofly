@@ -48,7 +48,11 @@ export const RecruiterDashboard: React.FC = () => {
   const orgName = user?.recruiterProfile?.organization?.name || 'Your Organization';
 
   return (
-    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn">
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 animate-fadeIn relative">
+      {/* High-Energy Ambient Mesh Glow Blobs */}
+      <div className="absolute top-10 right-10 w-[500px] h-[500px] bg-[#FFDE59]/35 rounded-full blur-[110px] pointer-events-none -z-10" />
+      <div className="absolute top-[400px] left-0 w-[550px] h-[550px] bg-[#70D6FF]/35 rounded-full blur-[120px] pointer-events-none -z-10" />
+
       {/* Banner */}
       <div className="relative rounded-[28px] bg-[#385241] text-white p-6 sm:p-8 overflow-hidden shadow-[4px_4px_0px_#1F2C23] border-2 border-[#1F2C23] flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="relative z-10 space-y-2">

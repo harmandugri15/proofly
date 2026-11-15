@@ -66,7 +66,12 @@ export const StudentDashboard: React.FC = () => {
   const score = profile?.completenessScore || 0;
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 bg-[#FAF7F2] text-[#1F2C23]">
+    <div className="w-full max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 bg-transparent text-[#1F2C23] relative">
+      {/* High-Energy Ambient Mesh Glow Blobs */}
+      <div className="absolute top-10 right-10 w-[500px] h-[500px] bg-[#FFDE59]/35 rounded-full blur-[110px] pointer-events-none -z-10" />
+      <div className="absolute top-[400px] left-0 w-[550px] h-[550px] bg-[#70D6FF]/35 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-[800px] right-10 w-[450px] h-[450px] bg-[#86EFAC]/30 rounded-full blur-[100px] pointer-events-none -z-10" />
+
       {/* Top Profile Banner (Editorial warm cream card) */}
       <div className="relative overflow-hidden rounded-[28px] bg-white border-2 border-[#1F2C23] p-6 sm:p-8 shadow-[4px_4px_0px_#1F2C23]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative">

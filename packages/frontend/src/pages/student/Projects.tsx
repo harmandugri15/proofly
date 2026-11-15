@@ -239,10 +239,12 @@ export const StudentProjectsPage: React.FC = () => {
       </div>
 
       {/* 1-Click Crawler Banner with Robot Mascot */}
-      <div className="p-6 rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-4 relative overflow-hidden w-full max-w-full">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-6 rounded-[28px] bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-4 relative overflow-hidden w-full max-w-full">
+        {/* Decorative corner glows */}
+        <div className="absolute top-0 right-0 -mr-10 -mt-10 w-44 h-44 bg-[#FFDE59]/50 rounded-full blur-2xl pointer-events-none" />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
           <div className="flex items-center gap-3.5">
-            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] shrink-0 bg-[#FAF7F2]">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] shrink-0 bg-white">
               <img
                 src="/images/crawler-bot.jpg"
                 alt="Crawler Mascot"
@@ -256,14 +258,14 @@ export const StudentProjectsPage: React.FC = () => {
                   Auto-Telemetry
                 </span>
               </h2>
-              <p className="text-xs text-[#586E5F] font-medium">
+              <p className="text-xs text-[#24362A] font-medium">
                 Paste your repository link below. Proofly's crawler automatically extracts title, architecture summary from README, languages, stars, and live demo link.
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-2.5 pt-1">
+        <div className="flex flex-col sm:flex-row gap-2.5 pt-1 relative z-10">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#586E5F]">
               <Github className="w-4 h-4" />
@@ -273,14 +275,14 @@ export const StudentProjectsPage: React.FC = () => {
               value={quickRepoUrl}
               onChange={(e) => setQuickRepoUrl(e.target.value)}
               placeholder="https://github.com/username/repository"
-              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono transition-all"
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23] font-mono transition-all font-bold"
             />
           </div>
 
           <button
             onClick={() => handleAutoFetch(quickRepoUrl, quickToken)}
             disabled={isAutoFetching || !quickRepoUrl.trim()}
-            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-50 text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
+            className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[#D97043] hover:bg-[#C55F34] disabled:opacity-50 text-white font-black text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0"
           >
             {isAutoFetching ? (
               <>
@@ -299,14 +301,14 @@ export const StudentProjectsPage: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowTokenInput(!showTokenInput)}
-            className="text-[11px] font-mono text-forest-700/70 hover:text-forest-900 underline flex items-center gap-1"
+            className="text-[11px] font-mono font-bold text-[#1F2C23] hover:underline flex items-center gap-1"
           >
             {showTokenInput ? '− Hide Access Token' : '+ Add Access Token for Private Repository'}
           </button>
 
           {showTokenInput && (
-            <div className="mt-2 p-3 rounded-xl bg-sand-50/90 border border-sand-300 space-y-1.5 animate-fadeIn">
-              <label className="block text-[10px] font-mono font-bold uppercase text-forest-800">
+            <div className="mt-2 p-3 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] space-y-1.5 animate-fadeIn">
+              <label className="block text-[10px] font-mono font-black uppercase text-[#1F2C23]">
                 GitHub Personal Access Token (Classic ghp_... or Fine-grained github_pat_...)
               </label>
               <input
@@ -314,9 +316,9 @@ export const StudentProjectsPage: React.FC = () => {
                 value={quickToken}
                 onChange={(e) => setQuickToken(e.target.value)}
                 placeholder="Paste token with repo scope to crawl private repos"
-                className="w-full px-3 py-1.5 rounded-lg bg-white border border-sand-300 text-forest-900 text-xs font-mono focus:outline-none focus:border-sage-500"
+                className="w-full px-3 py-1.5 rounded-lg bg-[#FAF7F2] border border-[#1F2C23] text-[#1F2C23] text-xs font-mono focus:outline-none"
               />
-              <p className="text-[10px] text-forest-700/60 font-mono">
+              <p className="text-[10px] text-[#586E5F] font-mono font-medium">
                 Tokens are used in-memory for this single fetch request and never persisted unencrypted.
               </p>
             </div>
@@ -324,13 +326,13 @@ export const StudentProjectsPage: React.FC = () => {
         </div>
 
         {githubSyncMsg && (
-          <p className="text-xs text-sage-800 bg-sage-50 border border-sage-200 p-2.5 rounded-xl flex items-center gap-1.5 font-mono">
-            <CheckCircle2 className="w-4 h-4 text-sage-600 shrink-0" /> {githubSyncMsg}
+          <p className="text-xs text-[#24362A] bg-[#DCFCE7] border-2 border-[#1F2C23] p-2.5 rounded-xl flex items-center gap-1.5 font-mono font-bold">
+            <CheckCircle2 className="w-4 h-4 text-[#16A34A] shrink-0" /> {githubSyncMsg}
           </p>
         )}
 
         {crawlerErrorMsg && (
-          <p className="text-xs text-terracotta-600 flex items-center gap-1.5 pt-1 font-mono">
+          <p className="text-xs text-[#DC2626] bg-[#FEE2E2] border-2 border-[#1F2C23] p-2.5 rounded-xl flex items-center gap-1.5 pt-1 font-mono font-bold">
             <AlertCircle className="w-3.5 h-3.5" /> {crawlerErrorMsg}
           </p>
         )}
@@ -338,86 +340,91 @@ export const StudentProjectsPage: React.FC = () => {
 
       {/* Projects Grid */}
       {projects.length === 0 ? (
-        <div className="p-16 text-center rounded-3xl bg-white/80 border border-sand-200 text-forest-700/60 space-y-3">
-          <FolderGit2 className="w-12 h-12 text-forest-700/40 mx-auto" />
-          <h3 className="text-base font-serif font-normal text-forest-900">No projects added yet</h3>
-          <p className="text-xs text-forest-700/70 max-w-sm mx-auto leading-relaxed">
+        <div className="p-16 text-center rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] text-[#586E5F] space-y-3">
+          <FolderGit2 className="w-12 h-12 text-[#1F2C23] mx-auto" />
+          <h3 className="text-lg font-serif font-black text-[#1F2C23]">No projects added yet</h3>
+          <p className="text-xs text-[#586E5F] max-w-sm mx-auto leading-relaxed font-medium">
             Projects with repository links or live demos provide essential proof of work for recruiters. Paste a GitHub link above to get started instantly.
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((project) => (
-            <div
-              key={project.id}
-              className="p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group"
-            >
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-base font-serif font-black text-[#1F2C23] leading-snug group-hover:text-[#D97043] transition-colors">
-                    {project.title}
-                  </h3>
-                  <EvidenceBadge status={project.verificationStatus} type="project" />
+          {projects.map((project, idx) => {
+            const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
+            const cardBg = cardBgs[idx % cardBgs.length];
+
+            return (
+              <div
+                key={project.id}
+                className={`p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group`}
+              >
+                <div className="space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-base font-serif font-black text-[#1F2C23] leading-snug group-hover:text-[#D97043] transition-colors">
+                      {project.title}
+                    </h3>
+                    <EvidenceBadge status={project.verificationStatus} type="project" />
+                  </div>
+
+                  <p className="text-xs text-[#1F2C23] font-black">{project.tagline}</p>
+                  <p className="text-xs text-[#24362A] font-medium leading-relaxed line-clamp-3">{project.description}</p>
+
+                  <div className="flex flex-wrap gap-1.5 pt-2">
+                    {project.skills?.map((s: string) => (
+                      <span
+                        key={s}
+                        className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
+                      >
+                        #{s}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
-                <p className="text-xs text-[#1F2C23] font-bold">{project.tagline}</p>
-                <p className="text-xs text-[#586E5F] leading-relaxed line-clamp-3">{project.description}</p>
+                <div className="pt-4 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs">
+                  <div className="flex items-center gap-3">
+                    {project.repositoryUrl && (
+                      <a
+                        href={project.repositoryUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1.5 transition-colors font-mono font-black"
+                      >
+                        <Github className="w-3.5 h-3.5" /> Source Code
+                      </a>
+                    )}
+                    {project.demoUrl && (
+                      <a
+                        href={project.demoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1.5 transition-colors font-mono font-black"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                      </a>
+                    )}
+                  </div>
 
-                <div className="flex flex-wrap gap-1.5 pt-2">
-                  {project.skills?.map((s: string) => (
-                    <span
-                      key={s}
-                      className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-[#FAF7F2] text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleVerifyProject(project.id)}
+                      disabled={verifyingId === project.id}
+                      className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] text-[11px] font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                     >
-                      #{s}
-                    </span>
-                  ))}
+                      {verifyingId === project.id ? 'Checking...' : 'Re-verify'}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteProject(project.id)}
+                      className="p-1.5 rounded-xl text-[#1F2C23] hover:text-[#DC2626] hover:bg-white border-2 border-transparent hover:border-[#1F2C23] transition-all"
+                      title="Delete project"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="pt-4 border-t-2 border-[#FAF7F2] flex items-center justify-between text-xs">
-                <div className="flex items-center gap-3">
-                  {project.repositoryUrl && (
-                    <a
-                      href={project.repositoryUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1.5 transition-colors font-mono font-bold"
-                    >
-                      <Github className="w-3.5 h-3.5" /> Source Code
-                    </a>
-                  )}
-                  {project.demoUrl && (
-                    <a
-                      href={project.demoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1.5 transition-colors font-mono font-black"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" /> Live Demo
-                    </a>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => handleVerifyProject(project.id)}
-                    disabled={verifyingId === project.id}
-                    className="px-3.5 py-1.5 rounded-xl bg-[#E4ECE6] hover:bg-[#C7D9CD] text-[#1F2C23] text-[11px] font-mono font-bold border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
-                  >
-                    {verifyingId === project.id ? 'Checking...' : 'Re-verify'}
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProject(project.id)}
-                    className="p-1.5 rounded-xl text-[#758C7D] hover:text-[#D97043] hover:bg-[#FCE5DB] border-2 border-transparent hover:border-[#1F2C23] transition-all"
-                    title="Delete project"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

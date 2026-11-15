@@ -133,7 +133,12 @@ export const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-[#FAF7F2] text-[#1F2C23]">
+    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-transparent text-[#1F2C23] relative overflow-hidden">
+      {/* High-Energy Ambient Mesh Glow Blobs */}
+      <div className="absolute top-1/4 -right-20 w-[500px] h-[500px] bg-[#FFDE59]/40 rounded-full blur-[110px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 -left-20 w-[500px] h-[500px] bg-[#70D6FF]/40 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute -top-10 left-1/3 w-[380px] h-[380px] bg-[#86EFAC]/35 rounded-full blur-[90px] pointer-events-none -z-10" />
+
       <div className="w-full max-w-lg bg-white border-2 border-[#1F2C23] rounded-[28px] p-7 sm:p-9 shadow-[6px_6px_0px_#1F2C23] relative space-y-6">
         {step === 'REGISTER' ? (
           <>

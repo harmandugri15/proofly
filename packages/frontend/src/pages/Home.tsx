@@ -47,7 +47,15 @@ export const Home: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#FAF7F2] text-[#1F2C23] selection:bg-[#D97043]/20 selection:text-[#D97043] pb-20">
+    <div className="min-h-screen w-full bg-transparent text-[#1F2C23] selection:bg-[#D97043]/20 selection:text-[#D97043] pb-20 relative overflow-hidden">
+      {/* High-Energy Neo-Brutalist Ambient Mesh Orbs */}
+      <div className="absolute top-10 left-1/4 -translate-x-1/2 w-[650px] h-[650px] bg-[#FFDE59]/40 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-48 right-0 w-[700px] h-[700px] bg-[#70D6FF]/40 rounded-full blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute top-[850px] left-5 w-[600px] h-[600px] bg-[#D8B4FE]/35 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-[1600px] right-5 w-[650px] h-[650px] bg-[#86EFAC]/40 rounded-full blur-[125px] pointer-events-none -z-10" />
+      <div className="absolute top-[2400px] left-1/3 w-[650px] h-[650px] bg-[#FF8A65]/35 rounded-full blur-[130px] pointer-events-none -z-10" />
+      <div className="absolute top-[3200px] right-10 w-[600px] h-[600px] bg-[#FFDE59]/35 rounded-full blur-[120px] pointer-events-none -z-10" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 space-y-16 sm:space-y-24">
         
         {/* ========================================================================= */}
@@ -416,23 +424,23 @@ export const Home: React.FC = () => {
           <p className="text-xs uppercase font-mono tracking-widest text-[#758C7D]">
             Engineering talent trained at world-class institutions • Scouted by high-velocity teams
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 pt-2">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-2">
             {[
-              'MIT CSAIL',
-              'Stanford Eng',
-              'UC Berkeley EECS',
-              'Carnegie Mellon',
-              'Chitkara University',
-              'Stripe Tech',
-              'Linear',
-              'Cloudflare',
-              'Vercel',
-            ].map((name) => (
+              { name: 'MIT CSAIL', bg: 'bg-[#FEF9C3]' },
+              { name: 'Stanford Eng', bg: 'bg-[#E0F2FE]' },
+              { name: 'UC Berkeley EECS', bg: 'bg-[#DCFCE7]' },
+              { name: 'Carnegie Mellon', bg: 'bg-[#F3E8FF]' },
+              { name: 'Chitkara University', bg: 'bg-[#FFE4E6]' },
+              { name: 'Stripe Tech', bg: 'bg-[#FEF9C3]' },
+              { name: 'Linear', bg: 'bg-[#E0F2FE]' },
+              { name: 'Cloudflare', bg: 'bg-[#FFEDD5]' },
+              { name: 'Vercel', bg: 'bg-[#DCFCE7]' },
+            ].map((item) => (
               <span
-                key={name}
-                className="px-4 py-2 rounded-full bg-white border border-[#DDD5C4] text-xs font-semibold text-[#405446] shadow-2xs hover:border-[#74947F] transition-colors"
+                key={item.name}
+                className={`px-4 py-2 rounded-xl ${item.bg} border-2 border-[#1F2C23] text-xs font-black text-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all`}
               >
-                {name}
+                {item.name}
               </span>
             ))}
           </div>
@@ -889,50 +897,50 @@ export const Home: React.FC = () => {
         {/* ========================================================================= */}
         <section className="space-y-8">
           <div className="max-w-2xl mx-auto text-center space-y-2">
-            <span className="text-xs font-mono uppercase font-bold text-[#D97043] tracking-wider">
+            <span className="text-xs font-mono uppercase font-black text-[#1F2C23] bg-[#FFDE59] px-3.5 py-1 rounded-xl border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] inline-block tracking-wider">
               Three Simple Steps
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1F2C23]">
+            <h2 className="font-serif text-3xl sm:text-5xl font-black text-[#1F2C23]">
               From code editor to interview in minutes.
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Step 1 */}
-            <div className="p-7 rounded-[32px] bg-white border border-[#DDD5C4] space-y-4 shadow-xs hover:border-[#74947F] transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#E4ECE6] text-[#24362A] flex items-center justify-center font-mono font-bold text-sm">
+            {/* Step 1: Pastel Butter */}
+            <div className="p-7 rounded-[28px] bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-4 hover:shadow-[7px_7px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-white text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center font-mono font-black text-base">
                 01
               </div>
-              <h3 className="font-serif text-lg font-bold text-[#1F2C23]">
+              <h3 className="font-serif text-xl font-black text-[#1F2C23]">
                 Connect Your Stack
               </h3>
-              <p className="text-xs text-[#586E5F] leading-relaxed">
+              <p className="text-xs text-[#24362A] font-medium leading-relaxed">
                 Link your GitHub profile, LeetCode handle, and Credly certifications. Proofly's autonomous crawler auto-syncs your projects in 60 seconds.
               </p>
             </div>
 
-            {/* Step 2 */}
-            <div className="p-7 rounded-[32px] bg-white border border-[#DDD5C4] space-y-4 shadow-xs hover:border-[#74947F] transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#FCE5DB] text-[#853C1E] flex items-center justify-center font-mono font-bold text-sm">
+            {/* Step 2: Ice Cyan */}
+            <div className="p-7 rounded-[28px] bg-[#E0F2FE] border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-4 hover:shadow-[7px_7px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-white text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center font-mono font-black text-base">
                 02
               </div>
-              <h3 className="font-serif text-lg font-bold text-[#1F2C23]">
+              <h3 className="font-serif text-xl font-black text-[#1F2C23]">
                 Get Your Fast-Pass™ Hash
               </h3>
-              <p className="text-xs text-[#586E5F] leading-relaxed">
-                Proofly computes your Proof Score and issues a clean, copyable Access Hash (e.g. <code className="bg-[#FAF7F2] px-1 rounded font-mono font-bold text-[#1F2C23]">PRF-XXXXXXXX</code>) ready for resumes and LinkedIn.
+              <p className="text-xs text-[#24362A] font-medium leading-relaxed">
+                Proofly computes your Proof Score and issues a clean, copyable Access Hash (e.g. <code className="bg-white px-1.5 py-0.5 rounded font-mono font-black text-[#1F2C23] border border-[#1F2C23]">PRF-XXXXXXXX</code>) ready for resumes and LinkedIn.
               </p>
             </div>
 
-            {/* Step 3 */}
-            <div className="p-7 rounded-[32px] bg-white border border-[#DDD5C4] space-y-4 shadow-xs hover:border-[#74947F] transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[#E4ECE6] text-[#24362A] flex items-center justify-center font-mono font-bold text-sm">
+            {/* Step 3: Fresh Mint */}
+            <div className="p-7 rounded-[28px] bg-[#DCFCE7] border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-4 hover:shadow-[7px_7px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+              <div className="w-12 h-12 rounded-2xl bg-white text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center font-mono font-black text-base">
                 03
               </div>
-              <h3 className="font-serif text-lg font-bold text-[#1F2C23]">
+              <h3 className="font-serif text-xl font-black text-[#1F2C23]">
                 Land High-Signal Roles
               </h3>
-              <p className="text-xs text-[#586E5F] leading-relaxed">
+              <p className="text-xs text-[#24362A] font-medium leading-relaxed">
                 Hiring managers unlock your card with zero login friction, evaluate your authentic commits, and fast-track you directly to final-round interviews.
               </p>
             </div>
@@ -940,32 +948,32 @@ export const Home: React.FC = () => {
         </section>
 
         {/* ========================================================================= */}
-        {/* 6. BIG IMPACT METRICS GRID (Brevo-Style Bold Numbers)                     */}
+        {/* 6. BIG IMPACT METRICS GRID (Neo-Brutalist Multi-Color Tiles)             */}
         {/* ========================================================================= */}
-        <section className="rounded-[36px] bg-[#E4ECE6] border border-[#C7D9CD] p-8 sm:p-12 shadow-sm">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center">
-            <div className="space-y-1">
-              <div className="font-serif text-3xl sm:text-5xl font-bold text-[#1F2C23]">365</div>
-              <div className="text-xs font-semibold text-[#385241]">Days Git Telemetry</div>
-              <div className="text-[11px] text-[#586E5F]">Live commit cadence</div>
+        <section className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-center">
+            <div className="p-6 rounded-[24px] bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-1 hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+              <div className="font-serif text-4xl sm:text-5xl font-black text-[#1F2C23]">365</div>
+              <div className="text-xs font-mono font-black uppercase text-[#1F2C23]">Days Git Telemetry</div>
+              <div className="text-[11px] text-[#586E5F] font-bold">Live commit cadence</div>
             </div>
 
-            <div className="space-y-1">
-              <div className="font-serif text-3xl sm:text-5xl font-bold text-[#1F2C23]">100%</div>
-              <div className="text-xs font-semibold text-[#385241]">Grounded Proof</div>
-              <div className="text-[11px] text-[#586E5F]">SHA-256 repo hashes</div>
+            <div className="p-6 rounded-[24px] bg-[#DCFCE7] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-1 hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+              <div className="font-serif text-4xl sm:text-5xl font-black text-[#1F2C23]">100%</div>
+              <div className="text-xs font-mono font-black uppercase text-[#1F2C23]">Grounded Proof</div>
+              <div className="text-[11px] text-[#586E5F] font-bold">SHA-256 repo hashes</div>
             </div>
 
-            <div className="space-y-1">
-              <div className="font-serif text-3xl sm:text-5xl font-bold text-[#1F2C23]">0%</div>
-              <div className="text-xs font-semibold text-[#385241]">Resume Fluff</div>
-              <div className="text-[11px] text-[#586E5F]">Verified signals only</div>
+            <div className="p-6 rounded-[24px] bg-[#E0F2FE] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-1 hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+              <div className="font-serif text-4xl sm:text-5xl font-black text-[#1F2C23]">0%</div>
+              <div className="text-xs font-mono font-black uppercase text-[#1F2C23]">Resume Fluff</div>
+              <div className="text-[11px] text-[#586E5F] font-bold">Verified signals only</div>
             </div>
 
-            <div className="space-y-1">
-              <div className="font-serif text-3xl sm:text-5xl font-bold text-[#D97043]">3.8x</div>
-              <div className="text-xs font-semibold text-[#853C1E]">Faster Screening</div>
-              <div className="text-[11px] text-[#586E5F]">Direct Fast-Pass access</div>
+            <div className="p-6 rounded-[24px] bg-[#FFEDD5] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-1 hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+              <div className="font-serif text-4xl sm:text-5xl font-black text-[#D97043]">3.8x</div>
+              <div className="text-xs font-mono font-black uppercase text-[#853C1E]">Faster Screening</div>
+              <div className="text-[11px] text-[#586E5F] font-bold">Direct Fast-Pass access</div>
             </div>
           </div>
         </section>
@@ -975,49 +983,49 @@ export const Home: React.FC = () => {
         {/* ========================================================================= */}
         <section className="space-y-8">
           <div className="text-center space-y-2">
-            <span className="text-xs font-mono uppercase font-bold text-[#385241] tracking-wider">
+            <span className="text-xs font-mono uppercase font-black text-[#1F2C23] bg-[#86EFAC] px-3.5 py-1 rounded-xl border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] inline-block tracking-wider">
               From Builders & Hiring Teams
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1F2C23]">
+            <h2 className="font-serif text-2xl sm:text-4xl font-black text-[#1F2C23]">
               What engineers and recruiters say about Proofly
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-            {/* Student Testimonial */}
-            <div className="p-7 rounded-[32px] bg-white border border-[#DDD5C4] space-y-4 shadow-xs flex flex-col justify-between">
+            {/* Student Testimonial: Lilac Lavender */}
+            <div className="p-7 rounded-[28px] bg-[#F3E8FF] border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-4 flex flex-col justify-between hover:shadow-[7px_7px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
               <div className="space-y-3">
-                <Quote className="w-6 h-6 text-[#74947F]" />
-                <p className="text-xs sm:text-sm text-[#405446] leading-relaxed italic">
+                <Quote className="w-8 h-8 text-[#9333EA]" />
+                <p className="text-xs sm:text-sm text-[#1F2C23] leading-relaxed font-semibold italic">
                   "Recruiters bypassed the generic algorithmic phone screen because my Raft consensus project had 99.4% test coverage and 184 inspectable commits verified on Proofly. It completely changed my job search."
                 </p>
               </div>
-              <div className="flex items-center gap-3 pt-2 border-t border-[#EBE5D8]">
-                <div className="w-10 h-10 rounded-full bg-[#E4ECE6] flex items-center justify-center font-bold text-xs text-[#24362A]">
+              <div className="flex items-center gap-3 pt-3 border-t-2 border-[#1F2C23]/20">
+                <div className="w-11 h-11 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center font-black text-sm text-[#1F2C23]">
                   AR
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-[#1F2C23]">Alex Rivera</div>
-                  <div className="text-[11px] text-[#758C7D]">CS Senior @ UC Berkeley • Hired as Cloud Engineer</div>
+                  <div className="text-xs font-black text-[#1F2C23]">Alex Rivera</div>
+                  <div className="text-[11px] text-[#586E5F] font-bold">CS Senior @ UC Berkeley • Hired as Cloud Engineer</div>
                 </div>
               </div>
             </div>
 
-            {/* Recruiter Testimonial */}
-            <div className="p-7 rounded-[32px] bg-white border border-[#DDD5C4] space-y-4 shadow-xs flex flex-col justify-between">
+            {/* Recruiter Testimonial: Soft Coral Rose */}
+            <div className="p-7 rounded-[28px] bg-[#FFE4E6] border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-4 flex flex-col justify-between hover:shadow-[7px_7px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
               <div className="space-y-3">
-                <Quote className="w-6 h-6 text-[#D97043]" />
-                <p className="text-xs sm:text-sm text-[#405446] leading-relaxed italic">
+                <Quote className="w-8 h-8 text-[#E11D48]" />
+                <p className="text-xs sm:text-sm text-[#1F2C23] leading-relaxed font-semibold italic">
                   "Instead of wasting weeks reviewing 300 keyword-stuffed resumes, we unlocked 10 verified Fast-Pass cards on Proofly. We hired our top two distributed systems interns in less than seven days."
                 </p>
               </div>
-              <div className="flex items-center gap-3 pt-2 border-t border-[#EBE5D8]">
-                <div className="w-10 h-10 rounded-full bg-[#FCE5DB] flex items-center justify-center font-bold text-xs text-[#853C1E]">
+              <div className="flex items-center gap-3 pt-3 border-t-2 border-[#1F2C23]/20">
+                <div className="w-11 h-11 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center font-black text-sm text-[#1F2C23]">
                   SL
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-[#1F2C23]">Sarah Lin</div>
-                  <div className="text-[11px] text-[#758C7D]">Head of Technical Talent @ Series B Infrastructure Startup</div>
+                  <div className="text-xs font-black text-[#1F2C23]">Sarah Lin</div>
+                  <div className="text-[11px] text-[#586E5F] font-bold">Head of Technical Talent @ Series B Infrastructure Startup</div>
                 </div>
               </div>
             </div>
@@ -1025,45 +1033,47 @@ export const Home: React.FC = () => {
         </section>
 
         {/* ========================================================================= */}
-        {/* 8. HIGH-IMPACT FINAL CTA BANNER (Brevo-Style Conversion)                 */}
+        {/* 8. HIGH-IMPACT FINAL CTA BANNER (Neo-Brutalist Vibrant Conversion)        */}
         {/* ========================================================================= */}
-        <section className="rounded-[36px] sm:rounded-[44px] bg-[#385241] text-white p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-lg">
-          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-80 h-80 bg-[#74947F]/30 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-80 h-80 bg-[#D97043]/20 rounded-full blur-3xl pointer-events-none" />
+        <section className="rounded-[32px] sm:rounded-[44px] bg-[#385241] border-2 border-[#1F2C23] shadow-[8px_8px_0px_#1F2C23] text-white p-8 sm:p-14 lg:p-16 relative overflow-hidden">
+          {/* Intense Glowing Mesh Spots */}
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-96 h-96 bg-[#FFDE59]/35 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-96 h-96 bg-[#70D6FF]/35 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-[#FF8A65]/25 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-mono font-medium">
-              <Sparkles className="w-3.5 h-3.5 text-[#E8865D]" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#FFDE59] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-xs font-mono font-black">
+              <Sparkles className="w-3.5 h-3.5 text-[#D97043]" />
               <span>JOIN 10,000+ VERIFIED STUDENT BUILDERS</span>
             </div>
 
-            <h2 className="font-serif text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
+            <h2 className="font-serif text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
               Ready to replace your resume with verifiable engineering proof?
             </h2>
 
-            <p className="text-xs sm:text-base text-white/80 max-w-xl mx-auto leading-relaxed">
+            <p className="text-xs sm:text-base text-white/90 max-w-xl mx-auto leading-relaxed font-medium">
               Create your account in under 2 minutes. Connect your GitHub repositories, claim your Fast-Pass™ Access Hash, and let your craft speak for itself.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
               <Link
                 to="/register"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-[#D97043] hover:bg-[#C55F34] text-white font-semibold text-xs sm:text-sm transition-all shadow-md hover:-translate-y-0.5"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white font-black text-xs sm:text-sm border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
               >
                 <span>Create Student Account Free</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
               </Link>
               <Link
                 to="/register"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm border border-white/25 transition-all hover:-translate-y-0.5 backdrop-blur-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-[#70D6FF] hover:bg-[#58C4F0] text-[#1F2C23] font-black text-xs sm:text-sm border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
               >
                 <span>Hire Verified Talent</span>
-                <Users className="w-4 h-4" />
+                <Users className="w-4 h-4 text-[#1F2C23]" />
               </Link>
             </div>
 
-            <p className="text-[11px] text-white/60 font-mono pt-2">
-              No credit card required • Cryptographically grounded • Free forever for students
+            <p className="text-[11px] text-[#D8D2C4] font-mono font-bold pt-2">
+              ★ No credit card required • Cryptographically grounded • Free forever for students
             </p>
           </div>
         </section>

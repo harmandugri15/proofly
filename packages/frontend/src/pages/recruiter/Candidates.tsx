@@ -305,14 +305,15 @@ export const RecruiterCandidatesPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {candidates.map((candidate) => {
+            {candidates.map((candidate, idx) => {
               const isSelected = selectedForCompare.includes(candidate.id);
+              const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
+              const cardBg = isSelected ? 'bg-[#86EFAC]' : cardBgs[idx % cardBgs.length];
+
               return (
                 <div
                   key={candidate.id}
-                  className={`p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] transition-all flex flex-col justify-between space-y-4 shadow-[4px_4px_0px_#1F2C23] group hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#1F2C23] ${
-                    isSelected ? 'bg-[#E4ECE6]' : ''
-                  }`}
+                  className={`p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] transition-all flex flex-col justify-between space-y-4 shadow-[4px_4px_0px_#1F2C23] group hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_#1F2C23]`}
                 >
                   <div className="space-y-3">
                     <div className="flex items-start justify-between gap-3">
@@ -330,7 +331,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
                           )}
                         </button>
 
-                        <div className="w-10 h-10 rounded-xl bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center font-serif text-sm font-black text-[#1F2C23] shrink-0">
+                        <div className="w-10 h-10 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center font-serif text-sm font-black text-[#1F2C23] shrink-0">
                           {candidate.user?.name ? candidate.user.name[0] : 'U'}
                         </div>
 
@@ -338,18 +339,18 @@ export const RecruiterCandidatesPage: React.FC = () => {
                           <h3 className="font-serif text-base font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors leading-snug">
                             {candidate.user?.name}
                           </h3>
-                          <p className="text-xs text-[#586E5F] font-mono font-bold">
+                          <p className="text-xs text-[#24362A] font-mono font-bold">
                             @{candidate.username} {candidate.targetGraduationYear ? `• Class of '${candidate.targetGraduationYear.toString().slice(-2)}` : ''}
                           </p>
                         </div>
                       </div>
 
-                      <span className="text-xs font-mono font-black text-[#1F2C23] bg-[#E4ECE6] px-3 py-1 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0">
+                      <span className="text-xs font-mono font-black text-[#1F2C23] bg-white px-3 py-1 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0">
                         {candidate.completenessScore}% Proof
                       </span>
                     </div>
 
-                    <p className="text-xs text-[#24362A] font-medium line-clamp-2 leading-relaxed">
+                    <p className="text-xs text-[#1F2C23] font-bold line-clamp-2 leading-relaxed">
                       {candidate.headline || 'Software Engineer'}
                     </p>
 
@@ -357,7 +358,7 @@ export const RecruiterCandidatesPage: React.FC = () => {
                       {candidate.skills?.slice(0, 5).map((s: any) => (
                         <span
                           key={s.id}
-                          className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-[#FAF7F2] text-[#1F2C23] border border-[#1F2C23]"
+                          className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
                         >
                           {s.name}
                         </span>
@@ -365,8 +366,8 @@ export const RecruiterCandidatesPage: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="pt-3 border-t-2 border-[#FAF7F2] flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-3 text-[#586E5F] font-mono text-[11px] font-bold">
+                  <div className="pt-3 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3 text-[#24362A] font-mono text-[11px] font-black">
                       <span>{candidate.projects?.length || 0} projects</span>
                       <span>•</span>
                       <span>{candidate.certificates?.length || 0} credentials</span>
@@ -374,10 +375,10 @@ export const RecruiterCandidatesPage: React.FC = () => {
 
                     <Link
                       to={`/recruiter/candidates/${candidate.id}`}
-                      className="inline-flex items-center gap-1.5 text-xs font-black text-[#D97043] hover:text-[#C55F34] transition-colors"
+                      className="inline-flex items-center gap-1.5 text-xs font-black text-[#1F2C23] hover:text-[#D97043] transition-colors"
                     >
                       <span>Inspect Evidence</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-3.5 h-3.5 stroke-[3]" />
                     </Link>
                   </div>
                 </div>

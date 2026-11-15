@@ -71,7 +71,12 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-[#FAF7F2] text-[#1F2C23]">
+    <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4 bg-transparent text-[#1F2C23] relative overflow-hidden">
+      {/* High-Energy Ambient Mesh Glow Blobs */}
+      <div className="absolute top-1/4 -left-20 w-[450px] h-[450px] bg-[#FFDE59]/40 rounded-full blur-[100px] pointer-events-none -z-10" />
+      <div className="absolute bottom-10 -right-20 w-[450px] h-[450px] bg-[#70D6FF]/40 rounded-full blur-[110px] pointer-events-none -z-10" />
+      <div className="absolute -top-10 right-1/3 w-[350px] h-[350px] bg-[#D8B4FE]/30 rounded-full blur-[90px] pointer-events-none -z-10" />
+
       <div className="w-full max-w-md bg-white border-2 border-[#1F2C23] rounded-[28px] p-7 sm:p-9 shadow-[6px_6px_0px_#1F2C23] relative space-y-6">
         
         {/* Header */}

@@ -29,11 +29,17 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Subtle warm ambient lighting */
+    /* Vibrant Neo-Brutalist High-Energy Ambient Mesh & Graph Matrix */
     background-image: 
-      radial-gradient(at 0% 0%, rgba(134, 167, 145, 0.12) 0px, transparent 45%),
-      radial-gradient(at 100% 20%, rgba(217, 112, 67, 0.08) 0px, transparent 40%),
-      radial-gradient(at 50% 100%, rgba(116, 148, 127, 0.08) 0px, transparent 50%);
+      radial-gradient(at 0% 5%, rgba(255, 222, 89, 0.42) 0px, transparent 45%),
+      radial-gradient(at 100% 12%, rgba(112, 214, 255, 0.38) 0px, transparent 48%),
+      radial-gradient(at 50% 35%, rgba(216, 180, 254, 0.30) 0px, transparent 50%),
+      radial-gradient(at 95% 65%, rgba(134, 239, 172, 0.35) 0px, transparent 45%),
+      radial-gradient(at 5% 75%, rgba(255, 138, 101, 0.32) 0px, transparent 45%),
+      radial-gradient(at 50% 90%, rgba(255, 222, 89, 0.28) 0px, transparent 50%),
+      linear-gradient(to right, rgba(31, 44, 35, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(31, 44, 35, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 32px 32px, 32px 32px;
     background-attachment: fixed;
   }
 
@@ -167,6 +173,130 @@
   color: #1F2C23;
   border: 2px solid #1F2C23;
   box-shadow: 3px 3px 0px #1F2C23;
+}
+
+/* Neo-Brutalist Pop Pastel Cards with Tactile Inset/Shadows */
+.neo-card-yellow {
+  background-color: #FEF9C3;
+  border: 2px solid #1F2C23;
+  border-radius: 24px;
+  box-shadow: 4px 4px 0px #1F2C23;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neo-card-yellow:hover {
+  box-shadow: 6px 6px 0px #1F2C23;
+  transform: translate(-1px, -1px);
+}
+
+.neo-card-cyan {
+  background-color: #E0F2FE;
+  border: 2px solid #1F2C23;
+  border-radius: 24px;
+  box-shadow: 4px 4px 0px #1F2C23;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neo-card-cyan:hover {
+  box-shadow: 6px 6px 0px #1F2C23;
+  transform: translate(-1px, -1px);
+}
+
+.neo-card-mint {
+  background-color: #DCFCE7;
+  border: 2px solid #1F2C23;
+  border-radius: 24px;
+  box-shadow: 4px 4px 0px #1F2C23;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neo-card-mint:hover {
+  box-shadow: 6px 6px 0px #1F2C23;
+  transform: translate(-1px, -1px);
+}
+
+.neo-card-lavender {
+  background-color: #F3E8FF;
+  border: 2px solid #1F2C23;
+  border-radius: 24px;
+  box-shadow: 4px 4px 0px #1F2C23;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neo-card-lavender:hover {
+  box-shadow: 6px 6px 0px #1F2C23;
+  transform: translate(-1px, -1px);
+}
+
+.neo-card-coral {
+  background-color: #FFE4E6;
+  border: 2px solid #1F2C23;
+  border-radius: 24px;
+  box-shadow: 4px 4px 0px #1F2C23;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neo-card-coral:hover {
+  box-shadow: 6px 6px 0px #1F2C23;
+  transform: translate(-1px, -1px);
+}
+
+.neo-card-peach {
+  background-color: #FFEDD5;
+  border: 2px solid #1F2C23;
+  border-radius: 24px;
+  box-shadow: 4px 4px 0px #1F2C23;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.neo-card-peach:hover {
+  box-shadow: 6px 6px 0px #1F2C23;
+  transform: translate(-1px, -1px);
+}
+
+/* Rich Ambient Mesh Blobs */
+.mesh-glow-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.mesh-blob-yellow {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(255, 222, 89, 0.45) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.mesh-blob-cyan {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(112, 214, 255, 0.40) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.mesh-blob-lavender {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(216, 180, 254, 0.38) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.mesh-blob-mint {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(134, 239, 172, 0.40) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.mesh-blob-coral {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(255, 138, 101, 0.38) 0%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
 }
 
 .neo-sticker {
