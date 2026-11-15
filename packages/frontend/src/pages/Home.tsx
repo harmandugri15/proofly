@@ -56,19 +56,19 @@ export const Home: React.FC = () => {
         <section className="space-y-10 sm:space-y-12">
           {/* Hero Header Content */}
           <div className="max-w-4xl mx-auto text-center space-y-6 pt-4">
-            {/* Announcement Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E4ECE6] border border-[#C7D9CD] text-[#24362A] text-xs font-semibold shadow-2xs hover:border-[#74947F] transition-colors">
-              <span className="flex h-2 w-2 rounded-full bg-[#385241] animate-pulse" />
+            {/* Announcement Pill with Vibrant Pop */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#FFDE59] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-[#1F2C23] text-xs font-black">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-[#1F2C23] animate-ping" />
               <span className="tracking-wide uppercase font-mono text-[11px]">The New Technical Standard</span>
-              <span className="text-[#586E5F] hidden sm:inline">•</span>
-              <span className="text-[#385241] hidden sm:inline">Replacing Fluff with Proof</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#385241]" />
+              <span className="text-[#1F2C23] hidden sm:inline">•</span>
+              <span className="text-[#1F2C23] hidden sm:inline">Replacing Fluff with Verifiable Proof</span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#1F2C23]" />
             </div>
 
             {/* Main Headline */}
-            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#1F2C23] leading-[1.08]">
+            <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-[#1F2C23] leading-[1.08]">
               The all-in-one platform to{' '}
-              <span className="text-[#385241] italic font-normal">verify</span>, showcase, and scout{' '}
+              <span className="text-[#385241] italic font-normal bg-[#86EFAC] px-2 py-0.5 rounded-lg border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">verify</span>, showcase, and scout{' '}
               <span className="relative inline-block text-[#D97043]">
                 real code.
                 <svg className="absolute -bottom-2 left-0 w-full h-3 text-[#D97043]/40" viewBox="0 0 100 20" preserveAspectRatio="none">
@@ -78,41 +78,110 @@ export const Home: React.FC = () => {
             </h1>
 
             {/* Subheading */}
-            <p className="text-base sm:text-xl text-[#586E5F] max-w-2xl mx-auto leading-relaxed font-sans font-normal">
+            <p className="text-base sm:text-xl text-[#405446] max-w-2xl mx-auto leading-relaxed font-sans font-medium">
               Say goodbye to 2-page PDF resumes stuffed with buzzwords. Proofly turns genuine GitHub commits, algorithmic problem solving, and verified credentials into a high-trust technical dossier with 1-click Fast-Pass™ access.
             </p>
 
-            {/* Primary Action Row */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            {/* Primary Action Row with Neo-Brutalist Tactile Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
               <Link
                 to="/register"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full bg-[#D97043] hover:bg-[#C55F34] text-white font-semibold text-sm transition-all shadow-[0_4px_16px_rgba(217,112,67,0.32)] hover:shadow-[0_6px_22px_rgba(217,112,67,0.44)] hover:-translate-y-0.5"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white font-black text-sm border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
               >
                 <span>Get Started Free</span>
-                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
               </Link>
               <Link
                 to="/posts"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-white hover:bg-[#F8F5EE] text-[#1F2C23] font-semibold text-sm border border-[#DDD5C4] transition-all shadow-xs hover:-translate-y-0.5"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-[#70D6FF] hover:bg-[#58C4F0] text-[#1F2C23] font-black text-sm border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all"
               >
                 <span>Explore Verified Community</span>
-                <ExternalLink className="w-4 h-4 text-[#758C7D]" />
+                <ExternalLink className="w-4 h-4 text-[#1F2C23]" />
               </Link>
             </div>
 
-            {/* Trust Bullet Chips */}
-            <div className="pt-2 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs font-medium text-[#586E5F]">
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#385241]" />
-                <span>100% Free for Student Builders</span>
+            {/* Vibrant Trust Bullet Chips */}
+            <div className="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-mono font-bold">
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#86EFAC] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#1F2C23]" />
+                <span>100% Free for Students</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#385241]" />
-                <span>Zero Login Wall with Fast-Pass™</span>
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#FFDE59] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+                <Zap className="w-3.5 h-3.5 text-[#1F2C23]" />
+                <span>Zero Login Wall Fast-Pass™</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-[#385241]" />
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#D8B4FE] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#1F2C23]" />
                 <span>SHA-256 Commit Grounding</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ========================================================================= */}
+          {/* Hero Illustrated Feature Banner (3D Neo-Brutalist Workspace Art)         */}
+          {/* ========================================================================= */}
+          <div className="relative rounded-[32px] sm:rounded-[40px] bg-white border-2 border-[#1F2C23] shadow-[8px_8px_0px_#1F2C23] p-4 sm:p-6 lg:p-8 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              {/* Left Column: Big Neo-Brutalist 3D Illustration */}
+              <div className="lg:col-span-6 relative group">
+                <div className="relative rounded-[24px] overflow-hidden border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] bg-[#FAF7F2]">
+                  <img
+                    src="/images/hero-workspace.jpg"
+                    alt="Proofly Neo-Brutalist Developer Workspace"
+                    className="w-full h-auto object-cover max-h-[380px] sm:max-h-[440px] transition-transform duration-300 group-hover:scale-105"
+                  />
+                  {/* Floating Tilted Neo-Brutalist Stickers */}
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-[#FFDE59] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-[11px] font-mono font-black text-[#1F2C23] -rotate-3 select-none">
+                    ★ 100% CRAWLER VERIFIED
+                  </div>
+                  <div className="absolute bottom-3 right-3 px-3 py-1 rounded-lg bg-[#86EFAC] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-[11px] font-mono font-black text-[#1F2C23] rotate-2 select-none flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#1F2C23] animate-ping" />
+                    <span>42/42 Tests Passing (99.4%)</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Live Telemetry Window Overview */}
+              <div className="lg:col-span-6 space-y-4">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#70D6FF] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-xs font-mono font-black text-[#1F2C23]">
+                  <Terminal className="w-4 h-4 text-[#1F2C23]" />
+                  <span>LIVE RECRUITER SPECIMEN</span>
+                </div>
+                <h3 className="font-serif text-2xl sm:text-3xl font-black text-[#1F2C23] leading-snug">
+                  Inspect authentic engineer output without asking for take-homes.
+                </h3>
+                <p className="text-xs sm:text-sm text-[#405446] leading-relaxed font-medium">
+                  Proofly automatically fetches repository ASTs, checks commit author signatures against GitHub APIs, and verifies live deployment health. Recruiters see verified evidence, not claims.
+                </p>
+
+                {/* Specimen Tags */}
+                <div className="grid grid-cols-2 gap-3 pt-1">
+                  <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+                    <span className="text-[10px] font-mono font-black uppercase text-[#586E5F] block">Commit Velocity</span>
+                    <span className="font-serif text-xl font-black text-[#1F2C23] block mt-0.5">482 Commits</span>
+                    <span className="text-[10px] font-mono text-[#2E7D32] font-bold">● 52-Week Active</span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+                    <span className="text-[10px] font-mono font-black uppercase text-[#586E5F] block">Code Quality Score</span>
+                    <span className="font-serif text-xl font-black text-[#D97043] block mt-0.5">96 / 100</span>
+                    <span className="text-[10px] font-mono text-[#1F2C23] font-bold">Peer-Audited</span>
+                  </div>
+                </div>
+
+                {/* Fast-Pass Quick Demo */}
+                <div className="p-3.5 rounded-xl bg-[#FEF08A] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="text-[10px] font-mono font-black uppercase text-[#1F2C23]">Specimen Access Hash:</span>
+                    <span className="font-mono text-xs font-black text-[#D97043] block truncate">PRF-8A2F9C1B</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyDemoHash}
+                    className="px-3.5 py-1.5 rounded-lg bg-[#1F2C23] text-white text-xs font-bold border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none shrink-0"
+                  >
+                    {copiedDemoHash ? 'Copied!' : 'Copy Hash'}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -389,86 +458,86 @@ export const Home: React.FC = () => {
           <div className="flex flex-wrap items-center justify-center gap-2 max-w-4xl mx-auto p-1.5 rounded-full bg-white border border-[#DDD5C4] shadow-xs">
             <button
               onClick={() => setActiveTab('fastpass')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
                 activeTab === 'fastpass'
-                  ? 'bg-[#385241] text-white shadow-2xs'
+                  ? 'bg-[#FFDE59] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]'
                   : 'text-[#586E5F] hover:text-[#1F2C23] hover:bg-[#FAF7F2]'
               }`}
             >
-              <Key className="w-3.5 h-3.5" />
-              <span>Fast-Pass™ Hash</span>
+              <Key className="w-4 h-4 text-[#D97043]" />
+              <span>Fast-Pass™</span>
             </button>
 
             <button
               onClick={() => setActiveTab('crawler')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
                 activeTab === 'crawler'
-                  ? 'bg-[#385241] text-white shadow-2xs'
+                  ? 'bg-[#86EFAC] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]'
                   : 'text-[#586E5F] hover:text-[#1F2C23] hover:bg-[#FAF7F2]'
               }`}
             >
-              <Terminal className="w-3.5 h-3.5" />
-              <span>Evidence Engine</span>
+              <Terminal className="w-4 h-4 text-[#1F2C23]" />
+              <span>Evidence Crawler</span>
             </button>
 
             <button
               onClick={() => setActiveTab('radar')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
                 activeTab === 'radar'
-                  ? 'bg-[#385241] text-white shadow-2xs'
+                  ? 'bg-[#70D6FF] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]'
                   : 'text-[#586E5F] hover:text-[#1F2C23] hover:bg-[#FAF7F2]'
               }`}
             >
-              <Search className="w-3.5 h-3.5" />
+              <Search className="w-4 h-4 text-[#1F2C23]" />
               <span>Scout Radar</span>
             </button>
 
             <button
               onClick={() => setActiveTab('ai')}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold transition-all ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black transition-all ${
                 activeTab === 'ai'
-                  ? 'bg-[#385241] text-white shadow-2xs'
+                  ? 'bg-[#D8B4FE] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]'
                   : 'text-[#586E5F] hover:text-[#1F2C23] hover:bg-[#FAF7F2]'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="w-4 h-4 text-[#A855F7]" />
               <span>Gemini AI Grounding</span>
             </button>
           </div>
 
-          {/* Dynamic Interactive Tab Card (Brevo Feature Card) */}
-          <div className="rounded-[36px] sm:rounded-[44px] bg-white border border-[#DDD5C4] p-6 sm:p-10 lg:p-12 shadow-md">
+          {/* Dynamic Interactive Tab Card with Real Generated Neo-Brutalist Artwork */}
+          <div className="rounded-[32px] sm:rounded-[40px] bg-white border-2 border-[#1F2C23] p-6 sm:p-10 lg:p-12 shadow-[6px_6px_0px_#1F2C23]">
             {activeTab === 'fastpass' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 <div className="lg:col-span-6 space-y-5">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FCE5DB] text-[#853C1E] text-xs font-bold border border-[#F4CDBC]">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#FFDE59] text-[#1F2C23] text-xs font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
                     <Key className="w-3.5 h-3.5 text-[#D97043]" />
                     <span>ZERO LOGIN WALLS</span>
                   </div>
-                  <h3 className="font-serif text-2xl sm:text-4xl font-bold text-[#1F2C23] leading-snug">
+                  <h3 className="font-serif text-2xl sm:text-4xl font-black text-[#1F2C23] leading-snug">
                     Share your unique Access Hash on your resume.
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#586E5F] leading-relaxed">
-                    Hiring managers don't have time to create new accounts just to evaluate your projects. Every Proofly candidate receives a cryptographic Access Hash (like <code className="bg-[#FAF7F2] px-1.5 py-0.5 rounded font-mono font-bold text-[#1F2C23] border border-[#DDD5C4]">PRF-981D2F8E</code>). Recruiters paste it and inspect your verified dossier in seconds.
+                  <p className="text-xs sm:text-sm text-[#405446] leading-relaxed font-medium">
+                    Hiring managers don't have time to create new accounts just to evaluate your projects. Every Proofly candidate receives a cryptographic Access Hash (like <code className="bg-[#FEF08A] px-1.5 py-0.5 rounded font-mono font-black text-[#1F2C23] border border-[#1F2C23]">PRF-981D2F8E</code>). Recruiters paste it and inspect your verified dossier in seconds.
                   </p>
-                  <ul className="space-y-2.5 text-xs text-[#405446]">
+                  <ul className="space-y-2.5 text-xs text-[#1F2C23] font-bold">
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#385241]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#2E7D32]" />
                       <span>Direct 1-click dossier unlocking in recruiter portal</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#385241]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#2E7D32]" />
                       <span>Full permission gating ensures your private info stays protected</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#385241]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#2E7D32]" />
                       <span>Compatible with paper resumes, LinkedIn profiles, and emails</span>
                     </li>
                   </ul>
                   <div className="pt-2">
                     <Link
                       to="/register"
-                      className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#385241] hover:bg-[#24362A] text-white text-xs font-semibold transition-all shadow-sm"
+                      className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#D97043] hover:bg-[#C55F34] text-white text-xs font-bold border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                     >
                       <span>Claim Your Fast-Pass™ Hash</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -476,25 +545,27 @@ export const Home: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="lg:col-span-6 rounded-3xl bg-[#FAF7F2] border border-[#DDD5C4] p-6 space-y-4 shadow-sm">
-                  <div className="flex items-center justify-between pb-3 border-b border-[#EBE5D8]">
-                    <span className="font-serif text-xs font-bold text-[#1F2C23]">Public Card Access Hash</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#E4ECE6] text-[#24362A] font-bold">ACTIVE</span>
-                  </div>
-                  <div className="p-4 rounded-2xl bg-white border border-[#DDD5C4] space-y-3">
-                    <div className="text-[11px] text-[#586E5F]">Copy this code directly into your PDF resume header:</div>
-                    <div className="flex items-center justify-between bg-[#FAF7F2] px-4 py-2.5 rounded-xl border border-[#DDD5C4]">
-                      <span className="font-mono text-base font-bold text-[#1F2C23]">PRF-981D2F8E</span>
-                      <span className="text-xs text-[#385241] font-semibold">1-Click Fast-Pass</span>
+                {/* Right Column: FastPass Holographic Card Artwork */}
+                <div className="lg:col-span-6 space-y-4">
+                  <div className="rounded-[24px] overflow-hidden border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] bg-[#FAF7F2] relative group">
+                    <img
+                      src="/images/fastpass-radar.jpg"
+                      alt="Holographic Fast-Pass Card and Scout Radar"
+                      className="w-full h-auto object-cover max-h-[340px] transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute top-3 right-3 px-3 py-1 rounded-lg bg-[#FFDE59] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[10px] font-mono font-black text-[#1F2C23]">
+                      CRYPTOGRAPHIC PASS
                     </div>
                   </div>
-                  <div className="p-4 rounded-2xl bg-[#E4ECE6] border border-[#C7D9CD] text-xs text-[#24362A] space-y-1">
-                    <div className="font-bold flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-[#385241]" /> Foolproof Recruiter Permission Guard
+
+                  <div className="p-4 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-between">
+                    <div>
+                      <div className="text-[10px] font-mono font-bold uppercase text-[#586E5F]">Specimen Access Hash</div>
+                      <div className="font-mono text-base font-black text-[#D97043]">PRF-981D2F8E</div>
                     </div>
-                    <p className="text-[11px] text-[#405446]">
-                      Only recruiters who have received your hash can view your complete engineering dossier.
-                    </p>
+                    <span className="text-xs font-mono font-bold px-3 py-1 rounded-lg bg-[#86EFAC] text-[#1F2C23] border border-[#1F2C23]">
+                      1-Click Unlock
+                    </span>
                   </div>
                 </div>
               </div>
@@ -503,44 +574,56 @@ export const Home: React.FC = () => {
             {activeTab === 'crawler' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                 <div className="lg:col-span-6 space-y-5">
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E4ECE6] text-[#24362A] text-xs font-bold border border-[#C7D9CD]">
-                    <Terminal className="w-3.5 h-3.5 text-[#385241]" />
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-[#86EFAC] text-[#1F2C23] text-xs font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+                    <Terminal className="w-3.5 h-3.5 text-[#1F2C23]" />
                     <span>AUTONOMOUS CRAWLER V3</span>
                   </div>
-                  <h3 className="font-serif text-2xl sm:text-4xl font-bold text-[#1F2C23] leading-snug">
+                  <h3 className="font-serif text-2xl sm:text-4xl font-black text-[#1F2C23] leading-snug">
                     Real code inspection. Never self-reported checkboxes.
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#586E5F] leading-relaxed">
+                  <p className="text-xs sm:text-sm text-[#405446] leading-relaxed font-medium">
                     Our autonomous repository engine connects directly to GitHub. It calculates authentic commit density, scans test coverage ratios, parses language percentages, and verifies credentials from official issuers like Credly and AWS.
                   </p>
-                  <ul className="space-y-2.5 text-xs text-[#405446]">
+                  <ul className="space-y-2.5 text-xs text-[#1F2C23] font-bold">
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#385241]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#2E7D32]" />
                       <span>Automated 365-day contribution heatmap calculation</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#385241]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#2E7D32]" />
                       <span>LeetCode & HackerRank acceptance rate verification</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-[#385241]" />
+                      <CheckCircle2 className="w-4 h-4 text-[#2E7D32]" />
                       <span>Tamper-proof Credly badge authentication</span>
                     </li>
                   </ul>
                 </div>
 
-                <div className="lg:col-span-6 rounded-3xl bg-[#1F2C23] text-white p-6 space-y-4 shadow-sm font-mono text-xs">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 text-[11px] text-[#A3BFAC]">
-                    <span>PROOF ENGINE CRAWLER // SHA-256</span>
-                    <span className="text-emerald-400">● CRAWLER_ONLINE</span>
+                {/* Right Column: Crawler Bot Artwork & Terminal */}
+                <div className="lg:col-span-6 space-y-4">
+                  <div className="rounded-[24px] overflow-hidden border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] bg-[#FAF7F2] relative group">
+                    <img
+                      src="/images/crawler-bot.jpg"
+                      alt="Proofly Autonomous Code Crawler Robot Mascot"
+                      className="w-full h-auto object-cover max-h-[300px] transition-transform duration-300 group-hover:scale-105"
+                    />
+                    <div className="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-[#86EFAC] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[10px] font-mono font-black text-[#1F2C23]">
+                      BOT STATUS: ONLINE // SHA-256
+                    </div>
                   </div>
-                  <div className="space-y-2 text-[#DDD5C4]">
-                    <div>&gt; target: github.com/user/raft-engine</div>
-                    <div>&gt; analyzing 184 commits across 8 branches...</div>
-                    <div className="text-emerald-400">&gt; verified test suite: 42/42 tests passing (99.4%)</div>
-                    <div className="text-emerald-400">&gt; language distribution: Go (84%), gRPC (11%), Docker (5%)</div>
-                    <div className="text-amber-300">&gt; cryptographic signature: verified via Git commit hash</div>
-                    <div className="pt-2 text-white font-bold">&gt;&gt; PROOF SCORE COMPUTED: 98 / 100 [MAX_SIGNAL]</div>
+
+                  <div className="rounded-xl bg-[#1F2C23] text-white p-4 space-y-2 border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] font-mono text-xs">
+                    <div className="flex items-center justify-between pb-2 border-b border-white/10 text-[10px] text-[#A3BFAC]">
+                      <span>PROOF ENGINE CRAWLER // SHA-256</span>
+                      <span className="text-[#86EFAC] font-bold">● ACTIVE</span>
+                    </div>
+                    <div className="space-y-1 text-xs text-[#DDD5C4]">
+                      <div>&gt; target: github.com/user/raft-engine</div>
+                      <div className="text-[#86EFAC]">&gt; verified test suite: 42/42 tests passing (99.4%)</div>
+                      <div className="text-[#FFDE59]">&gt; language distribution: Go (84%), gRPC (11%), Docker (5%)</div>
+                      <div className="pt-1 text-white font-bold">&gt;&gt; PROOF SCORE COMPUTED: 98 / 100 [MAX_SIGNAL]</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -653,74 +736,148 @@ export const Home: React.FC = () => {
         </section>
 
         {/* ========================================================================= */}
+        {/* 3.5 STUDENT BUILDER COMMUNITY SHOWCASE (Visual Neo-Brutalist Image Card) */}
+        {/* ========================================================================= */}
+        <section className="space-y-10">
+          <div className="max-w-3xl mx-auto text-center space-y-3">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-[#70D6FF] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-xs font-mono font-black text-[#1F2C23]">
+              <Users className="w-4 h-4 text-[#1F2C23]" />
+              <span>THE BUILDER ECOSYSTEM</span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-5xl font-black text-[#1F2C23]">
+              Built for Real Developers. <br className="hidden sm:inline" />
+              Scouted by High-Growth Teams.
+            </h2>
+            <p className="text-xs sm:text-base text-[#405446] max-w-xl mx-auto font-medium">
+              Join thousands of college-age software engineers who showcase verified project code, authentic algorithmic stats, and tamper-proof certifications.
+            </p>
+          </div>
+
+          <div className="rounded-[32px] sm:rounded-[40px] bg-white border-2 border-[#1F2C23] shadow-[8px_8px_0px_#1F2C23] p-6 sm:p-10 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              {/* Left Column: Student Builders 3D Illustration */}
+              <div className="lg:col-span-7 relative group">
+                <div className="rounded-[28px] overflow-hidden border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] bg-[#FAF7F2] relative">
+                  <img
+                    src="/images/student-builders.jpg"
+                    alt="Diverse student software developers collaborating with laptops"
+                    className="w-full h-auto object-cover max-h-[380px] sm:max-h-[420px] transition-transform duration-300 group-hover:scale-105"
+                  />
+                  {/* Floating Tilted Neo-Brutalist Badges */}
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-[#FFDE59] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-[11px] font-mono font-black text-[#1F2C23] -rotate-2 select-none">
+                    ★ 1,200+ REPOSITORIES VERIFIED
+                  </div>
+                  <div className="absolute bottom-3 right-3 px-3 py-1 rounded-lg bg-[#86EFAC] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-[11px] font-mono font-black text-[#1F2C23] rotate-2 select-none">
+                    ⚡ 100% CRAWLER GROUNDED
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: 3 Vibrant Community Pillars */}
+              <div className="lg:col-span-5 space-y-4">
+                <div className="p-4 rounded-[20px] bg-[#FEF08A] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="p-1 rounded-md bg-white border border-[#1F2C23] text-xs font-black">01</span>
+                    <h4 className="font-serif text-base font-black text-[#1F2C23]">Show Genuine Craft</h4>
+                  </div>
+                  <p className="text-xs text-[#24362A] font-medium leading-relaxed">
+                    Connect GitHub and let Proofly's crawler compute genuine commit density, language percentages, and unit test ratios.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-[20px] bg-[#BAE6FD] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="p-1 rounded-md bg-white border border-[#1F2C23] text-xs font-black">02</span>
+                    <h4 className="font-serif text-base font-black text-[#1F2C23]">Fast-Pass Access for Recruiters</h4>
+                  </div>
+                  <p className="text-xs text-[#24362A] font-medium leading-relaxed">
+                    Put your Access Hash on resumes or LinkedIn. Scouts unlock your verified technical dossier with zero login friction.
+                  </p>
+                </div>
+
+                <div className="p-4 rounded-[20px] bg-[#BBF7D0] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="p-1 rounded-md bg-white border border-[#1F2C23] text-xs font-black">03</span>
+                    <h4 className="font-serif text-base font-black text-[#1F2C23]">Cited AI Grounding</h4>
+                  </div>
+                  <p className="text-xs text-[#24362A] font-medium leading-relaxed">
+                    Powered by Gemini AI strictly restricted to your verified evidence. Zero AI hallucination, 100% explainable match scores.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
         {/* 4. "WHY PROOFLY WINS" — VISUAL COMPARISON MATRIX (Brevo-Style)            */}
         {/* ========================================================================= */}
         <section className="space-y-8">
           <div className="max-w-3xl mx-auto text-center space-y-2">
-            <span className="text-xs font-mono uppercase font-bold text-[#385241] tracking-wider">
+            <span className="text-xs font-mono uppercase font-black text-[#1F2C23] bg-[#FFDE59] px-3 py-1 rounded-lg border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] inline-block">
               The Evolution of Technical Evaluation
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1F2C23]">
-              Traditional PDF Resumes vs. Proofly Verified Cards
+            <h2 className="font-serif text-3xl sm:text-5xl font-black text-[#1F2C23]">
+              Traditional PDF Resumes vs. Proofly Cards
             </h2>
-            <p className="text-xs sm:text-sm text-[#586E5F]">
-              Why leading engineering teams are abandoning static resume screens.
+            <p className="text-xs sm:text-sm text-[#586E5F] font-medium">
+              Why leading engineering teams and founders are abandoning static resume screens.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             {/* The Old Way: Resume PDFs */}
-            <div className="rounded-[32px] bg-white border border-red-200/80 p-6 sm:p-8 space-y-5 shadow-xs">
-              <div className="flex items-center justify-between pb-3 border-b border-red-100">
-                <span className="font-serif text-base font-bold text-red-900">Traditional Resume PDFs</span>
-                <span className="text-[11px] font-mono font-bold text-red-600 bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
+            <div className="rounded-[28px] bg-[#FEE2E2] border-2 border-[#1F2C23] p-6 sm:p-8 space-y-5 shadow-[4px_4px_0px_#1F2C23]">
+              <div className="flex items-center justify-between pb-3 border-b-2 border-[#1F2C23]/20">
+                <span className="font-serif text-lg font-black text-[#991B1B]">Traditional Resume PDFs</span>
+                <span className="text-[11px] font-mono font-black text-[#991B1B] bg-white px-2.5 py-0.5 rounded-lg border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
                   THE BROKEN PAST
                 </span>
               </div>
-              <ul className="space-y-3 text-xs text-[#586E5F]">
+              <ul className="space-y-3 text-xs text-[#1F2C23] font-bold">
                 <li className="flex items-start gap-3">
-                  <X className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                  <X className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5 stroke-[3]" />
                   <span>Unverifiable bullet points and self-proclaimed "expert" keyword lists</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <X className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
+                  <X className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5 stroke-[3]" />
                   <span>Easily inflated by AI chatbots to trick applicant tracking systems (ATS)</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <X className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                  <span>Requires 4 to 5 interview stages just to catch candidates who cannot code</span>
+                  <X className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5 stroke-[3]" />
+                  <span>Forces hiring teams to waste 2+ weeks issuing tedious take-home tests</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <X className="w-4 h-4 text-red-500 shrink-0 mt-0.5" />
-                  <span>Cluttered attachments lost in recruiter inbox threads</span>
+                  <X className="w-4 h-4 text-[#DC2626] shrink-0 mt-0.5 stroke-[3]" />
+                  <span>Dead static PDF documents with broken hyperlinks and no live demos</span>
                 </li>
               </ul>
             </div>
 
-            {/* The Proofly Way: Verified Cards */}
-            <div className="rounded-[32px] bg-[#E4ECE6]/60 border border-[#385241] p-6 sm:p-8 space-y-5 shadow-md relative overflow-hidden">
-              <div className="flex items-center justify-between pb-3 border-b border-[#C7D9CD]">
-                <span className="font-serif text-base font-bold text-[#1F2C23]">Proofly Verified Cards</span>
-                <span className="text-[11px] font-mono font-bold text-[#24362A] bg-[#FAF7F2] px-2.5 py-0.5 rounded-full border border-[#C7D9CD]">
-                  THE VERIFIED STANDARD
+            {/* The New Way: Proofly Verified Dossier */}
+            <div className="rounded-[28px] bg-[#DCFCE7] border-2 border-[#1F2C23] p-6 sm:p-8 space-y-5 shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-transform">
+              <div className="flex items-center justify-between pb-3 border-b-2 border-[#1F2C23]/20">
+                <span className="font-serif text-lg font-black text-[#166534]">Proofly Verified Card</span>
+                <span className="text-[11px] font-mono font-black text-[#1F2C23] bg-[#FFDE59] px-2.5 py-0.5 rounded-lg border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+                  THE VERIFIABLE FUTURE
                 </span>
               </div>
-              <ul className="space-y-3 text-xs text-[#24362A] font-medium">
+              <ul className="space-y-3 text-xs text-[#1F2C23] font-bold">
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-[#385241] shrink-0 mt-0.5 stroke-[2.5]" />
-                  <span>Real commit cadence, pull request reviews, and 365-day git streaks</span>
+                  <Check className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5 stroke-[3]" />
+                  <span>Grounded in cryptographic SHA-256 commit hashes and reachable test suites</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-[#385241] shrink-0 mt-0.5 stroke-[2.5]" />
-                  <span>Cryptographically verified certifications from Credly and AWS APIs</span>
+                  <Check className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5 stroke-[3]" />
+                  <span>1-click Fast-Pass™ link lets recruiters review candidates without login barriers</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-[#385241] shrink-0 mt-0.5 stroke-[2.5]" />
-                  <span>1-click Fast-Pass™ Access Hash (zero login wall for hiring managers)</span>
+                  <Check className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5 stroke-[3]" />
+                  <span>Authentic 365-day commit velocity, streak consistency, and language ratios</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <Check className="w-4 h-4 text-[#385241] shrink-0 mt-0.5 stroke-[2.5]" />
-                  <span>Grounded AI recruiter research that cites real repository proof lines</span>
+                  <Check className="w-4 h-4 text-[#16A34A] shrink-0 mt-0.5 stroke-[3]" />
+                  <span>Cited Gemini AI synthesis grounded strictly in verified proof artifacts</span>
                 </li>
               </ul>
             </div>

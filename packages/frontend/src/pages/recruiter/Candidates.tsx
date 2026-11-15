@@ -156,22 +156,29 @@ export const RecruiterCandidatesPage: React.FC = () => {
         )}
       </div>
 
-      {/* Unlock Candidate with Public Card / Fast-Pass Form */}
-      <div className="p-6 rounded-[24px] bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-white border-2 border-[#1F2C23] flex items-center justify-center text-[#1F2C23] shrink-0 shadow-[1px_1px_0px_#1F2C23]">
-              <Key className="w-4 h-4 text-[#D97043]" />
+      {/* Unlock Candidate with Public Card / Fast-Pass Form with Radar Art */}
+      <div className="p-6 rounded-[28px] bg-[#FEF08A] border-2 border-[#1F2C23] shadow-[5px_5px_0px_#1F2C23] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-3.5">
+            <div className="w-12 h-12 rounded-xl overflow-hidden border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] shrink-0 bg-white">
+              <img
+                src="/images/fastpass-radar.jpg"
+                alt="Fast-Pass Radar"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <h2 className="text-base font-serif font-black text-[#1F2C23]">
                 Unlock Candidate via Access Hash or Fast-Pass Link
               </h2>
-              <p className="text-[11px] text-[#24362A] font-medium">
-                Paste a student's Access Hash (e.g. <code className="bg-white px-1.5 py-0.5 rounded text-[10px] font-mono font-black text-[#1F2C23] border border-[#1F2C23]">PRF-XXXXXXXX</code>) or their Public Card link to instantly unlock their dossier.
+              <p className="text-[11px] text-[#1F2C23] font-bold">
+                Paste a student's Access Hash (e.g. <code className="bg-white px-1.5 py-0.5 rounded text-[10px] font-mono font-black text-[#D97043] border border-[#1F2C23]">PRF-XXXXXXXX</code>) or their Fast-Pass link to instantly add their verified dossier to your radar.
               </p>
             </div>
           </div>
+          <span className="text-[10px] font-mono font-black px-3 py-1 rounded-full bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] self-start sm:self-auto">
+            ZERO AUTH BARRIER
+          </span>
         </div>
 
         <form onSubmit={handleUnlockSubmit} className="flex flex-col sm:flex-row gap-2.5 pt-1">

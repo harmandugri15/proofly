@@ -238,37 +238,37 @@ export const PublicProfilePage: React.FC = () => {
           </div>
         </div>
 
-        {/* Quick Social Proof Stats Bar */}
-        <div className="mt-6 pt-5 border-t-2 border-[#FAF7F2] grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
-            <div className="text-2xl font-serif font-black text-[#1F2C23]">
+        {/* Quick Social Proof Stats Bar with Vibrant Neo-Brutalist Colors */}
+        <div className="mt-6 pt-5 border-t-2 border-[#1F2C23]/20 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div className="p-4 rounded-xl bg-[#FEF08A] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-center">
+            <div className="text-3xl font-serif font-black text-[#1F2C23]">
               {profile.projects?.length || 0}
             </div>
-            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#1F2C23] uppercase tracking-wider font-black mt-0.5">
               Verified Projects
             </div>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
-            <div className="text-2xl font-serif font-black text-[#385241]">
+          <div className="p-4 rounded-xl bg-[#BAE6FD] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-center">
+            <div className="text-3xl font-serif font-black text-[#1F2C23]">
               {profile.gitHubRepos?.length || (profile.githubStats?.totalStars ? `${profile.githubStats.totalStars}★` : 'Active')}
             </div>
-            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#1F2C23] uppercase tracking-wider font-black mt-0.5">
               Public Repositories
             </div>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
-            <div className="text-2xl font-serif font-black text-[#D97043]">
+          <div className="p-4 rounded-xl bg-[#BBF7D0] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-center">
+            <div className="text-3xl font-serif font-black text-[#1F2C23]">
               {profile.codingProfiles?.reduce((acc: number, cp: any) => acc + (cp.solvedCount || 0), 0) || 0}
             </div>
-            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#1F2C23] uppercase tracking-wider font-black mt-0.5">
               Problems Solved
             </div>
           </div>
-          <div className="p-3.5 rounded-xl bg-[#FAF7F2] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-center">
-            <div className="text-2xl font-serif font-black text-[#1F2C23]">
+          <div className="p-4 rounded-xl bg-[#DDD6FE] border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-center">
+            <div className="text-3xl font-serif font-black text-[#1F2C23]">
               {profile.certificates?.length || 0}
             </div>
-            <div className="text-[10px] font-mono text-[#586E5F] uppercase tracking-wider font-bold">
+            <div className="text-[10px] font-mono text-[#1F2C23] uppercase tracking-wider font-black mt-0.5">
               Credentials
             </div>
           </div>

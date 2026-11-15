@@ -133,6 +133,56 @@
   font-weight: 700;
 }
 
+/* Neo-Brutalist Vibrant Color Pops */
+.neo-yellow {
+  background-color: #FFDE59;
+  color: #1F2C23;
+  border: 2px solid #1F2C23;
+  box-shadow: 3px 3px 0px #1F2C23;
+}
+
+.neo-cyan {
+  background-color: #70D6FF;
+  color: #1F2C23;
+  border: 2px solid #1F2C23;
+  box-shadow: 3px 3px 0px #1F2C23;
+}
+
+.neo-mint {
+  background-color: #86EFAC;
+  color: #1F2C23;
+  border: 2px solid #1F2C23;
+  box-shadow: 3px 3px 0px #1F2C23;
+}
+
+.neo-lavender {
+  background-color: #D8B4FE;
+  color: #1F2C23;
+  border: 2px solid #1F2C23;
+  box-shadow: 3px 3px 0px #1F2C23;
+}
+
+.neo-coral {
+  background-color: #FF8A65;
+  color: #1F2C23;
+  border: 2px solid #1F2C23;
+  box-shadow: 3px 3px 0px #1F2C23;
+}
+
+.neo-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.35rem 0.75rem;
+  border: 2px solid #1F2C23;
+  border-radius: 12px;
+  font-weight: 800;
+  font-family: monospace;
+  font-size: 0.75rem;
+  box-shadow: 2px 2px 0px #1F2C23;
+  text-transform: uppercase;
+}
+
 .neo-input {
   border: 2px solid #1F2C23;
   box-shadow: 2px 2px 0px #1F2C23;

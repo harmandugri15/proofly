@@ -238,22 +238,28 @@ export const StudentProjectsPage: React.FC = () => {
         </div>
       </div>
 
-      {/* 1-Click Crawler Banner */}
-      <div className="p-6 rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-3.5 relative overflow-hidden w-full max-w-full">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-[#E4ECE6] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0">
-            <Zap className="w-4 h-4 text-[#D97043]" />
-          </div>
-          <div>
-            <h2 className="text-base font-serif font-black text-[#1F2C23] flex items-center gap-2">
-              <span>1-Click GitHub Repository Crawler</span>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#E4ECE6] text-[#1F2C23] border border-[#1F2C23] font-bold shadow-[1px_1px_0px_#1F2C23]">
-                Auto-Telemetry
-              </span>
-            </h2>
-            <p className="text-xs text-[#586E5F]">
-              Paste your repository link below. Proofly's crawler automatically extracts title, architecture summary from README, languages, stars, and live demo link.
-            </p>
+      {/* 1-Click Crawler Banner with Robot Mascot */}
+      <div className="p-6 rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] space-y-4 relative overflow-hidden w-full max-w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] shrink-0 bg-[#FAF7F2]">
+              <img
+                src="/images/crawler-bot.jpg"
+                alt="Crawler Mascot"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div>
+              <h2 className="text-base font-serif font-black text-[#1F2C23] flex items-center gap-2">
+                <span>1-Click GitHub Repository Crawler</span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-[#86EFAC] text-[#1F2C23] border border-[#1F2C23] font-black shadow-[1px_1px_0px_#1F2C23]">
+                  Auto-Telemetry
+                </span>
+              </h2>
+              <p className="text-xs text-[#586E5F] font-medium">
+                Paste your repository link below. Proofly's crawler automatically extracts title, architecture summary from README, languages, stars, and live demo link.
+              </p>
+            </div>
           </div>
         </div>
 

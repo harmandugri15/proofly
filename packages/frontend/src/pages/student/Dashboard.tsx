@@ -71,9 +71,12 @@ export const StudentDashboard: React.FC = () => {
       <div className="relative overflow-hidden rounded-[28px] bg-white border-2 border-[#1F2C23] p-6 sm:p-8 shadow-[4px_4px_0px_#1F2C23]">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative">
           <div className="flex items-start sm:items-center gap-4 sm:gap-5 min-w-0">
-            {/* Organic Avatar */}
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#E4ECE6] border-2 border-[#1F2C23] flex items-center justify-center text-xl sm:text-2xl font-serif font-black text-[#1F2C23] shrink-0 shadow-[2px_2px_0px_#1F2C23]">
+            {/* Vibrant Avatar */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#FFDE59] border-2 border-[#1F2C23] flex items-center justify-center text-xl sm:text-2xl font-serif font-black text-[#1F2C23] shrink-0 shadow-[3px_3px_0px_#1F2C23] relative">
               {user?.name?.slice(0, 2).toUpperCase() || 'PR'}
+              <div className="absolute -bottom-1 -right-1 p-1 rounded-full bg-[#86EFAC] text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]" title="Verified Builder">
+                <ShieldCheck className="w-3.5 h-3.5 stroke-[3]" />
+              </div>
             </div>
 
             <div className="space-y-1.5 min-w-0 flex-1">
@@ -81,11 +84,11 @@ export const StudentDashboard: React.FC = () => {
                 <h1 className="font-serif text-2xl sm:text-3xl font-black text-[#1F2C23] truncate">
                   {user?.name}
                 </h1>
-                <span className="text-xs font-mono font-bold text-[#1F2C23] bg-[#F4EFE6] px-2.5 py-0.5 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+                <span className="text-xs font-mono font-black text-[#1F2C23] bg-[#BAE6FD] px-2.5 py-0.5 rounded-full border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
                   @{profile?.username}
                 </span>
-                <span className="text-[11px] font-sans font-bold px-3 py-0.5 rounded-full bg-[#E4ECE6] text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#2E7D32]" /> Verified Builder
+                <span className="text-[11px] font-sans font-bold px-3 py-0.5 rounded-full bg-[#86EFAC] text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#1F2C23]" /> Verified Builder
                 </span>
               </div>
 
@@ -124,18 +127,18 @@ export const StudentDashboard: React.FC = () => {
       </div>
 
       {/* Recruiter Fast-Pass Access Hash & Link Banner */}
-      <div className="p-6 rounded-[28px] bg-[#E4ECE6] border-2 border-[#1F2C23] flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-[4px_4px_0px_#1F2C23]">
+      <div className="p-6 rounded-[28px] bg-[#FFDE59] border-2 border-[#1F2C23] flex flex-col lg:flex-row lg:items-center justify-between gap-6 shadow-[5px_5px_0px_#1F2C23]">
         <div className="space-y-1.5 min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <span className="p-1.5 rounded-xl bg-white text-[#1F2C23] shrink-0 border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
               <Key className="w-4 h-4 text-[#D97043]" />
             </span>
-            <h2 className="font-serif text-base font-black text-[#1F2C23]">Public Card Access Hash & Fast-Pass</h2>
-            <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+            <h2 className="font-serif text-base font-black text-[#1F2C23]">Public Card Access Hash & Fast-Pass™</h2>
+            <span className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-full bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
               Recruiter Unlock Code
             </span>
           </div>
-          <p className="text-xs text-[#24362A] leading-relaxed max-w-2xl font-medium">
+          <p className="text-xs text-[#1F2C23] leading-relaxed max-w-2xl font-bold">
             Give this <strong>Access Hash</strong> or link to recruiters so they can instantly unlock your verified dossier, GitHub heatmap, and project code in their portal with zero login barriers.
           </p>
         </div>
@@ -156,7 +159,7 @@ export const StudentDashboard: React.FC = () => {
                   setTimeout(() => setCopiedHash(false), 2000);
                 }
               }}
-              className="ml-1 p-1 rounded-md text-[#1F2C23] hover:bg-[#E4ECE6] transition-colors"
+              className="ml-1 p-1 rounded-md text-[#1F2C23] hover:bg-[#FAF7F2] transition-colors"
               title="Copy Access Hash"
             >
               {copiedHash ? (
@@ -175,11 +178,11 @@ export const StudentDashboard: React.FC = () => {
               setCopiedFastPass(true);
               setTimeout(() => setCopiedFastPass(false), 2000);
             }}
-            className="px-5 py-2.5 rounded-xl bg-[#385241] hover:bg-[#24362A] text-white font-bold text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0 flex items-center justify-center gap-1.5"
+            className="px-5 py-2.5 rounded-xl bg-[#1F2C23] hover:bg-[#385241] text-white font-black text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shrink-0 flex items-center justify-center gap-1.5"
           >
             {copiedFastPass ? (
               <>
-                <CheckCircle2 className="w-3.5 h-3.5" /> Link Copied!
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#86EFAC]" /> Link Copied!
               </>
             ) : (
               <>
@@ -190,58 +193,63 @@ export const StudentDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Metrics Row (5 Neo-Brutalist White Tiles) */}
+      {/* Metrics Row (5 Multi-Color Neo-Brutalist Pop Tiles) */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
-          <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-bold text-[#1F2C23]">Proof Score</span>
-            <TrendingUp className="w-4 h-4 text-[#385241]" />
+        {/* Tile 1: Canary Yellow */}
+        <div className="p-5 rounded-[22px] bg-[#FEF08A] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+          <div className="flex items-center justify-between text-[#1F2C23] mb-2 font-black">
+            <span className="text-xs uppercase tracking-wider font-mono">Proof Score</span>
+            <TrendingUp className="w-4 h-4 text-[#1F2C23]" />
           </div>
-          <div className="font-serif text-2xl font-black text-[#1F2C23]">{score}%</div>
-          <div className="w-full bg-[#EBE5D8] h-2 rounded-full mt-2 overflow-hidden border border-[#1F2C23]">
-            <div className="bg-[#74947F] h-full rounded-full transition-all" style={{ width: `${score}%` }} />
+          <div className="font-serif text-3xl font-black text-[#1F2C23]">{score}%</div>
+          <div className="w-full bg-white h-2.5 rounded-full mt-2.5 overflow-hidden border-2 border-[#1F2C23]">
+            <div className="bg-[#1F2C23] h-full rounded-full transition-all" style={{ width: `${score}%` }} />
           </div>
         </div>
 
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
-          <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-bold text-[#1F2C23]">Projects</span>
-            <FolderGit2 className="w-4 h-4 text-[#74947F]" />
+        {/* Tile 2: Electric Cyan */}
+        <div className="p-5 rounded-[22px] bg-[#BAE6FD] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+          <div className="flex items-center justify-between text-[#1F2C23] mb-2 font-black">
+            <span className="text-xs uppercase tracking-wider font-mono">Projects</span>
+            <FolderGit2 className="w-4 h-4 text-[#1F2C23]" />
           </div>
-          <div className="font-serif text-2xl font-black text-[#1F2C23]">{profile?.projects?.length || 0}</div>
-          <p className="text-[11px] text-[#586E5F] mt-1 font-mono font-semibold">
+          <div className="font-serif text-3xl font-black text-[#1F2C23]">{profile?.projects?.length || 0}</div>
+          <p className="text-[11px] text-[#1F2C23] mt-1 font-mono font-bold">
             {profile?.projects?.filter((p: any) => p.verificationStatus !== 'UNVERIFIED').length || 0} code-verified
           </p>
         </div>
 
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
-          <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-bold text-[#1F2C23]">Certifications</span>
-            <ShieldCheck className="w-4 h-4 text-[#74947F]" />
+        {/* Tile 3: Fresh Mint */}
+        <div className="p-5 rounded-[22px] bg-[#BBF7D0] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+          <div className="flex items-center justify-between text-[#1F2C23] mb-2 font-black">
+            <span className="text-xs uppercase tracking-wider font-mono">Certificates</span>
+            <ShieldCheck className="w-4 h-4 text-[#1F2C23]" />
           </div>
-          <div className="font-serif text-2xl font-black text-[#1F2C23]">{profile?.certificates?.length || 0}</div>
-          <p className="text-[11px] text-[#586E5F] mt-1 font-mono font-semibold">
+          <div className="font-serif text-3xl font-black text-[#1F2C23]">{profile?.certificates?.length || 0}</div>
+          <p className="text-[11px] text-[#1F2C23] mt-1 font-mono font-bold">
             {profile?.certificates?.filter((c: any) => c.verificationStatus === 'ISSUER_VERIFIED').length || 0} issuer-checked
           </p>
         </div>
 
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
-          <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-bold text-[#1F2C23]">GitHub Repos</span>
-            <GitBranch className="w-4 h-4 text-[#74947F]" />
+        {/* Tile 4: Retro Lavender */}
+        <div className="p-5 rounded-[22px] bg-[#DDD6FE] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+          <div className="flex items-center justify-between text-[#1F2C23] mb-2 font-black">
+            <span className="text-xs uppercase tracking-wider font-mono">GitHub Repos</span>
+            <GitBranch className="w-4 h-4 text-[#1F2C23]" />
           </div>
-          <div className="font-serif text-2xl font-black text-[#1F2C23]">{profile?.gitHubRepos?.length || 0}</div>
-          <p className="text-[11px] text-[#586E5F] mt-1 font-mono font-semibold">Live Synchronized</p>
+          <div className="font-serif text-3xl font-black text-[#1F2C23]">{profile?.gitHubRepos?.length || 0}</div>
+          <p className="text-[11px] text-[#1F2C23] mt-1 font-mono font-bold">Live Synchronized</p>
         </div>
 
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
-          <div className="flex items-center justify-between text-[#586E5F] mb-2">
-            <span className="text-xs font-bold text-[#1F2C23]">LinkedIn</span>
+        {/* Tile 5: Coral Peach */}
+        <div className="p-5 rounded-[22px] bg-[#FFEDD5] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all">
+          <div className="flex items-center justify-between text-[#1F2C23] mb-2 font-black">
+            <span className="text-xs uppercase tracking-wider font-mono">LinkedIn</span>
             <Linkedin className="w-4 h-4 text-[#0077b5]" />
           </div>
           <div className="text-sm font-bold text-[#1F2C23] flex items-center gap-1.5 mt-1">
             {profile?.linkedinVerified ? (
-              <span className="text-[#2E7D32] text-xs flex items-center gap-1 font-mono font-bold">
+              <span className="text-[#2E7D32] text-xs flex items-center gap-1 font-mono font-black">
                 <CheckCircle2 className="w-3.5 h-3.5" /> Verified
               </span>
             ) : profile?.linkedinUrl ? (
@@ -250,8 +258,8 @@ export const StudentDashboard: React.FC = () => {
               <span className="text-[#758C7D] text-xs font-mono">Not Linked</span>
             )}
           </div>
-          <p className="text-[11px] text-[#586E5F] mt-1">
-            <Link to="/student/integrations" className="text-[#D97043] hover:underline font-mono font-bold">
+          <p className="text-[11px] text-[#1F2C23] mt-1">
+            <Link to="/student/integrations" className="text-[#D97043] hover:underline font-mono font-black">
               {profile?.linkedinUrl ? 'Manage' : 'Connect'}
             </Link>
           </p>

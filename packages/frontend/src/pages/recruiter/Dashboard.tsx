@@ -84,37 +84,37 @@ export const RecruiterDashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Metrics Row */}
+      {/* Metrics Row with Neo-Brutalist Colors */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-center justify-between">
+        <div className="p-5 rounded-[22px] bg-[#BAE6FD] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex items-center justify-between">
           <div>
-            <span className="text-xs font-mono text-[#586E5F] font-bold block">ACTIVE JOB SPECS</span>
-            <span className="text-2xl font-serif font-black text-[#1F2C23] mt-1 block">{jobs.length}</span>
+            <span className="text-xs font-mono text-[#1F2C23] font-black block">ACTIVE JOB SPECS</span>
+            <span className="text-3xl font-serif font-black text-[#1F2C23] mt-1 block">{jobs.length}</span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-[#E4ECE6] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center text-[#1F2C23]">
-            <Briefcase className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center text-[#1F2C23]">
+            <Briefcase className="w-6 h-6 text-[#1F2C23]" />
           </div>
         </div>
 
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-center justify-between">
+        <div className="p-5 rounded-[22px] bg-[#FFEDD5] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex items-center justify-between">
           <div>
-            <span className="text-xs font-mono text-[#586E5F] font-bold block">SAVED TALENT POOLS</span>
-            <span className="text-2xl font-serif font-black text-[#1F2C23] mt-1 block">{shortlists.length}</span>
+            <span className="text-xs font-mono text-[#1F2C23] font-black block">SAVED TALENT POOLS</span>
+            <span className="text-3xl font-serif font-black text-[#1F2C23] mt-1 block">{shortlists.length}</span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-[#FCE5DB] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center text-[#D97043]">
-            <BookmarkCheck className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center text-[#D97043]">
+            <BookmarkCheck className="w-6 h-6 text-[#D97043]" />
           </div>
         </div>
 
-        <div className="p-5 rounded-[20px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-center justify-between">
+        <div className="p-5 rounded-[22px] bg-[#FEF08A] border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex items-center justify-between">
           <div>
-            <span className="text-xs font-mono text-[#586E5F] font-bold block">GROUNDED AI ENGINE</span>
-            <span className="text-xs font-mono text-[#1F2C23] font-bold mt-1.5 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#D97043]" /> Cited Evidence Active
+            <span className="text-xs font-mono text-[#1F2C23] font-black block">GROUNDED AI ENGINE</span>
+            <span className="text-xs font-mono text-[#1F2C23] font-black mt-2 flex items-center gap-1.5">
+              <Sparkles className="w-4 h-4 text-[#D97043]" /> Cited Evidence Active
             </span>
           </div>
-          <div className="w-11 h-11 rounded-xl bg-[#FEF9C3] border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] flex items-center justify-center text-[#CA8A04]">
-            <Zap className="w-5 h-5" />
+          <div className="w-12 h-12 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] flex items-center justify-center text-[#CA8A04]">
+            <Zap className="w-6 h-6 text-[#D97043]" />
           </div>
         </div>
       </div>
