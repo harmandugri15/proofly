@@ -30,6 +30,7 @@ import { RecruiterResearchResult, CandidateMatchResult } from '@proofly/shared';
 import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
 import { CodingProfileCard } from '../../components/common/CodingProfileCard';
 import { DelicateStarOrnament } from '../../components/common/CreativeArt';
+import { ProjectDetailModal } from '../../components/common/ProjectDetailModal';
 
 export const RecruiterCandidateDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +39,8 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
   const [jobs, setJobs] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   // Inline Fast-Pass Unlock
   const [unlockInput, setUnlockInput] = useState('');
@@ -358,59 +361,106 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column (Evidence) */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Projects & Demonstrations */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-white/95 border border-sand-200/80 space-y-4 shadow-sm">
-            <div className="flex items-center justify-between pb-2 border-b border-sand-200">
-              <h2 className="text-base font-serif font-normal text-forest-900 flex items-center gap-2">
-                <Layers className="w-4 h-4 text-terracotta-600" />
-                Verified Project Evidence ({candidate.projects?.length || 0})
-              </h2>
-              <span className="text-[11px] font-mono text-forest-700/60">Authenticated Artifacts</span>
+          {/* Projects & Demonstrations (Clickable Overview Cards) */}
+          <div className="p-6 sm:p-7 rounded-[28px] bg-white border-2 border-[#1F2C23] space-y-4 shadow-[4px_4px_0px_#1F2C23]">
+            <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b-2 border-[#1F2C23]/15">
+              <div>
+                <h2 className="text-base font-serif font-black text-[#1F2C23] flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-[#D97043]" />
+                  Verified Project Evidence ({candidate.projects?.length || 0})
+                </h2>
+                <p className="text-[11px] text-[#586E5F] font-medium">Click any project to inspect complete architectural breakdown & code.</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {candidate.projects?.length > 4 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllProjects(!showAllProjects)}
+                    className="text-xs font-mono font-black px-3 py-1 rounded-xl bg-[#FEF9C3] hover:bg-[#FDE047] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+                  >
+                    {showAllProjects ? 'Show Top 4 Overview' : `Show All (${candidate.projects.length})`}
+                  </button>
+                )}
+              </div>
             </div>
 
-            <div className="space-y-4">
-              {candidate.projects?.map((proj: any) => (
-                <div key={proj.id} className="p-5 rounded-2xl bg-sand-50/60 border border-sand-200 space-y-2.5 hover:border-sage-400/50 transition-colors">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-sm sm:text-base font-serif font-normal text-forest-900">{proj.title}</h3>
-                    <EvidenceBadge status={proj.verificationStatus} type="project" />
-                  </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {(showAllProjects ? candidate.projects : candidate.projects?.slice(0, 4))?.map((proj: any, idx: number) => {
+                const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
+                const cardBg = cardBgs[idx % cardBgs.length];
 
-                  <p className="text-xs text-forest-800 font-medium">{proj.tagline}</p>
-                  <p className="text-xs text-forest-700/70 leading-relaxed">{proj.description}</p>
+                return (
+                  <div
+                    key={proj.id}
+                    onClick={() => setSelectedProject(proj)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedProject(proj);
+                      }
+                    }}
+                    className={`p-4 rounded-[22px] ${cardBg} border-2 border-[#1F2C23] space-y-2.5 shadow-[3px_3px_0px_#1F2C23] hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#1F2C23] transition-all cursor-pointer group flex flex-col justify-between`}
+                  >
+                    <div className="space-y-1.5 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="text-sm font-serif font-black text-[#1F2C23] group-hover:text-[#D97043] transition-colors truncate">
+                          {proj.title}
+                        </h3>
+                        <EvidenceBadge status={proj.verificationStatus} type="project" />
+                      </div>
 
-                  <div className="flex flex-wrap gap-1.5 pt-1">
-                    {proj.skills?.map((s: string) => (
-                      <span key={s} className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-sand-100 text-forest-800 border border-sand-200">
-                        {s}
+                      <p className="text-xs text-[#24362A] font-bold line-clamp-1">{proj.tagline || proj.description}</p>
+
+                      <div className="flex flex-wrap gap-1 pt-1">
+                        {proj.skills?.slice(0, 2).map((s: string) => (
+                          <span key={s} className="text-[9px] font-mono font-black px-2 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23]">
+                            #{s}
+                          </span>
+                        ))}
+                        {proj.skills?.length > 2 && (
+                          <span className="text-[9px] font-mono font-bold text-[#586E5F]">
+                            +{proj.skills.length - 2}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs pt-2 border-t-2 border-[#1F2C23]/10">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono font-black text-[#D97043] group-hover:text-[#C55F34]">
+                        <span>Inspect Dossier</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
-                    ))}
-                  </div>
 
-                  <div className="flex items-center gap-4 text-xs pt-2.5 border-t border-sand-200">
-                    {proj.repositoryUrl && (
-                      <a
-                        href={proj.repositoryUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-forest-700/75 hover:text-forest-900 flex items-center gap-1.5 font-mono text-xs transition-colors"
-                      >
-                        <Github className="w-3.5 h-3.5" /> Inspect Code
-                      </a>
-                    )}
-                    {proj.demoUrl && (
-                      <a
-                        href={proj.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-terracotta-600 hover:text-terracotta-700 flex items-center gap-1.5 font-mono text-xs font-bold transition-colors"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" /> Live Deployment
-                      </a>
-                    )}
+                      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        {proj.repositoryUrl && (
+                          <a
+                            href={proj.repositoryUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1 font-mono text-[10px] font-black bg-white px-2 py-0.5 rounded-md border border-[#1F2C23]"
+                            title="Inspect Code"
+                          >
+                            <Github className="w-3 h-3" /> Code
+                          </a>
+                        )}
+                        {proj.demoUrl && (
+                          <a
+                            href={proj.demoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1 font-mono text-[10px] font-black bg-white px-2 py-0.5 rounded-md border border-[#1F2C23]"
+                            title="Live Demo"
+                          >
+                            <ExternalLink className="w-3 h-3" /> Demo
+                          </a>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -626,6 +676,13 @@ export const RecruiterCandidateDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Interactive Project Detail Modal */}
+      <ProjectDetailModal
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </div>
   );
 };

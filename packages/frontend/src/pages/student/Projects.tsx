@@ -15,16 +15,28 @@ import {
   RefreshCw,
   Star,
   GitFork,
+  Search,
+  LayoutGrid,
+  ListFilter,
+  ArrowUpRight,
+  Layers,
 } from 'lucide-react';
 import { EvidenceBadge } from '../../components/common/EvidenceBadge';
 import { AutoFetchedProjectData } from '@proofly/shared';
 import { DelicateStarOrnament } from '../../components/common/CreativeArt';
+import { ProjectDetailModal } from '../../components/common/ProjectDetailModal';
 
 export const StudentProjectsPage: React.FC = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [verifyingId, setVerifyingId] = useState<string | null>(null);
+
+  // Clickable Overview Modal & View Controls
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'overview' | 'expanded'>('overview');
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   // Crawler / Auto-Fetch State
   const [quickRepoUrl, setQuickRepoUrl] = useState('');
@@ -338,6 +350,82 @@ export const StudentProjectsPage: React.FC = () => {
         )}
       </div>
 
+      {/* Projects Section Header & Controls */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 className="text-xl font-serif font-black text-[#1F2C23] flex items-center gap-2">
+              <Layers className="w-5 h-5 text-[#D97043]" />
+              <span>Showcased Projects & Production Proof</span>
+            </h3>
+            <p className="text-xs text-[#586E5F] font-medium">
+              Click any project card to review its complete dossier, telemetry, and live verification evidence.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            {/* View Mode Toggle */}
+            <div className="flex items-center bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] rounded-xl p-0.5">
+              <button
+                type="button"
+                onClick={() => setViewMode('overview')}
+                className={`px-3 py-1 rounded-lg text-xs font-mono font-black transition-all ${
+                  viewMode === 'overview'
+                    ? 'bg-[#FFDE59] text-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]'
+                    : 'text-[#586E5F] hover:text-[#1F2C23]'
+                }`}
+                title="Compact Overview Grid"
+              >
+                Overview
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('expanded')}
+                className={`px-3 py-1 rounded-lg text-xs font-mono font-black transition-all ${
+                  viewMode === 'expanded'
+                    ? 'bg-[#FFDE59] text-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]'
+                    : 'text-[#586E5F] hover:text-[#1F2C23]'
+                }`}
+                title="Expanded Detail List"
+              >
+                Expanded
+              </button>
+            </div>
+
+            <span className="text-xs font-mono font-black bg-white px-3 py-1.5 rounded-xl border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+              {projects.length} Total
+            </span>
+          </div>
+        </div>
+
+        {/* Filter / Search Bar if projects exist */}
+        {projects.length > 2 && (
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#586E5F]">
+                <Search className="w-4 h-4" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Filter projects by title, tagline, or skill (e.g. React, Rust, WebSockets)..."
+                className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs font-mono font-bold focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23]"
+              />
+            </div>
+            {projects.length > 6 && !searchQuery && (
+              <button
+                type="button"
+                onClick={() => setShowAllProjects(!showAllProjects)}
+                className="px-4 py-2 rounded-xl bg-[#FEF9C3] hover:bg-[#FDE047] text-[#1F2C23] text-xs font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] shrink-0 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+              >
+                {showAllProjects ? 'Show Top 6 Overview' : `Show All (${projects.length})`}
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Projects Grid */}
       {projects.length === 0 ? (
         <div className="p-16 text-center rounded-[28px] bg-white border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] text-[#586E5F] space-y-3">
@@ -348,85 +436,187 @@ export const StudentProjectsPage: React.FC = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {projects.map((project, idx) => {
-            const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
-            const cardBg = cardBgs[idx % cardBgs.length];
+        <div className={`grid ${viewMode === 'overview' ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'} gap-5`}>
+          {projects
+            .filter((p) => {
+              if (!searchQuery.trim()) return true;
+              const q = searchQuery.toLowerCase();
+              return (
+                p.title?.toLowerCase().includes(q) ||
+                p.tagline?.toLowerCase().includes(q) ||
+                p.skills?.some((s: string) => s.toLowerCase().includes(q))
+              );
+            })
+            .slice(0, showAllProjects || searchQuery ? undefined : 6)
+            .map((project, idx) => {
+              const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
+              const cardBg = cardBgs[idx % cardBgs.length];
 
-            return (
-              <div
-                key={project.id}
-                className={`p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group`}
-              >
-                <div className="space-y-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <h3 className="text-base font-serif font-black text-[#1F2C23] leading-snug group-hover:text-[#D97043] transition-colors">
-                      {project.title}
-                    </h3>
-                    <EvidenceBadge status={project.verificationStatus} type="project" />
-                  </div>
+              if (viewMode === 'overview') {
+                return (
+                  <div
+                    key={project.id}
+                    onClick={() => setSelectedProject(project)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedProject(project);
+                      }
+                    }}
+                    className={`p-5 rounded-[22px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-3 cursor-pointer hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#1F2C23] transition-all group min-w-0`}
+                  >
+                    <div className="space-y-2 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-1.5 min-w-0">
+                          <span className="text-[10px] font-mono text-[#1F2C23] font-black bg-white px-2 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0">
+                            #{idx + 1}
+                          </span>
+                          <h4 className="text-base font-serif font-black text-[#1F2C23] leading-snug truncate group-hover:text-[#D97043] transition-colors">
+                            {project.title}
+                          </h4>
+                        </div>
+                        <EvidenceBadge status={project.verificationStatus} type="project" />
+                      </div>
 
-                  <p className="text-xs text-[#1F2C23] font-black">{project.tagline}</p>
-                  <p className="text-xs text-[#24362A] font-medium leading-relaxed line-clamp-3">{project.description}</p>
+                      <p className="text-xs text-[#24362A] font-bold line-clamp-1 break-words">
+                        {project.tagline || project.description}
+                      </p>
 
-                  <div className="flex flex-wrap gap-1.5 pt-2">
-                    {project.skills?.map((s: string) => (
-                      <span
-                        key={s}
-                        className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
-                      >
-                        #{s}
+                      <div className="flex flex-wrap items-center gap-1 pt-1">
+                        {project.skills?.slice(0, 2).map((s: string) => (
+                          <span
+                            key={s}
+                            className="text-[10px] font-mono font-black px-2 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
+                          >
+                            #{s}
+                          </span>
+                        ))}
+                        {project.skills?.length > 2 && (
+                          <span className="text-[10px] font-mono font-bold text-[#586E5F] px-1">
+                            +{project.skills.length - 2}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="pt-2.5 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs flex-wrap gap-1.5">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono font-black text-[#D97043] group-hover:text-[#C55F34] transition-colors">
+                        <span>Inspect Dossier</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
-                    ))}
+
+                      <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          onClick={() => handleVerifyProject(project.id)}
+                          disabled={verifyingId === project.id}
+                          className="px-2.5 py-1 rounded-lg bg-white hover:bg-[#FAF7F2] text-[#1F2C23] text-[10px] font-mono font-black border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+                          title="Re-verify project evidence"
+                        >
+                          {verifyingId === project.id ? '...' : 'Verify'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteProject(project.id)}
+                          className="p-1 rounded-lg text-[#1F2C23] hover:text-[#DC2626] hover:bg-white border border-transparent hover:border-[#1F2C23] transition-all"
+                          title="Delete project"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              // Expanded list view
+              return (
+                <div
+                  key={project.id}
+                  className={`p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group`}
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <h4 className="text-base font-serif font-black text-[#1F2C23] leading-snug group-hover:text-[#D97043] transition-colors">
+                        {project.title}
+                      </h4>
+                      <EvidenceBadge status={project.verificationStatus} type="project" />
+                    </div>
+
+                    <p className="text-xs text-[#1F2C23] font-black">{project.tagline}</p>
+                    <p className="text-xs text-[#24362A] font-medium leading-relaxed line-clamp-3">{project.description}</p>
+
+                    <div className="flex flex-wrap gap-1.5 pt-2">
+                      {project.skills?.map((s: string) => (
+                        <span
+                          key={s}
+                          className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
+                        >
+                          #{s}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-3">
+                      {project.repositoryUrl && (
+                        <a
+                          href={project.repositoryUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1.5 transition-colors font-mono font-black"
+                        >
+                          <Github className="w-3.5 h-3.5" /> Source Code
+                        </a>
+                      )}
+                      {project.demoUrl && (
+                        <a
+                          href={project.demoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1.5 transition-colors font-mono font-black"
+                        >
+                          <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                        </a>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleVerifyProject(project.id)}
+                        disabled={verifyingId === project.id}
+                        className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] text-[11px] font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+                      >
+                        {verifyingId === project.id ? 'Checking...' : 'Re-verify'}
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="p-1.5 rounded-xl text-[#1F2C23] hover:text-[#DC2626] hover:bg-white border-2 border-transparent hover:border-[#1F2C23] transition-all"
+                        title="Delete project"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                <div className="pt-4 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-3">
-                    {project.repositoryUrl && (
-                      <a
-                        href={project.repositoryUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1.5 transition-colors font-mono font-black"
-                      >
-                        <Github className="w-3.5 h-3.5" /> Source Code
-                      </a>
-                    )}
-                    {project.demoUrl && (
-                      <a
-                        href={project.demoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1.5 transition-colors font-mono font-black"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" /> Live Demo
-                      </a>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleVerifyProject(project.id)}
-                      disabled={verifyingId === project.id}
-                      className="px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] text-[11px] font-mono font-black border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
-                    >
-                      {verifyingId === project.id ? 'Checking...' : 'Re-verify'}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteProject(project.id)}
-                      className="p-1.5 rounded-xl text-[#1F2C23] hover:text-[#DC2626] hover:bg-white border-2 border-transparent hover:border-[#1F2C23] transition-all"
-                      title="Delete project"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
       )}
+
+      {/* Interactive Project Detail Modal */}
+      <ProjectDetailModal
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+        onVerify={handleVerifyProject}
+        onDelete={handleDeleteProject}
+        isVerifying={verifyingId === selectedProject?.id}
+        canManage={true}
+      />
 
       {/* Add Project Modal */}
       {showModal && (

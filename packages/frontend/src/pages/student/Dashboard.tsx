@@ -14,8 +14,12 @@ import {
   Key,
   Copy,
   Linkedin,
+  ArrowUpRight,
+  Layers,
 } from 'lucide-react';
 import { ProfileCompletenessResult } from '@proofly/shared';
+import { EvidenceBadge } from '../../components/common/EvidenceBadge';
+import { ProjectDetailModal } from '../../components/common/ProjectDetailModal';
 
 export const StudentDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -25,6 +29,8 @@ export const StudentDashboard: React.FC = () => {
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [copiedFastPass, setCopiedFastPass] = useState(false);
   const [copiedHash, setCopiedHash] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [showAllDashboardProjects, setShowAllDashboardProjects] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -336,36 +342,126 @@ export const StudentDashboard: React.FC = () => {
         )}
       </div>
 
-      {/* Featured Projects Preview */}
+      {/* Featured Projects Preview (Clickable Overview Cards) */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h3 className="font-serif text-xl font-black text-[#1F2C23]">Featured Project Evidence</h3>
-          <Link to="/student/projects" className="text-xs font-bold text-[#D97043] hover:underline font-mono">
-            Manage All Projects &rarr;
-          </Link>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h3 className="font-serif text-xl font-black text-[#1F2C23] flex items-center gap-2">
+              <Layers className="w-5 h-5 text-[#D97043]" />
+              <span>Project Evidence & Showcases</span>
+            </h3>
+            <p className="text-xs text-[#586E5F] font-medium">
+              Click any project card to review its verified dossier, architecture details, and telemetry.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link
+              to="/student/projects"
+              className="text-xs font-mono font-black text-[#D97043] hover:underline flex items-center gap-1"
+            >
+              <span>Manage All ({profile?.projects?.length || 0})</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {profile?.projects?.slice(0, 2).map((project: any) => (
-            <div key={project.id} className="p-6 rounded-[24px] bg-white border-2 border-[#1F2C23] space-y-3 shadow-[3px_3px_0px_#1F2C23] hover:shadow-[4px_4px_0px_#1F2C23] transition-all">
-              <div className="flex items-start justify-between gap-2 min-w-0">
-                <h4 className="font-serif text-base font-black text-[#1F2C23] leading-snug truncate">{project.title}</h4>
-                <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-[#E4ECE6] text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] font-bold shrink-0">
-                  {project.verificationStatus}
-                </span>
-              </div>
-              <p className="text-xs text-[#586E5F] line-clamp-2 leading-relaxed">{project.tagline}</p>
-              <div className="flex flex-wrap gap-1.5 pt-2 border-t-2 border-[#FAF7F2]">
-                {project.skills?.map((s: string) => (
-                  <span key={s} className="text-[10px] font-mono px-2.5 py-0.5 rounded-md bg-[#FAF7F2] text-[#1F2C23] border border-[#1F2C23] font-bold">
-                    #{s}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+        {profile?.projects?.length === 0 ? (
+          <div className="p-8 rounded-[24px] bg-white border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] text-center space-y-2">
+            <FolderGit2 className="w-8 h-8 text-[#586E5F] mx-auto" />
+            <p className="text-xs text-[#1F2C23] font-bold">No projects added yet.</p>
+            <Link
+              to="/student/projects"
+              className="inline-block text-xs font-mono font-black text-[#D97043] underline"
+            >
+              Add your first project to boost your score &rarr;
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {(showAllDashboardProjects ? profile.projects : profile.projects?.slice(0, 4))?.map(
+              (project: any, idx: number) => {
+                const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
+                const cardBg = cardBgs[idx % cardBgs.length];
+
+                return (
+                  <div
+                    key={project.id}
+                    onClick={() => setSelectedProject(project)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedProject(project);
+                      }
+                    }}
+                    className={`p-5 rounded-[22px] ${cardBg} border-2 border-[#1F2C23] space-y-3 shadow-[3px_3px_0px_#1F2C23] hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#1F2C23] transition-all cursor-pointer group`}
+                  >
+                    <div className="flex items-start justify-between gap-2 min-w-0">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-[10px] font-mono font-black bg-white px-2 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+                          #{idx + 1}
+                        </span>
+                        <h4 className="font-serif text-base font-black text-[#1F2C23] leading-snug truncate group-hover:text-[#D97043] transition-colors">
+                          {project.title}
+                        </h4>
+                      </div>
+                      <EvidenceBadge status={project.verificationStatus} type="project" />
+                    </div>
+
+                    <p className="text-xs text-[#24362A] font-medium line-clamp-1 leading-relaxed">
+                      {project.tagline || project.description}
+                    </p>
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t-2 border-[#1F2C23]/10">
+                      <div className="flex flex-wrap gap-1">
+                        {project.skills?.slice(0, 3).map((s: string) => (
+                          <span
+                            key={s}
+                            className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] font-bold shadow-[1px_1px_0px_#1F2C23]"
+                          >
+                            #{s}
+                          </span>
+                        ))}
+                        {project.skills?.length > 3 && (
+                          <span className="text-[10px] font-mono font-bold text-[#586E5F]">
+                            +{project.skills.length - 3}
+                          </span>
+                        )}
+                      </div>
+
+                      <span className="inline-flex items-center gap-1 text-[11px] font-mono font-black text-[#D97043] group-hover:text-[#C55F34]">
+                        <span>Inspect Dossier</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </span>
+                    </div>
+                  </div>
+                );
+              }
+            )}
+          </div>
+        )}
+
+        {profile?.projects?.length > 4 && (
+          <div className="text-center pt-1">
+            <button
+              onClick={() => setShowAllDashboardProjects(!showAllDashboardProjects)}
+              className="text-xs font-mono font-black px-4 py-2 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+            >
+              {showAllDashboardProjects
+                ? 'Show Top 4 Overview'
+                : `Show All ${profile.projects.length} Projects on Dashboard`}
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Interactive Project Detail Modal */}
+      <ProjectDetailModal
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </div>
   );
 };

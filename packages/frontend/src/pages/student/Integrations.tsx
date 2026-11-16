@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { api } from '../../lib/api';
-import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, Sparkles, Linkedin, ExternalLink, Zap } from 'lucide-react';
+import { GitBranch, Github, Code2, RefreshCw, CheckCircle2, AlertCircle, Plus, Trash2, Sparkles, Linkedin, ExternalLink, Zap, Search, ArrowUpRight, Star, Layers } from 'lucide-react';
 import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
 import { CodingProfileCard } from '../../components/common/CodingProfileCard';
 import { DelicateStarOrnament } from '../../components/common/CreativeArt';
+import { RepoDetailModal } from '../../components/common/RepoDetailModal';
 
 export const StudentIntegrationsPage: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
@@ -13,6 +14,11 @@ export const StudentIntegrationsPage: React.FC = () => {
   const [githubToken, setGithubToken] = useState('');
   const [githubMsg, setGithubMsg] = useState<string | null>(null);
   const [isDisconnectingGithub, setIsDisconnectingGithub] = useState(false);
+
+  // Clickable Overview Modal & Repo Controls
+  const [selectedRepo, setSelectedRepo] = useState<any | null>(null);
+  const [repoSearchQuery, setRepoSearchQuery] = useState('');
+  const [showAllRepos, setShowAllRepos] = useState(false);
 
   // Coding profile form
   const [platform, setPlatform] = useState<'LEETCODE' | 'HACKERRANK' | 'CODEFORCES'>('LEETCODE');
@@ -251,51 +257,138 @@ export const StudentIntegrationsPage: React.FC = () => {
           showSyncButton={true}
         />
 
-        {/* Selected Repositories List */}
+        {/* Selected Repositories List (Clickable Overview Cards) */}
         {profile?.gitHubRepos?.length > 0 && (
           <div className="space-y-3 pt-2 w-full max-w-full">
-            <h3 className="text-xs font-mono font-black uppercase tracking-wider text-[#1F2C23]">
-              Synchronized Public Repositories ({profile.gitHubRepos.length})
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {profile.gitHubRepos.map((repo: any, idx: number) => {
-                const cardTints = ['bg-white', 'bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]'];
-                const cardTint = cardTints[idx % cardTints.length];
-                return (
-                  <div
-                    key={repo.id}
-                    className={`p-5 rounded-[22px] ${cardTint} border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex items-start justify-between gap-3 text-xs transition-transform hover:-translate-y-0.5`}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h3 className="text-xs font-mono font-black uppercase tracking-wider text-[#1F2C23] flex items-center gap-2">
+                  <Github className="w-4 h-4 text-[#1F2C23]" />
+                  <span>Synchronized Public Repositories ({profile.gitHubRepos.length})</span>
+                </h3>
+                <p className="text-[11px] text-[#586E5F] font-medium">
+                  Click any repository card to inspect its complete metadata, commit counts, and source.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {profile.gitHubRepos.length > 6 && !repoSearchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllRepos(!showAllRepos)}
+                    className="text-xs font-mono font-black px-3 py-1 rounded-xl bg-[#FEF9C3] hover:bg-[#FDE047] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
                   >
-                    <div className="space-y-1.5 min-w-0">
-                      <a
-                        href={repo.htmlUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-black text-[#1F2C23] hover:underline text-sm truncate block"
-                      >
-                        {repo.name}
-                      </a>
-                      <p className="text-[#385241] line-clamp-1 font-medium">{repo.description || 'No description provided'}</p>
-                      <div className="flex flex-wrap items-center gap-2 text-[11px] font-mono pt-1">
-                        <span className="bg-[#FFDE59] px-2 py-0.5 rounded-lg border-2 border-[#1F2C23] font-black text-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
-                          ★ {repo.starsCount}
+                    {showAllRepos ? 'Show Top 6 Overview' : `Show All (${profile.gitHubRepos.length})`}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Filter Search Input */}
+            {profile.gitHubRepos.length > 4 && (
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#586E5F]">
+                  <Search className="w-4 h-4" />
+                </div>
+                <input
+                  type="text"
+                  value={repoSearchQuery}
+                  onChange={(e) => setRepoSearchQuery(e.target.value)}
+                  placeholder="Filter repositories by name, language, or topic..."
+                  className="w-full pl-10 pr-4 py-2 rounded-xl bg-white border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] text-[#1F2C23] placeholder:text-[#758C7D] text-xs font-mono font-bold focus:outline-none focus:shadow-[3px_3px_0px_#1F2C23]"
+                />
+              </div>
+            )}
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {profile.gitHubRepos
+                .filter((r: any) => {
+                  if (!repoSearchQuery.trim()) return true;
+                  const q = repoSearchQuery.toLowerCase();
+                  return (
+                    r.name?.toLowerCase().includes(q) ||
+                    r.description?.toLowerCase().includes(q) ||
+                    r.primaryLanguage?.toLowerCase().includes(q)
+                  );
+                })
+                .slice(0, showAllRepos || repoSearchQuery ? undefined : 6)
+                .map((repo: any, idx: number) => {
+                  const cardTints = ['bg-white', 'bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]'];
+                  const cardTint = cardTints[idx % cardTints.length];
+                  return (
+                    <div
+                      key={repo.id}
+                      onClick={() => setSelectedRepo(repo)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setSelectedRepo(repo);
+                        }
+                      }}
+                      className={`p-4 rounded-[22px] ${cardTint} border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] flex flex-col justify-between space-y-3 cursor-pointer hover:shadow-[5px_5px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#1F2C23] transition-all group`}
+                    >
+                      <div className="space-y-1.5 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <h4 className="font-serif font-black text-[#1F2C23] group-hover:text-[#D97043] text-sm truncate">
+                            {repo.name}
+                          </h4>
+                          <span className="text-[9px] text-[#1F2C23] font-mono bg-[#86EFAC] px-2 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0 font-black uppercase">
+                            Live
+                          </span>
+                        </div>
+                        <p className="text-[#385241] line-clamp-1 font-medium text-xs">
+                          {repo.description || 'No description provided'}
+                        </p>
+                      </div>
+
+                      <div className="pt-2 border-t-2 border-[#1F2C23]/10 flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-1.5 text-[11px] font-mono">
+                          <span className="bg-[#FFDE59] px-2 py-0.5 rounded-md border border-[#1F2C23] font-black text-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]">
+                            ★ {repo.starsCount}
+                          </span>
+                          <span className="bg-white px-2 py-0.5 rounded-md text-[#1F2C23] border border-[#1F2C23] font-black">
+                            {repo.primaryLanguage || 'Code'}
+                          </span>
+                        </div>
+
+                        <span className="inline-flex items-center gap-1 text-[11px] font-mono font-black text-[#D97043] group-hover:text-[#C55F34]">
+                          <span>Overview</span>
+                          <ArrowUpRight className="w-3.5 h-3.5" />
                         </span>
-                        <span className="bg-white px-2 py-0.5 rounded-lg text-[#1F2C23] border-2 border-[#1F2C23] font-black shadow-[1px_1px_0px_#1F2C23]">
-                          {repo.primaryLanguage || 'Code'}
-                        </span>
-                        <span className="font-bold text-[#1F2C23]">{repo.recentCommitCount} commits</span>
                       </div>
                     </div>
-                    <span className="text-[10px] text-[#1F2C23] font-mono bg-[#86EFAC] px-2.5 py-0.5 rounded-lg border-2 border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0 font-black uppercase">
-                      Live
-                    </span>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
+
+            {profile.gitHubRepos.length > 6 && !repoSearchQuery && (
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAllRepos(!showAllRepos)}
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] font-mono font-black text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+                >
+                  <Github className="w-4 h-4 text-[#1F2C23]" />
+                  <span>
+                    {showAllRepos
+                      ? 'Collapse to Top 6 Repositories'
+                      : `View All ${profile.gitHubRepos.length} Synchronized Repositories`}
+                  </span>
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
+
+      {/* Interactive Repo Detail Modal */}
+      <RepoDetailModal
+        repo={selectedRepo}
+        isOpen={!!selectedRepo}
+        onClose={() => setSelectedRepo(null)}
+      />
 
       {/* 2. Coding Platforms Section (LeetCode, HackerRank, Codeforces) */}
       <div className="space-y-6 pt-6 border-t-2 border-[#1F2C23]">

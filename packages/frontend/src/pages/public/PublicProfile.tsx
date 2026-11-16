@@ -28,6 +28,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip } from 'recha
 import { GitHubProfileCard } from '../../components/common/GitHubProfileCard';
 import { CodingProfileCard } from '../../components/common/CodingProfileCard';
 import { DelicateStarOrnament, OrganicLeafLogo, Stamp100Verified } from '../../components/common/CreativeArt';
+import { ProjectDetailModal } from '../../components/common/ProjectDetailModal';
 
 export const PublicProfilePage: React.FC = () => {
   const { username } = useParams<{ username: string }>();
@@ -35,6 +36,10 @@ export const PublicProfilePage: React.FC = () => {
   const [profile, setProfile] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Modal & Overview State
+  const [selectedProject, setSelectedProject] = useState<any | null>(null);
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   // Share Modal State
   const [showShareModal, setShowShareModal] = useState(false);
@@ -445,30 +450,54 @@ export const PublicProfilePage: React.FC = () => {
         </div>
       )}
 
-      {/* Featured Projects Section */}
+      {/* Featured Projects Section (Clickable Overview Cards) */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-serif font-normal text-forest-900 flex items-center gap-2">
-            <Layers className="w-5 h-5 text-terracotta-600" />
-            <span>Verified Projects & Production Artifacts</span>
-            <DelicateStarOrnament className="w-4 h-4 text-terracotta-500" />
-          </h2>
-          <span className="text-[11px] font-mono text-forest-700/60 font-bold">
-            {profile.projects?.length || 0} Showcased
-          </span>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-lg font-serif font-black text-[#1F2C23] flex items-center gap-2">
+              <Layers className="w-5 h-5 text-[#D97043]" />
+              <span>Verified Projects & Production Artifacts</span>
+              <DelicateStarOrnament className="w-4 h-4 text-[#D97043]" />
+            </h2>
+            <p className="text-xs text-[#586E5F] font-medium">
+              Click any project card below to open its comprehensive architectural breakdown, live telemetry, and verification evidence.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono font-black text-[#1F2C23] bg-white px-3 py-1 rounded-xl border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23]">
+              {profile.projects?.length || 0} Showcased
+            </span>
+            {profile.projects?.length > 4 && (
+              <button
+                onClick={() => setShowAllProjects(!showAllProjects)}
+                className="text-xs font-mono font-black px-3 py-1 rounded-xl bg-[#FEF9C3] hover:bg-[#FDE047] text-[#1F2C23] border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+              >
+                {showAllProjects ? 'Show Top 4 Overview' : `Show All (${profile.projects.length})`}
+              </button>
+            )}
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {profile.projects?.map((proj: any, idx: number) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {(showAllProjects ? profile.projects : profile.projects?.slice(0, 4))?.map((proj: any, idx: number) => {
             const cardBgs = ['bg-[#FEF9C3]', 'bg-[#E0F2FE]', 'bg-[#DCFCE7]', 'bg-[#F3E8FF]'];
             const cardBg = cardBgs[idx % cardBgs.length];
 
             return (
               <div
                 key={proj.id}
-                className={`p-6 rounded-[24px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-4 hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all group min-w-0`}
+                onClick={() => setSelectedProject(proj)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setSelectedProject(proj);
+                  }
+                }}
+                className={`p-5 rounded-[22px] ${cardBg} border-2 border-[#1F2C23] shadow-[4px_4px_0px_#1F2C23] flex flex-col justify-between space-y-3 cursor-pointer hover:shadow-[6px_6px_0px_#1F2C23] hover:translate-x-[-1px] hover:translate-y-[-1px] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#1F2C23] transition-all group min-w-0`}
               >
-                <div className="space-y-3 min-w-0">
+                <div className="space-y-2.5 min-w-0">
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2 min-w-0">
                       <span className="text-[11px] font-mono text-[#1F2C23] font-black bg-white px-2.5 py-0.5 rounded-md border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23] shrink-0">
@@ -481,36 +510,47 @@ export const PublicProfilePage: React.FC = () => {
                     <EvidenceBadge status={proj.verificationStatus} type="project" />
                   </div>
 
-                  {proj.tagline && (
-                    <p className="text-xs text-[#1F2C23] font-black line-clamp-1 break-words">{proj.tagline}</p>
+                  {proj.tagline ? (
+                    <p className="text-xs text-[#1F2C23] font-bold line-clamp-1 break-words">{proj.tagline}</p>
+                  ) : (
+                    <p className="text-xs text-[#24362A] font-medium line-clamp-1 break-words">{proj.description}</p>
                   )}
 
-                  <p className="text-xs text-[#24362A] font-medium leading-relaxed line-clamp-3 break-words">{proj.description}</p>
-
                   {proj.skills && proj.skills.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {proj.skills.map((s: string) => (
+                    <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                      {proj.skills.slice(0, 3).map((s: string) => (
                         <span
                           key={s}
-                          className="text-[10px] font-mono font-black px-2.5 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
+                          className="text-[10px] font-mono font-black px-2 py-0.5 rounded-md bg-white text-[#1F2C23] border border-[#1F2C23] shadow-[1px_1px_0px_#1F2C23]"
                         >
-                          {s}
+                          #{s}
                         </span>
                       ))}
+                      {proj.skills.length > 3 && (
+                        <span className="text-[10px] font-mono font-bold text-[#586E5F] px-1.5 py-0.5">
+                          +{proj.skills.length - 3} more
+                        </span>
+                      )}
                     </div>
                   )}
                 </div>
 
-                <div className="pt-3 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs flex-wrap gap-2">
-                  <div className="flex items-center gap-3">
+                <div className="pt-2.5 border-t-2 border-[#1F2C23]/15 flex items-center justify-between text-xs flex-wrap gap-2">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-mono font-black text-[#D97043] group-hover:text-[#C55F34] transition-colors">
+                    <span>Inspect Full Dossier</span>
+                    <ArrowUpRight className="w-3.5 h-3.5" />
+                  </span>
+
+                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                     {proj.repositoryUrl && (
                       <a
                         href={proj.repositoryUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1.5 font-mono font-black transition-colors"
+                        className="text-[#1F2C23] hover:text-[#D97043] flex items-center gap-1 font-mono font-black transition-colors bg-white px-2 py-0.5 rounded-md border border-[#1F2C23] text-[10px]"
+                        title="View GitHub source"
                       >
-                        <Github className="w-3.5 h-3.5 text-[#1F2C23]" /> Source
+                        <Github className="w-3 h-3 text-[#1F2C23]" /> Code
                       </a>
                     )}
                     {proj.demoUrl && (
@@ -518,22 +558,42 @@ export const PublicProfilePage: React.FC = () => {
                         href={proj.demoUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1.5 font-mono font-black transition-colors"
+                        className="text-[#D97043] hover:text-[#C55F34] flex items-center gap-1 font-mono font-black transition-colors bg-white px-2 py-0.5 rounded-md border border-[#1F2C23] text-[10px]"
+                        title="Open live demo"
                       >
-                        <ExternalLink className="w-3.5 h-3.5" /> Live Demo
+                        <ExternalLink className="w-3 h-3" /> Live
                       </a>
                     )}
-                  </div>
-
-                  <div className="text-[10px] font-mono text-[#24362A] font-black">
-                    {proj.verifiedCommitCount ? `${proj.verifiedCommitCount} commits` : 'Verified'}
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
+
+        {profile.projects?.length > 4 && (
+          <div className="text-center pt-2">
+            <button
+              onClick={() => setShowAllProjects(!showAllProjects)}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-white hover:bg-[#FAF7F2] text-[#1F2C23] font-mono font-black text-xs border-2 border-[#1F2C23] shadow-[3px_3px_0px_#1F2C23] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all"
+            >
+              <Layers className="w-4 h-4 text-[#D97043]" />
+              <span>
+                {showAllProjects
+                  ? 'Collapse to Top 4 Overview'
+                  : `View All ${profile.projects.length} Showcased Projects`}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
+
+      {/* Interactive Project Detail Modal */}
+      <ProjectDetailModal
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
 
       {/* Certifications Section */}
       {profile.certificates?.length > 0 && (
