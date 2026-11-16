@@ -47,7 +47,7 @@ export const Navbar: React.FC = () => {
                 className="flex items-center gap-3 group shrink-0"
               >
                 <div className="relative">
-                  <OrganicLeafLogo size={42} className="border-2 border-[#1F2C23] rounded-full shadow-[2px_2px_0px_#1F2C23] group-hover:scale-105 transition-transform duration-200" />
+                  <OrganicLeafLogo size={42} className="group-hover:scale-105 transition-transform duration-200" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-serif text-2xl font-bold tracking-tight text-[#1F2C23] leading-none">

@@ -6,29 +6,21 @@ import React from 'react';
  * Sage greens (#74947F), terracotta (#D97043), warm cream (#FAF7F2), and deep forest (#1F2C23).
  */
 
-// 1. Organic Botanical Leaf Circle Logo Mark
+// 1. Proofly Neo-Brutalist Brand Logo Mark
 export const OrganicLeafLogo: React.FC<{ size?: number; className?: string }> = ({
-  size = 38,
+  size = 40,
   className = '',
 }) => {
   return (
     <div
       style={{ width: size, height: size }}
-      className={`rounded-full bg-[#3D5645] flex items-center justify-center shrink-0 shadow-sm ${className}`}
+      className={`rounded-xl overflow-hidden shrink-0 border-2 border-[#1F2C23] shadow-[2px_2px_0px_#1F2C23] bg-[#86EFAC] ${className}`}
     >
-      <svg
-        width={size * 0.58}
-        height={size * 0.58}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#FAF7F2"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z" />
-        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
-      </svg>
+      <img
+        src="/images/proofly-logo.jpg"
+        alt="Proofly Logo"
+        className="w-full h-full object-cover"
+      />
     </div>
   );
 };
